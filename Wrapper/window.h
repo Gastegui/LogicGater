@@ -116,6 +116,17 @@ public:
                 delete tmp;
             }
         }
+        if(lineas != nullptr)
+        {
+            // ReSharper disable once CppDFAUnusedValue
+            const ListaLineas* tmp{nullptr};
+            while(lineas != nullptr)
+            {
+                tmp = lineas;
+                lineas = lineas->siguiente;
+                delete tmp;
+            }
+        }
     }
 
     [[nodiscard]] SDL_Renderer* getRenderer() const { return renderer; }
