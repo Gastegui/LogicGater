@@ -412,10 +412,6 @@ bool Raton::borrarTodo(const int altura_)
 
 void Raton::setBorrando(const bool borrando_)
 {
-
-    if(!borrando_)
-        borrando = false;
-
     borrando = borrando_;
     conectando = false;
     controlador->desmarcarOrigen();
