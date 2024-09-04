@@ -28,11 +28,41 @@ IMG* buscarLista(const Raton::lista_t* lista, const int posX, const int posY)
 
 void Raton::interactuar(IMG* actual, const SDL_Event* evento)
 {
-    const Evento ratonEvento{evento->type == SDL_MOUSEBUTTONDOWN ? Evento::ABAJO  :
-                             evento->type == SDL_MOUSEBUTTONUP   ? Evento::ARRIBA : Evento::NADA};
-    const Boton ratonBoton{evento->button.button == SDL_BUTTON_LEFT  ? Boton::IZQUIERDO :
-                           evento->button.button == SDL_BUTTON_RIGHT ? Boton::DERECHO   :
-                           evento->button.button == SDL_BUTTON_MIDDLE ? Boton::RUEDA    : Boton::NINGUNO};
+    Evento ratonEvento{Evento::NADA};
+    Boton ratonBoton{Boton::NINGUNO};
+
+    if(evento->type == SDL_MOUSEBUTTONUP)
+        ratonEvento = Evento::ARRIBA;
+    else if(evento->type == SDL_MOUSEBUTTONDOWN)
+        ratonEvento = Evento::ABAJO;
+
+    if(ratonEvento != Evento::NADA)
+    {
+        if(evento->button.button == SDL_BUTTON_LEFT)
+            ratonBoton = Boton::IZQUIERDO;
+        else if(evento->button.button == SDL_BUTTON_MIDDLE)
+            ratonBoton = Boton::RUEDA;
+        else if(evento->button.button == SDL_BUTTON_RIGHT)
+            ratonBoton = Boton::DERECHO;
+    }
+
+    if(borrando)
+    {
+        if(ratonBoton == Boton::IZQUIERDO) //Si uso ratonBoton y ratonEvento CLion se queja
+        {
+            if(ratonEvento == Evento::ARRIBA)
+            {
+                if(actual->getPadrePuerta())
+                    controlador->borrar(actual->getPadrePuerta());
+                else if(actual->getPadreEntrada())
+                    controlador->borrar(actual->getPadreEntrada());
+                else if(actual->getPadreSalida())
+                    controlador->borrar(actual->getPadreSalida());
+                borrando = false;
+                return;
+            }
+        }
+    }
 
     if(imgAnterior == nullptr) //El raton a entrado a una imagen desde sin estar antes en otra
     {
@@ -81,20 +111,6 @@ bool Raton::interactuarConexion(IMG* actual, const SDL_Event* evento)
             return true;
         }
 
-        if(evento->button.button == SDL_BUTTON_LEFT)
-        {
-            if(evento->type == SDL_MOUSEBUTTONUP)
-            {
-                if(actual->getPadrePuerta())
-                    controlador->borrar(actual->getPadrePuerta());
-                else if(actual->getPadreEntrada())
-                    controlador->borrar(actual->getPadreEntrada());
-                else if(actual->getPadreSalida())
-                    controlador->borrar(actual->getPadreSalida());
-                borrando = false;
-            }
-            return true;
-        }
     }
 
     if(controlador->getConectando())
