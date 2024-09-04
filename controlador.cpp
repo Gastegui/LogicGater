@@ -92,6 +92,7 @@ bool Controlador::borrar(Puerta* puerta)
 
         while(tmp->siguiente != nullptr && tmp->puerta != puerta)
         {
+            anterior = anterior->siguiente;
             tmp = tmp->siguiente;
         }
 
@@ -209,6 +210,7 @@ bool Controlador::borrar(Entrada* entrada)
 
         while(tmp->siguiente != nullptr && tmp->entrada != entrada)
         {
+            anterior = anterior->siguiente;
             tmp = tmp->siguiente;
         }
 
@@ -290,6 +292,7 @@ bool Controlador::borrar(Salida* salida)
 
         while(tmp->siguiente != nullptr && tmp->salida != salida)
         {
+            anterior = anterior->siguiente;
             tmp = tmp->siguiente;
         }
 
