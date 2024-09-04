@@ -97,11 +97,10 @@ bool Raton::interactuarConexion(IMG* actual, const SDL_Event* evento)
         }
     }
 
-    if(conectando)
+    if(controlador->getConectando())
     {
         if(arriba)
         {
-            conectando = false;
             if(actual->getPadrePuerta() != nullptr)
                 controlador->destino(actual->getPadrePuerta(), posY < actual->getRect()->y + actual->getRect()->h / 2);
             else if(actual->getPadreSalida() != nullptr)
@@ -120,7 +119,6 @@ bool Raton::interactuarConexion(IMG* actual, const SDL_Event* evento)
         else
             return false;
 
-        conectando = true;
         return true;
     }
 
@@ -151,9 +149,8 @@ void Raton::manejarRaton(const SDL_Event* evento)
     }
 
     //Por si se ha soltado la rueda en algun lugar que no sea clickable y conectable
-    if(conectando && evento->type == SDL_MOUSEBUTTONUP && evento->button.button == SDL_BUTTON_MIDDLE)
+    if(controlador->getConectando() && evento->type == SDL_MOUSEBUTTONUP && evento->button.button == SDL_BUTTON_MIDDLE)
     {
-        conectando = false;
         controlador->desmarcarOrigen();
     }
 
@@ -413,6 +410,5 @@ bool Raton::borrarTodo(const int altura_)
 void Raton::setBorrando(const bool borrando_)
 {
     borrando = borrando_;
-    conectando = false;
     controlador->desmarcarOrigen();
 }

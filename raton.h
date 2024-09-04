@@ -18,7 +18,6 @@ class Raton
 
     Controlador* controlador{nullptr};
 
-    bool conectando{false};
     bool borrando{false};
 
 public:

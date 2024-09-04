@@ -34,14 +34,16 @@ void Controlador::crear(const Puerta::Tipo tipo, const int x, const int y, const
     }
 }
 
-void Controlador::borrarConexiones(Puerta* puerta, const bool arriba, const bool abajo, const bool salida) const
+void Controlador::borrarConexiones(Puerta* puerta, const bool arriba, const bool abajo, const bool salida)
 {
     const ListaPuertas* tmp{listaPuertas};
+    if(origen != nullptr)
+        origen = nullptr;
 
     window->borrarLineas(puerta, arriba, abajo, salida);
 
     if(arriba)
-        puerta->setAbajo(nullptr);
+        puerta->setArriba(nullptr);
 
     if(abajo)
         puerta->setAbajo(nullptr);

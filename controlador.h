@@ -97,7 +97,7 @@ public:
     //Borra una puerta
     bool borrar(Puerta* puerta);
     //Borra las conexiones deseadas de una puerta. (Todas por defenco)
-    void borrarConexiones(Puerta* puerta, bool arriba = true, bool abajo = true, bool salida = true) const;
+    void borrarConexiones(Puerta* puerta, bool arriba = true, bool abajo = true, bool salida = true);
 
     //Crea una entrada
     void crear(bool mantener, int x, int y);
@@ -116,6 +116,7 @@ public:
     void marcarOrigen(Puerta* puerta);
     void marcarOrigen(Entrada* boton);
     void desmarcarOrigen();
+    [[nodiscard]] bool getConectando() const { return origen != nullptr; }
 
     void destino(Puerta* puerta, bool arriba);
     void destino(Salida* salida);
