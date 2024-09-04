@@ -118,7 +118,7 @@ void Controlador::marcarOrigen(Puerta* puerta)
 
 void Controlador::destino(Puerta* puerta, const bool arriba)
 {
-    if(origen == nullptr)
+    if(origen == nullptr || (arriba && puerta->getArriba() != nullptr) || (!arriba && puerta->getAbajo() != nullptr))
         return;
 
     if(arriba)
