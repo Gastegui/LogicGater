@@ -65,17 +65,30 @@ public:
                 delete tmp->puerta;
                 delete tmp;
             }
-
+        }
+        if(listaEntradas != nullptr)
+        {
             // ReSharper disable once CppJoinDeclarationAndAssignment
-            const ListaEntradas* tmp2;
+            const ListaEntradas* tmp;
             while(listaEntradas != nullptr)
             {
-                tmp2 = listaEntradas;
+                tmp = listaEntradas;
                 listaEntradas = listaEntradas->siguiente;
-                delete tmp2->entrada;
-                delete tmp2;
+                delete tmp->entrada;
+                delete tmp;
             }
-
+        }
+        if(listaSalidas != nullptr)
+        {
+            // ReSharper disable once CppJoinDeclarationAndAssignment
+            const ListaSalidas* tmp;
+            while(listaSalidas != nullptr)
+            {
+                tmp = listaSalidas;
+                listaSalidas = listaSalidas->siguiente;
+                delete tmp->salida;
+                delete tmp;
+            }
         }
     }
 
