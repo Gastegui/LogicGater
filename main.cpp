@@ -64,22 +64,22 @@ int main(int argc, char* argv[])
                     window.getRaton()->setBorrando(!window.getRaton()->getBorrando());
                     break;
                 case 'a':
-                    controlador.crear(Puerta::AND, 0, 0);
+                    controlador.crear(Puerta::AND, -1, -1);
                     break;
                 case 'o':
-                    controlador.crear(Puerta::OR, 0, 0);
+                    controlador.crear(Puerta::OR, -1, -1);
                     break;
                 case 'x':
-                    controlador.crear(Puerta::XOR, 0, 0);
+                    controlador.crear(Puerta::XOR, -1, -1);
                     break;
                 case 'i':
-                    controlador.crear(false, 0, 0);
+                    controlador.crear(false, -1, -1);
                     break;
                 case 'b':
-                    controlador.crear(true, 0, 0);
+                    controlador.crear(true, -1, -1);
                     break;
                 case 's':
-                    controlador.crear(0, 0);
+                    controlador.crear(-1, -1);
                     break;
                 default:
                     break;

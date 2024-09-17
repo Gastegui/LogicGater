@@ -9,8 +9,11 @@ void Controlador::desmarcarOrigen()
     origen = nullptr;
 }
 
-void Controlador::crear(const Puerta::Tipo tipo, const int x, const int y, const bool arribaNegado, const bool abajoNegado, const bool salidaNegada)
+void Controlador::crear(const Puerta::Tipo tipo, int x, int y, const bool arribaNegado, const bool abajoNegado, const bool salidaNegada)
 {
+    if(x == -1 && y == -1)
+        SDL_GetMouseState(&x, &y);
+
     Puerta* puerta = new Puerta{renderer, tipo, x, y, arribaNegado, abajoNegado, salidaNegada};
     window->añadir(puerta->getIMG(), Window::MEDIO);
     if(listaPuertas == nullptr)
@@ -136,8 +139,11 @@ void Controlador::destino(Puerta* puerta, const bool arriba)
     origen = nullptr;
 }
 
-void Controlador::crear(const bool mantener, const int x, const int y)
+void Controlador::crear(const bool mantener, int x, int y)
 {
+    if(x == -1 && y == -1)
+        SDL_GetMouseState(&x, &y);
+
     Entrada* entrada = new Entrada{renderer, x, y, mantener};
     window->añadir(entrada->getImg(), Window::MEDIO);
 
@@ -236,8 +242,11 @@ void Controlador::marcarOrigen(Entrada* boton)
     origen = boton->getSalida();
 }
 
-void Controlador::crear(const int x, const int y)
+void Controlador::crear(int x, int y)
 {
+    if(x == -1 && y == -1)
+        SDL_GetMouseState(&x, &y);
+
     Salida* salida = new Salida{renderer, x, y};
     window->añadir(salida->getImg(), Window::MEDIO);
 
