@@ -9,6 +9,7 @@
 Controles::Accion Controles::accionAnterior = Nada;
 SDL_Event* Controles::evento = nullptr;
 std::map<std::string, Controles::Accion> Controles::acciones;
+Window* Controles::window = nullptr;
 
 Controles::Accion Controles::getNuevaAccion(const SDL_Event* evento)
 {
@@ -80,5 +81,9 @@ Controles::Accion Controles::getNuevaAccion(const SDL_Event* evento)
     }
     if(str != "--" && acciones.contains(str))
         accionAnterior = acciones[str];
+    if(window != nullptr && window->getRaton()->getBorrando() && !(accionAnterior == Interactuar || accionAnterior == InteractuarAbajo ||
+                                                                    accionAnterior == ConexionArriba || accionAnterior == ConexionAbajo ||
+                                                                    accionAnterior == MovimientoRaton))
+        window->getRaton()->setBorrando(false);
     return accionAnterior;
 }

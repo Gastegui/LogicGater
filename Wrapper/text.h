@@ -5,18 +5,22 @@
 #ifndef TEXT_H
 #define TEXT_H
 
-#include "window.h"
+#include "iostream"
+#include "SDL_ttf.h"
 
 class TXT
 {
     TTF_Font* m_font{nullptr};
     int m_size{10};
     SDL_Color m_color{255, 255, 255};
-    Window* m_window{nullptr};
+    SDL_Renderer* m_renderer;
+    int m_x{0};
+    int m_y{0};
+    int m_alturaSalto{30};
 
 public:
-    TXT(const char* fontName, const int fontSize, const SDL_Color fontColor, Window* img)
-        : m_font{TTF_OpenFont(fontName, fontSize)}, m_color{fontColor}, m_window{img}
+    TXT(const char* fontName, const int fontSize, const SDL_Color fontColor, SDL_Renderer* renderer)
+        : m_font{TTF_OpenFont(fontName, fontSize)}, m_color{fontColor}, m_renderer(renderer)
     {
         // ReSharper disable once CppDFAConstantConditions
         if(m_font == nullptr)
@@ -35,29 +39,14 @@ public:
         return m_font == nullptr;
     }
 
-    void write(const int x, const int y, const char* text) const
-    {
+    friend TXT& operator<< (TXT& anterior, const char* str);
 
-        if(m_font == nullptr)
-        {
-            std::cerr << "Se ha intentado escribir pero no se ha cargado el texto" << std::endl;
-            return;
-        }
+    void setPos(const int x, const int y) { m_x = x; m_y = y; }
+    void setPos(const int x, const int y, const int salto) { m_x = x; m_y = y; m_alturaSalto = salto; }
 
-        SDL_Rect rect;
-        SDL_Renderer* renderer{m_window->getRenderer()};
-        SDL_Surface* surface = TTF_RenderText_Blended(m_font, text, m_color);
-        SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);
+    void write(const char* text);
 
-        rect.x = x;
-        rect.y = y;
-        rect.w = surface->w;
-        rect.h = surface->h;
-
-        SDL_RenderCopy(renderer, texture, nullptr, &rect);
-        SDL_FreeSurface(surface);
-        SDL_DestroyTexture(texture);
-    }
+    void write(int x, int y, const char* text);
 };
 
 #endif //TEXT_H

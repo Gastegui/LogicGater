@@ -31,6 +31,7 @@ add_executable(LogicGater main.cpp
         salida.cpp
         salida.h
         controles.cpp
-        controles.h)
+        controles.h
+        Wrapper/text.cpp)
 
 target_link_libraries(LogicGater ${SDL2_LIBRARIES} SDL2_ttf SDL2_mixer SDL2_image)

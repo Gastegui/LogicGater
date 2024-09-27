@@ -8,6 +8,8 @@
 #include <SDL_events.h>
 #include <string>
 
+#include "Wrapper/window.h"
+
 
 class Controles
 {
@@ -41,13 +43,16 @@ private:
     static Accion accionAnterior;
     static SDL_Event* evento;
     static std::map<std::string, Accion> acciones;
-    //Primer caracter p: pulsar s: soltar
-    //Segundo caracter I: raton izquierda. M: raton medio. D: raton derecha. E: espacio. R: enter. B: borrar. T: tab. C: ctrl. S: shift. A: alt. X: escape. Cualquier caracter en minusculas: su tecla en el teclado
+    static Window* window;
 public:
-    static void init(SDL_Event* event)
+    static void init(SDL_Event* evento_, Window* window_)
     {
-        evento = event;
+        evento = evento_;
+        window = window_;
+
         accionAnterior = Nada;
+        //Primer caracter p: pulsar s: soltar
+        //Segundo caracter I: raton izquierda. M: raton medio. D: raton derecha. E: espacio. R: enter. B: borrar. T: tab. C: ctrl. S: shift. A: alt. X: escape. Cualquier caracter en minusculas: su tecla en el teclado
         acciones.insert(std::make_pair("pI", InteractuarAbajo));
         acciones.insert(std::make_pair("sI", Interactuar));
         acciones.insert(std::make_pair("pD", MoverAbajo));

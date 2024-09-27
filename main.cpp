@@ -35,7 +35,7 @@ int main(int argc, char* argv[])
         return 1;
     }
 
-    const TXT txt {"ttf/8bitOperatorPlusSC-Regular.ttf", 20, SDL_Color{255, 255, 255, 255}, &window};
+    TXT txt {"ttf/8bitOperatorPlusSC-Regular.ttf", 20, SDL_Color{255, 255, 255, 255}, window.getRenderer()};
     if(!txt)
     {
         std::cerr << "Error al inicializar el texto. Error " << SDL_GetError() << std::endl;
@@ -45,10 +45,10 @@ int main(int argc, char* argv[])
     window.render();
 
     SDL_Event event;
-    Controles::init(&event);
-    bool running = true;
+    Controles::init(&event, &window);
+    bool enMarcha = true;
     bool simulando = false;
-    while (running)
+    while (enMarcha)
     {
         while (SDL_PollEvent(&event))
         {
@@ -89,13 +89,13 @@ int main(int argc, char* argv[])
                     simulando = false;
                     break;
                 case Controles::Cerrar:
-                    running = false;
+                    enMarcha = false;
                     break;
                 case Controles::Nada:
                 default:
                     break;
             }
-            if(running)
+            if(enMarcha)
                 window.manejarRaton();
         }
 
@@ -103,11 +103,15 @@ int main(int argc, char* argv[])
             controlador.simular();
 
         window.limpiar();
-        txt.write(0, 1020, "a: puerta AND | o: puerta OR | x: puerta XOR | i: interruptor | b: botón | s: salida | borrar: modo borrar | espacio: simular un paso | l: borrar todos los elementos no conectados | alt + f4: salir");
+        txt.setPos(0, 460);
+        txt << "Creación:" << "    A: puerta AND" << "    O: puerta OR" << "    X: puerta XOR" << "    I: interruptor" << "    B: botón" << "    S: salida";
+        txt << "Modificadores:" << "    Espacio: crear conexión" << "    Retroceso: modo borrar";
         if(!window.getRaton()->getBorrando())
-            txt.write(0, 1050, "ratón izquierdo: mover | ratón rueda: conectar | ratón derecha: cambiar puerta o invertir polaridad o encender/apagar botones e interruptores");
+            txt << "Ratón:" << "    Izquierda: interactuar" << "    Medio: crear conexión" << "    Derecha: Mover";
         else
-            txt.write(0, 1050, "ratón izquierdo: borrar puerta/entrada/salida | ratón rueda: borrar conexión");
+            txt << "Ratón:" << "    Izquierda: borrar elemento" << "    Medio: borrar conexión";
+        txt << "Simulación:" << "    Entrar: simular una vez" << "    Q: empezar simulación" << "    W: parar simulación";
+        txt << "Otros:" << "    L: borrar elementos desconectados";
 
         window.render();
         SDL_Delay(16);
