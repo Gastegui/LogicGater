@@ -5,6 +5,7 @@
 #include "raton.h"
 #include "Wrapper/image.h"
 #include "controlador.h"
+#include "controles.h"
 
 IMG* buscarLista(const Raton::lista_t* lista, const int posX, const int posY)
 {
@@ -26,75 +27,56 @@ IMG* buscarLista(const Raton::lista_t* lista, const int posX, const int posY)
     return nullptr;
 }
 
-void Raton::interactuar(IMG* actual, const SDL_Event* evento)
+void Raton::interactuar(IMG* actual)
 {
-    Evento ratonEvento{Evento::NADA};
-    Boton ratonBoton{Boton::NINGUNO};
-
-    if(evento->type == SDL_MOUSEBUTTONUP)
-        ratonEvento = Evento::ARRIBA;
-    else if(evento->type == SDL_MOUSEBUTTONDOWN)
-        ratonEvento = Evento::ABAJO;
-
-    if(ratonEvento != Evento::NADA)
-    {
-        if(evento->button.button == SDL_BUTTON_LEFT)
-            ratonBoton = Boton::IZQUIERDO;
-        else if(evento->button.button == SDL_BUTTON_MIDDLE)
-            ratonBoton = Boton::RUEDA;
-        else if(evento->button.button == SDL_BUTTON_RIGHT)
-            ratonBoton = Boton::DERECHO;
-    }
-
+    const Controles::Accion accion = Controles::getUltimaAccion();
     if(borrando)
     {
-        if(ratonBoton == Boton::IZQUIERDO) //Si uso ratonBoton y ratonEvento CLion se queja
+        if(accion == Controles::Interactuar)
         {
-            if(ratonEvento == Evento::ARRIBA)
-            {
-                if(actual->getPadrePuerta())
-                    controlador->borrar(actual->getPadrePuerta());
-                else if(actual->getPadreEntrada())
-                    controlador->borrar(actual->getPadreEntrada());
-                else if(actual->getPadreSalida())
-                    controlador->borrar(actual->getPadreSalida());
-                borrando = false;
-                return;
-            }
+            if(actual->getPadrePuerta())
+                controlador->borrar(actual->getPadrePuerta());
+            else if(actual->getPadreEntrada())
+                controlador->borrar(actual->getPadreEntrada());
+            else if(actual->getPadreSalida())
+                controlador->borrar(actual->getPadreSalida());
+            borrando = false;
+            return;
         }
     }
 
     if(imgAnterior == nullptr) //El raton a entrado a una imagen desde sin estar antes en otra
     {
         imgAnterior = actual;
-        actual->clickar(posX - actual->getRect()->x, posY - actual->getRect()->y, ratonBoton, Evento::ENTRAR);
+        actual->clickar(posX - actual->getRect()->x, posY - actual->getRect()->y, Evento::ENTRAR);
     }
     else
     {
         if(imgAnterior == actual) //El raton sige encima de la misma imagen
         {
-            if(evento->type == SDL_MOUSEMOTION)
-                actual->clickar(evento->motion.xrel, evento->motion.yrel, ratonBoton, Raton::MOVIMIENTO);
+            if(accion == Controles::MovimientoRaton)
+            {
+                const SDL_Event* evento = Controles::getEvent();
+                actual->clickar(evento->motion.xrel, evento->motion.yrel, Raton::MOVIMIENTO);
+            }
             else
-                actual->clickar(posX - actual->getRect()->x, posY - actual->getRect()->y, ratonBoton, ratonEvento);
+                actual->clickar(posX - actual->getRect()->x, posY - actual->getRect()->y, Raton::NADA);
         }
         else //Se salta de una imagen a otra directamente
         {
-            imgAnterior->clickar(-1, -1, Boton::NINGUNO, Evento::SALIR);
+            imgAnterior->clickar(-1, -1,  Evento::SALIR);
             imgAnterior = actual;
-            actual->clickar(posX - actual->getRect()->x, posY - actual->getRect()->y, ratonBoton, Evento::ENTRAR);
+            actual->clickar(posX - actual->getRect()->x, posY - actual->getRect()->y, Evento::ENTRAR);
         }
     }
 }
 
-bool Raton::interactuarConexion(IMG* actual, const SDL_Event* evento)
+bool Raton::interactuarConexion(IMG* actual)
 {
-    const bool abajo = evento->type == SDL_MOUSEBUTTONDOWN && evento->button.button == SDL_BUTTON_MIDDLE;
-    const bool arriba = evento->type == SDL_MOUSEBUTTONUP && evento->button.button == SDL_BUTTON_MIDDLE;
 
     if(borrando)
     {
-        if(arriba)
+        if(Controles::getUltimaAccion() == Controles::ConexionArriba)
         {
             if(actual->getPadrePuerta())
             {
@@ -115,7 +97,7 @@ bool Raton::interactuarConexion(IMG* actual, const SDL_Event* evento)
 
     if(controlador->getConectando())
     {
-        if(arriba)
+        if(Controles::getUltimaAccion() == Controles::ConexionArriba)
         {
             if(actual->getPadrePuerta() != nullptr)
                 controlador->destino(actual->getPadrePuerta(), posY < actual->getRect()->y + actual->getRect()->h / 2);
@@ -126,7 +108,7 @@ bool Raton::interactuarConexion(IMG* actual, const SDL_Event* evento)
             return true;
         }
     }
-    else if(abajo)
+    else if(Controles::getUltimaAccion() == Controles::ConexionAbajo)
     {
         if(actual->getPadrePuerta() != nullptr)
             controlador->marcarOrigen(actual->getPadrePuerta());
@@ -142,7 +124,7 @@ bool Raton::interactuarConexion(IMG* actual, const SDL_Event* evento)
 }
 
 
-void Raton::manejarRaton(const SDL_Event* evento)
+void Raton::manejarRaton()
 {
     SDL_GetMouseState(&posX, &posY);
 
@@ -150,7 +132,7 @@ void Raton::manejarRaton(const SDL_Event* evento)
     IMG* actual = buscarLista(lista, posX, posY);
     if(actual != nullptr)
     {
-        interactuar(actual, evento);
+        interactuar(actual);
         return;
     }
 
@@ -158,14 +140,14 @@ void Raton::manejarRaton(const SDL_Event* evento)
     actual = buscarLista(lista, posX, posY);
     if(actual != nullptr)
     {
-        if(interactuarConexion(actual, evento))
+        if(interactuarConexion(actual))
             return;
-        interactuar(actual, evento);
+        interactuar(actual);
         return;
     }
 
     //Por si se ha soltado la rueda en algun lugar que no sea clickable y conectable
-    if(controlador->getConectando() && evento->type == SDL_MOUSEBUTTONUP && evento->button.button == SDL_BUTTON_MIDDLE)
+    if(controlador->getConectando() && Controles::getUltimaAccion() == Controles::ConexionArriba)
     {
         controlador->desmarcarOrigen();
     }
@@ -174,13 +156,13 @@ void Raton::manejarRaton(const SDL_Event* evento)
     actual = buscarLista(lista, posX, posY);
     if(actual != nullptr)
     {
-        interactuar(actual, evento);
+        interactuar(actual);
         return;
     }
 
     if(imgAnterior != nullptr) //El raton no esta en ninguna imagen, y antes si lo estaba
     {
-        imgAnterior->clickar(-1, -1, Raton::NINGUNO, Evento::SALIR);
+        imgAnterior->clickar(-1, -1, Evento::SALIR);
         imgAnterior = nullptr;
     }
 }

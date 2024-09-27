@@ -5,15 +5,26 @@
 #include "puerta.h"
 #include "raton.h"
 #include "entrada.h"
+#include "controles.h"
 
 
-void Puerta::click(const int x, const int y, const Raton::Boton boton, const Raton::Evento evento)
+void Puerta::click(const int x, const int y, const Raton::Evento evento)
 {
-    switch(evento)
+    switch (evento)
     {
-    case Raton::ABAJO:
-        if(boton == Raton::DERECHO)
-        {
+        case Raton::ENTRAR:
+            break;
+        case Raton::SALIR:
+            if(mover == true)
+                mover = false;
+            break;
+        default:
+            break;
+    }
+
+    switch(Controles::getUltimaAccion())
+    {
+        case Controles::Interactuar:
             if(x >= 0 && x <= 23 && y >= 0 && y <= 23)
             {
                 arribaNegado = !arribaNegado;
@@ -34,36 +45,27 @@ void Puerta::click(const int x, const int y, const Raton::Boton boton, const Rat
                 tipo = tipo == AND ? OR : tipo == OR ? XOR : AND;
                 cambiar();
             }
-        }
-        else if(boton == Raton::IZQUIERDO)
+            break;
+        case Controles::MoverAbajo:
             mover = true;
-        break;
-    case Raton::ARRIBA:
-        if(boton == Raton::IZQUIERDO)
+            break;
+        case Controles::MoverArriba:
             mover = false;
-        break;
-    case Raton::ENTRAR:
-        break;
-    case Raton::SALIR:
-        if(mover == true)
-            mover = false;
-        break;
-    case Raton::MOVIMIENTO:
-        if(mover)
-        {
-            imagen.mover(imagen.getRect()->x + x, imagen.getRect()->y + y);
-            lineaArriba.first += x;
-            lineaArriba.second += y;
-            lineaAbajo.first += x;
-            lineaAbajo.second += y;
-            lineaSalida.first += x;
-            lineaSalida.second += y;
-        }
-        break;
-    case Raton::NADA:
-    default:
-        break;
-
+            break;
+        case Controles::MovimientoRaton:
+            if(mover)
+            {
+                imagen.mover(imagen.getRect()->x + x, imagen.getRect()->y + y);
+                lineaArriba.first += x;
+                lineaArriba.second += y;
+                lineaAbajo.first += x;
+                lineaAbajo.second += y;
+                lineaSalida.first += x;
+                lineaSalida.second += y;
+            }
+            break;
+        default:
+            break;
     }
 }
 

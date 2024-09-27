@@ -6,6 +6,7 @@
 #include "./Wrapper/text.h"
 #include "./Wrapper/window.h"
 #include "controlador.h"
+#include "controles.h"
 
 int main(int argc, char* argv[])
 {
@@ -44,51 +45,55 @@ int main(int argc, char* argv[])
     window.render();
 
     SDL_Event event;
+    Controles::init(&event);
     bool running = true;
     while (running)
     {
         while (SDL_PollEvent(&event))
         {
-            if (event.type == SDL_QUIT)
-                running = false;
-            window.manejarRaton(&event);
-
-            if (event.type == SDL_KEYDOWN)
+            switch (Controles::getNuevaAccion(&event))
             {
-                switch (event.key.keysym.sym)
-                {
-                case SDLK_SPACE:
-                    controlador.simular();
+                case Controles::BorrarSueltos:
+                    printf("Se han borrado %d elementos\n", controlador.limpiar());
                     break;
-                case SDLK_BACKSPACE:
-                    window.getRaton()->setBorrando(!window.getRaton()->getBorrando());
-                    break;
-                case 'a':
+                case Controles::CrearAnd:
                     controlador.crear(Puerta::AND, -1, -1);
                     break;
-                case 'o':
+                case Controles::CrearOr:
                     controlador.crear(Puerta::OR, -1, -1);
                     break;
-                case 'x':
+                case Controles::CrearXor:
                     controlador.crear(Puerta::XOR, -1, -1);
                     break;
-                case 'i':
+                case Controles::CrearInterruptor:
                     controlador.crear(false, -1, -1);
                     break;
-                case 'b':
+                case Controles::CrearBoton:
                     controlador.crear(true, -1, -1);
                     break;
-                case 's':
+                case Controles::CrearSalida:
                     controlador.crear(-1, -1);
                     break;
+                case Controles::SimularPaso:
+                    window.getRaton()->setBorrando(!window.getRaton()->getBorrando());
+                    break;
+                case Controles::SimularEmpezar:
+                    break;
+                case Controles::SimularParar:
+                    break;
+                case Controles::Cerrar:
+                    running = false;
+                    break;
+                case Controles::Nada:
                 default:
                     break;
-                }
             }
+            if(running)
+                window.manejarRaton();
         }
 
         window.limpiar();
-        txt.write(0, 1020, "a: puerta AND | o: uerta OR | x: puerta XOR | i: interruptor | b: botón | s: salida | borrar: modo borrar | espacio: simular un paso | alt + f4: salir");
+        txt.write(0, 1020, "a: puerta AND | o: puerta OR | x: puerta XOR | i: interruptor | b: botón | s: salida | borrar: modo borrar | espacio: simular un paso | l: borrar todos los elementos no conectados | alt + f4: salir");
         if(!window.getRaton()->getBorrando())
             txt.write(0, 1050, "ratón izquierdo: mover | ratón rueda: conectar | ratón derecha: cambiar puerta o invertir polaridad o encender/apagar botones e interruptores");
         else
@@ -97,7 +102,6 @@ int main(int argc, char* argv[])
         window.render();
         SDL_Delay(16);
     }
-
     //Mix_CloseAudio();
     return 0;
 }

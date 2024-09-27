@@ -58,8 +58,8 @@ private:
     lista_t* medio{nullptr};
     lista_t* fondo{nullptr};
 
-    void interactuar(IMG* actual, const SDL_Event* evento);
-    bool interactuarConexion(IMG* actual, const SDL_Event* evento);
+    void interactuar(IMG* actual);
+    bool interactuarConexion(IMG* actual);
 
 public:
     ~Raton()
@@ -99,7 +99,7 @@ public:
     void setBorrando(bool borrando_);
     [[nodiscard]] bool getBorrando() const { return borrando; }
 
-    void manejarRaton(const SDL_Event* evento);
+    void manejarRaton();
     bool añadir(IMG* img, int altura_, bool final);
     bool borrar(const IMG* img, int altura_);
     bool borrarTodo(int altura_);

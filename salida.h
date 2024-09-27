@@ -40,7 +40,7 @@ public:
 
     void simular();
 
-    void click(int x, int y, Raton::Boton boton, Raton::Evento evento);
+    void click(int x, int y, Raton::Evento evento);
 };
 
 

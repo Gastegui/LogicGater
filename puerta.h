@@ -104,7 +104,7 @@ public:
                              salidaNegada ? "./img/puertas/salida_negada.png" : "./img/puertas/salida_normal.png");
     }
 
-    void click(int x, int y, Raton::Boton boton, Raton::Evento evento);
+    void click(int x, int y, Raton::Evento evento);
 
     bool simular();
     void simulacionTermindada();

@@ -3,25 +3,23 @@
 //
 
 #include "salida.h"
-
 #include "puerta.h"
+#include "controles.h"
 
-void Salida::click(const int x, const int y, const Raton::Boton boton, const Raton::Evento evento)
+void Salida::click(const int x, const int y, const Raton::Evento evento)
 {
-    switch (evento)
+    if(evento == Raton::SALIR)
+        mover = false;
+
+    switch (Controles::getUltimaAccion())
     {
-    case Raton::ABAJO:
-        if(boton == Raton::IZQUIERDO)
-            mover = true;
+    case Controles::MoverAbajo:
+        mover = true;
         break;
-    case Raton::SALIR:
+    case Controles::MoverArriba:
         mover = false;
         break;
-    case Raton::ARRIBA:
-        if(boton == Raton::IZQUIERDO)
-            mover = false;
-        break;
-    case Raton::MOVIMIENTO:
+    case Controles::MovimientoRaton:
         if(mover)
         {
             img.mover(img.getRect()->x + x, img.getRect()->y + y);
