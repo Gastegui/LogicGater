@@ -376,7 +376,7 @@ void Controlador::borrarConexiones(Salida* salida) const
 
 void Controlador::destino(Salida* salida)
 {
-    if(origen == nullptr)
+    if(origen == nullptr || salida->getEntrada() != nullptr)
         return;
     salida->setEntrada(origen);
 
