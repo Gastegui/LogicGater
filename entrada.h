@@ -35,7 +35,7 @@ public:
     [[nodiscard]] IO* getSalida() { return &salida; }
     [[nodiscard]] IMG* getImg() { return &img; }
     [[nodiscard]] std::pair<int, int>* getLineaPos() { return &linea; }
-
+    [[nodiscard]] bool getDesconectado() const { return salida.getConexiones() == 0; }
     [[nodiscard]] bool getMantener() const { return mantener; }
     void setMantener(const bool mantener_) { mantener = mantener_; }
 

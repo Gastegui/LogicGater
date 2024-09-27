@@ -23,6 +23,8 @@ class IO
     int lineaX{};
     int lineaY{};
 
+    int conexiones{0};
+
     Puerta* puerta{nullptr};
     Entrada* entrada{nullptr};
     Salida* salida{nullptr};
@@ -48,6 +50,10 @@ public:
     [[nodiscard]] Puerta* getPadrePuerta() const { return puerta; }
     [[nodiscard]] Entrada* getPadreEntrada() const { return entrada; }
     [[nodiscard]] Salida* getPadreSalida() const { return salida; }
+
+    void conectado() { conexiones++; }
+    void desconectado() { conexiones--; }
+    [[nodiscard]] int getConexiones() const { return conexiones; }
 
     explicit operator bool() const
     {

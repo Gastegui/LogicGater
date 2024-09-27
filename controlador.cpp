@@ -39,28 +39,51 @@ void Controlador::crear(const Puerta::Tipo tipo, int x, int y, const bool arriba
 
 void Controlador::borrarConexiones(Puerta* puerta, const bool arriba, const bool abajo, const bool salida)
 {
-    const ListaPuertas* tmp{listaPuertas};
     if(origen != nullptr)
         origen = nullptr;
 
     window->borrarLineas(puerta, arriba, abajo, salida);
 
-    if(arriba)
-        puerta->setArriba(nullptr);
-
-    if(abajo)
-        puerta->setAbajo(nullptr);
-
-    while(tmp != nullptr)
+    if(arriba && puerta->getArriba() != nullptr)
     {
-        if(salida)
+        puerta->getArriba()->desconectado();
+        puerta->setArriba(nullptr);
+    }
+
+    if(abajo && puerta->getAbajo() != nullptr)
+    {
+        puerta->getAbajo()->desconectado();
+        puerta->setAbajo(nullptr);
+    }
+
+    if(salida && puerta->getSalida()->getConexiones() != 0)
+    {
+        const ListaPuertas* listaP{listaPuertas};
+        while(listaP != nullptr)
         {
-            if(tmp->puerta->getArriba() == puerta->getSalida())
-                tmp->puerta->setArriba(nullptr);
-            if(tmp->puerta->getAbajo() == puerta->getSalida())
-                tmp->puerta->setAbajo(nullptr);
+            if(listaP->puerta->getArriba() == puerta->getSalida())
+            {
+                puerta->getSalida()->desconectado();
+                listaP->puerta->setArriba(nullptr);
+            }
+            if(listaP->puerta->getAbajo() == puerta->getSalida())
+            {
+                puerta->getSalida()->desconectado();
+                listaP->puerta->setAbajo(nullptr);
+            }
+            listaP = listaP->siguiente;
         }
-        tmp = tmp->siguiente;
+
+        const ListaSalidas* listaS{listaSalidas};
+        while(listaS != nullptr)
+        {
+            if(listaS->salida->getEntrada() == puerta->getSalida())
+            {
+                puerta->getSalida()->desconectado();
+                listaS->salida->setEntrada(nullptr);
+            }
+            listaS = listaS->siguiente;
+        }
     }
 }
 
@@ -136,6 +159,8 @@ void Controlador::destino(Puerta* puerta, const bool arriba)
     else
         window->añadirLinea(origen->getPadrePuerta(), puerta, arriba);
 
+    origen->conectado();
+
     origen = nullptr;
 }
 
@@ -170,18 +195,35 @@ void Controlador::crear(const bool mantener, int x, int y)
 
 void Controlador::borrarConexiones(Entrada* entrada) const
 {
-    const ListaPuertas* lista{listaPuertas};
+    const ListaPuertas* listaP{listaPuertas};
 
     window->borrarLineas(entrada);
 
-    while(lista != nullptr)
+    while(listaP != nullptr)
     {
-        if(lista->puerta->getArriba() == entrada->getSalida())
-            lista->puerta->setArriba(nullptr);
-        if(lista->puerta->getAbajo() == entrada->getSalida())
-            lista->puerta->setAbajo(nullptr);
+        if(listaP->puerta->getArriba() == entrada->getSalida())
+        {
+            entrada->getSalida()->desconectado();
+            listaP->puerta->setArriba(nullptr);
+        }
+        if(listaP->puerta->getAbajo() == entrada->getSalida())
+        {
+            entrada->getSalida()->desconectado();
+            listaP->puerta->setAbajo(nullptr);
+        }
 
-        lista = lista->siguiente;
+        listaP = listaP->siguiente;
+    }
+
+    const ListaSalidas* listaS{listaSalidas}; //Acabo de añadir esto
+    while(listaS != nullptr)
+    {
+        if(listaS->salida->getEntrada() == entrada->getSalida())
+        {
+            entrada->getSalida()->desconectado();
+            listaS->salida->setEntrada(nullptr);
+        }
+        listaS = listaS->siguiente;
     }
 }
 
@@ -324,11 +366,14 @@ bool Controlador::borrar(Salida* salida)
 
 void Controlador::borrarConexiones(Salida* salida) const
 {
+    if(salida->getEntrada() == nullptr)
+        return;
+
     window->borrarLineas(salida);
+    salida->getEntrada()->desconectado();
     salida->setEntrada(nullptr);
 }
 
-// ReSharper disable once CppMemberFunctionMayBeConst
 void Controlador::destino(Salida* salida)
 {
     if(origen == nullptr)
@@ -340,6 +385,7 @@ void Controlador::destino(Salida* salida)
     else
         window->añadirLinea(origen->getPadrePuerta(), salida);
 
+    origen->conectado();
     origen = nullptr;
 }
 
@@ -361,4 +407,76 @@ void Controlador::simular() const
         listaP->puerta->simulacionTermindada();
         listaP = listaP->siguiente;
     }
+}
+
+int Controlador::limpiar()
+{
+    int limpiados = 0;
+
+    const ListaPuertas* puertas{listaPuertas};
+    if(puertas != nullptr)
+    {
+        while(puertas->siguiente != nullptr)
+        {
+            if(puertas->siguiente->puerta->getDesconectado())
+            {
+                borrar(puertas->siguiente->puerta);
+                limpiados++;
+            }
+            else
+                puertas = puertas->siguiente;
+        }
+
+        if(listaPuertas->puerta->getDesconectado())
+        {
+            borrar(listaPuertas->puerta);
+            limpiados++;
+        }
+    }
+
+    const ListaEntradas* entradas{listaEntradas};
+    if(entradas != nullptr)
+    {
+        while(entradas->siguiente != nullptr)
+        {
+            if(entradas->siguiente->entrada->getDesconectado())
+            {
+                borrar(entradas->siguiente->entrada);
+                limpiados++;
+            }
+            else
+                entradas = entradas->siguiente;
+        }
+
+        if(listaEntradas->entrada->getDesconectado())
+        {
+            borrar(listaEntradas->entrada);
+            limpiados++;
+        }
+    }
+
+    const ListaSalidas* salidas{listaSalidas};
+
+    if(salidas != nullptr)
+    {
+
+        while(salidas->siguiente != nullptr)
+        {
+            if(salidas->siguiente->salida->getDesconectado())
+            {
+                borrar(salidas->siguiente->salida);
+                limpiados++;
+            }
+            else
+                salidas = salidas->siguiente;
+        }
+
+        if(listaSalidas->salida->getDesconectado())
+        {
+            borrar(listaSalidas->salida);
+            limpiados++;
+        }
+    }
+
+    return limpiados;
 }

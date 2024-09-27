@@ -121,6 +121,8 @@ public:
     void destino(Puerta* puerta, bool arriba);
     void destino(Salida* salida);
 
+    int limpiar();
+
     void simular() const;
 
 };

@@ -79,7 +79,7 @@ public:
     [[nodiscard]] IO* getSalida() { return &salida; }
     [[nodiscard]] IO* getArriba() const { return arriba; }
     [[nodiscard]] IO* getAbajo() const { return abajo; }
-
+    [[nodiscard]] bool getDesconectado() const { return arriba == nullptr && abajo == nullptr && salida.getConexiones() == 0; }
     [[nodiscard]] IMG* getIMG() { return &imagen; }
 
     [[nodiscard]] std::pair<int, int>* getLineaArribaPos() { return &lineaArriba; }

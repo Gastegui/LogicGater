@@ -34,9 +34,11 @@ public:
     }
 
     void setEntrada(IO* entrada_) { entrada = entrada_; }
+    [[nodiscard]] IO* getEntrada() const { return entrada; }
     [[nodiscard]] IMG* getImg() { return &img; }
     [[nodiscard]] std::pair<int, int>* getLineaPos() { return &linea; }
     [[nodiscard]] bool get() const { return entrada->get(); }
+    [[nodiscard]] bool getDesconectado() const { return entrada == nullptr; }
 
     void simular();
 
