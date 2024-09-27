@@ -29,6 +29,8 @@ add_executable(LogicGater main.cpp
         entrada.cpp
         entrada.h
         salida.cpp
-        salida.h)
+        salida.h
+        controles.cpp
+        controles.h)
 
 target_link_libraries(LogicGater ${SDL2_LIBRARIES} SDL2_ttf SDL2_mixer SDL2_image)

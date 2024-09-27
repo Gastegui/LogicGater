@@ -166,7 +166,7 @@ public:
     void borrarLineas(const Entrada* entrada);
     void borrarLineas(const Salida* salida);
 
-    void manejarRaton(const SDL_Event* evento);
+    void manejarRaton();
 };
 
 #endif //WINDOW_H

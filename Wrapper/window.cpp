@@ -291,9 +291,9 @@ bool Window::borrarTodo(const Altura altura)
     return true;
 }
 
-void Window::manejarRaton(const SDL_Event* evento)
+void Window::manejarRaton()
 {
-    raton.manejarRaton(evento);
+    raton.manejarRaton();
 }
 
 

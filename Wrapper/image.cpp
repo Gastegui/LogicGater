@@ -60,15 +60,15 @@ void IMG::setClickable(Salida* salida_)
     salida = salida_;
 }
 
-void IMG::clickar(const int x, const int y, const Raton::Boton ratonBoton, const Raton::Evento evento) const
+void IMG::clickar(const int x, const int y, const Raton::Evento evento) const
 {
     if(!esClickable)
         return;
 
     if(puerta != nullptr)
-        puerta->click(x, y, ratonBoton, evento);
+        puerta->click(x, y, evento);
     else if(entrada != nullptr)
-        entrada->click(x, y, ratonBoton, evento);
+        entrada->click(x, y, evento);
     else if(salida != nullptr)
-        salida->click(x, y, ratonBoton, evento);
+        salida->click(x, y, evento);
 }

@@ -5,7 +5,6 @@
 #ifndef RATON_H
 #define RATON_H
 
-#include <SDL2/SDL.h>
 
 class IMG;
 class Controlador;

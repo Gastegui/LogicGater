@@ -93,11 +93,11 @@ bool Controlador::borrar(Puerta* puerta)
     if(listaPuertas == nullptr)
         return false;
 
-    if(listaPuertas->puerta == puerta) //Es la primra puerta de la listaPuertas
+    if(listaPuertas->puerta == puerta) //Es la primera puerta de la listaPuertas
     {
         borrarConexiones(puerta);
 
-        if(listaPuertas->siguiente == nullptr) //Y es la unica puerta de la listaPuertas
+        if(listaPuertas->siguiente == nullptr) //Y es la única puerta de la listaPuertas
         {
             window->borrar(listaPuertas->puerta->getIMG(), Window::MEDIO);
             delete listaPuertas->puerta;
@@ -233,11 +233,11 @@ bool Controlador::borrar(Entrada* entrada)
     if(listaEntradas == nullptr)
         return false;
 
-    if(listaEntradas->entrada == entrada) //Es el primer entrada de listaEntradas
+    if(listaEntradas->entrada == entrada) //Es la primera entrada de listaEntradas
     {
         borrarConexiones(entrada);
 
-        if(listaEntradas->siguiente == nullptr) //Y es el unico entrada de listaEntradas
+        if(listaEntradas->siguiente == nullptr) //Y es la única entrada de listaEntradas
         {
             window->borrar(listaEntradas->entrada->getImg(), Window::MEDIO);
             delete listaEntradas->entrada;
@@ -322,7 +322,7 @@ bool Controlador::borrar(Salida* salida)
     {
         borrarConexiones(salida);
 
-        if(listaSalidas->siguiente == nullptr) //Y es la unica salida de listaSalidas
+        if(listaSalidas->siguiente == nullptr) //Y es la única salida de listaSalidas
         {
             window->borrar(listaSalidas->salida->getImg(), Window::MEDIO);
             delete listaSalidas->salida;

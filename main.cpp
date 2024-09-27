@@ -74,8 +74,11 @@ int main(int argc, char* argv[])
                 case Controles::CrearSalida:
                     controlador.crear(-1, -1);
                     break;
-                case Controles::SimularPaso:
+                case Controles::AlternarBorrando:
                     window.getRaton()->setBorrando(!window.getRaton()->getBorrando());
+                    break;
+                case Controles::SimularPaso:
+                    controlador.simular();
                     break;
                 case Controles::SimularEmpezar:
                     break;

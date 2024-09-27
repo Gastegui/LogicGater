@@ -125,7 +125,7 @@ public:
         return crearPuerta(entradaArriba, entradaAbajo, cuerpo, salida);
     }
 
-    void clickar(int x, int y, Raton::Boton ratonBoton, Raton::Evento evento) const;
+    void clickar(int x, int y, Raton::Evento evento) const;
 };
 
 #endif //IMAGE_H
