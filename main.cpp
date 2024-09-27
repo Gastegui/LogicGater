@@ -47,6 +47,7 @@ int main(int argc, char* argv[])
     SDL_Event event;
     Controles::init(&event);
     bool running = true;
+    bool simulando = false;
     while (running)
     {
         while (SDL_PollEvent(&event))
@@ -79,10 +80,13 @@ int main(int argc, char* argv[])
                     break;
                 case Controles::SimularPaso:
                     controlador.simular();
+                    simulando = false;
                     break;
                 case Controles::SimularEmpezar:
+                    simulando = true;
                     break;
                 case Controles::SimularParar:
+                    simulando = false;
                     break;
                 case Controles::Cerrar:
                     running = false;
@@ -94,6 +98,9 @@ int main(int argc, char* argv[])
             if(running)
                 window.manejarRaton();
         }
+
+        if(simulando)
+            controlador.simular();
 
         window.limpiar();
         txt.write(0, 1020, "a: puerta AND | o: puerta OR | x: puerta XOR | i: interruptor | b: botón | s: salida | borrar: modo borrar | espacio: simular un paso | l: borrar todos los elementos no conectados | alt + f4: salir");

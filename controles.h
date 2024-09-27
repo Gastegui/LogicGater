@@ -54,6 +54,8 @@ public:
         acciones.insert(std::make_pair("sD", MoverArriba));
         acciones.insert(std::make_pair("pE", ConexionAbajo));
         acciones.insert(std::make_pair("sE", ConexionArriba));
+        acciones.insert(std::make_pair("pM", ConexionAbajo));
+        acciones.insert(std::make_pair("sM", ConexionArriba));
         acciones.insert(std::make_pair("sB", AlternarBorrando));
         acciones.insert(std::make_pair("sl", BorrarSueltos));
         acciones.insert(std::make_pair("sa", CrearAnd));
