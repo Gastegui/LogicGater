@@ -36,7 +36,8 @@ public:
         SimularPaso,        //Enter
         SimularEmpezar,     //q
         SimularParar,       //w
-        Cerrar              //Alt + F4
+        Cerrar,              //Alt + F4
+        MostrarControles
     };
 
 private:
@@ -72,6 +73,8 @@ public:
         acciones.insert(std::make_pair("sR", SimularPaso));
         acciones.insert(std::make_pair("sq", SimularEmpezar));
         acciones.insert(std::make_pair("sw", SimularParar));
+        acciones.insert(std::make_pair("pc", Cerrar));
+        acciones.insert(std::make_pair("sm", MostrarControles));
     }
     static Accion getNuevaAccion(const SDL_Event* evento);
     [[nodiscard]] static Accion getUltimaAccion() { return accionAnterior; }

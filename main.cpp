@@ -48,6 +48,7 @@ int main(int argc, char* argv[])
     Controles::init(&event, &window);
     bool enMarcha = true;
     bool simulando = false;
+    bool mostrarControles = true;
     while (enMarcha)
     {
         while (SDL_PollEvent(&event))
@@ -91,6 +92,9 @@ int main(int argc, char* argv[])
                 case Controles::Cerrar:
                     enMarcha = false;
                     break;
+                case Controles::MostrarControles:
+                    mostrarControles = !mostrarControles;
+                    break;
                 case Controles::Nada:
                 default:
                     break;
@@ -103,15 +107,29 @@ int main(int argc, char* argv[])
             controlador.simular();
 
         window.limpiar();
-        txt.setPos(0, 460);
-        txt << "Creación:" << "    A: puerta AND" << "    O: puerta OR" << "    X: puerta XOR" << "    I: interruptor" << "    B: botón" << "    S: salida";
-        txt << "Modificadores:" << "    Espacio: crear conexión" << "    Retroceso: modo borrar";
-        if(!window.getRaton()->getBorrando())
-            txt << "Ratón:" << "    Izquierda: interactuar" << "    Medio: crear conexión" << "    Derecha: Mover";
+        if(mostrarControles)
+        {
+            txt.setPos(0, 420);
+            txt << "Creación:" << "    A: puerta AND" << "    O: puerta OR" << "    X: puerta XOR" << "    I: interruptor" << "    B: botón" << "    S: salida";
+            txt << "Modificadores:" << "    Espacio: crear conexión" << "    Retroceso: modo borrar";
+            if(!window.getRaton()->getBorrando())
+                txt << "Ratón:" << "    Izquierda: interactuar" << "    Medio: crear conexión" << "    Derecha: Mover";
+            else
+                txt << "Ratón:" << "    Izquierda: borrar elemento" << "    Medio: borrar conexión";
+            txt << "Simulación:" << "    Entrar: simular una vez" << "    Q: empezar simulación" << "    W: parar simulación";
+            txt << "Otros:" << "    L: borrar elementos desconectados" << "    M: ocultar controles" << "    C: cerrar";
+        }
         else
-            txt << "Ratón:" << "    Izquierda: borrar elemento" << "    Medio: borrar conexión";
-        txt << "Simulación:" << "    Entrar: simular una vez" << "    Q: empezar simulación" << "    W: parar simulación";
-        txt << "Otros:" << "    L: borrar elementos desconectados";
+        {
+            txt.setPos(0, 1050);
+            txt << "M: mostrar controles";
+        }
+
+        if(simulando)
+        {
+            txt.setPos(1800, 1050);
+            txt << "SIMULANDO";
+        }
 
         window.render();
         SDL_Delay(16);
