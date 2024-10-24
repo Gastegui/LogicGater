@@ -34,10 +34,10 @@ public:
         CrearBoton,         //B
         CrearSalida,        //S
         SimularPaso,        //Enter
-        SimularEmpezar,     //q
-        SimularParar,       //w
-        Cerrar,              //Alt + F4
-        MostrarControles
+        SimularEmpezar,     //Q
+        SimularParar,       //W
+        Cerrar,             //C
+        MostrarControles    //M
     };
 
 private:
