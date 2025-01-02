@@ -92,6 +92,11 @@ public:
         }
     }
 
+    [[nodiscard]] ListaIMG::Lista* getListaIMG(const ListaIMG::Altura altura) const
+    {
+        return window->getListaIMG(altura);
+    }
+
     //Crea una puerta
     void crear(Puerta::Tipo tipo, int x, int y, bool arribaNegado = false, bool abajoNegado = false, bool salidaNegada = false);
     //Borra una puerta

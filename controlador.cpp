@@ -15,7 +15,7 @@ void Controlador::crear(const Puerta::Tipo tipo, int x, int y, const bool arriba
         SDL_GetMouseState(&x, &y);
 
     Puerta* puerta = new Puerta{renderer, tipo, x, y, arribaNegado, abajoNegado, salidaNegada};
-    window->añadir(puerta->getIMG(), Window::MEDIO);
+    window->añadir(puerta->getIMG(), ListaIMG::MEDIO);
     if(listaPuertas == nullptr)
     {
         listaPuertas = new ListaPuertas;
@@ -99,7 +99,7 @@ bool Controlador::borrar(Puerta* puerta)
 
         if(listaPuertas->siguiente == nullptr) //Y es la única puerta de la listaPuertas
         {
-            window->borrar(listaPuertas->puerta->getIMG(), Window::MEDIO);
+            window->borrar(listaPuertas->puerta->getIMG(), ListaIMG::MEDIO);
             delete listaPuertas->puerta;
             delete listaPuertas;
             listaPuertas = nullptr;
@@ -108,7 +108,7 @@ bool Controlador::borrar(Puerta* puerta)
         {
             const ListaPuertas* tmp{listaPuertas};
             listaPuertas = listaPuertas->siguiente;
-            window->borrar(tmp->puerta->getIMG(), Window::MEDIO);
+            window->borrar(tmp->puerta->getIMG(), ListaIMG::MEDIO);
             delete tmp->puerta;
             delete tmp;
         }
@@ -128,7 +128,7 @@ bool Controlador::borrar(Puerta* puerta)
         {
             borrarConexiones(puerta);
             anterior->siguiente = tmp->siguiente;
-            window->borrar(tmp->puerta->getIMG(), Window::MEDIO);
+            window->borrar(tmp->puerta->getIMG(), ListaIMG::MEDIO);
             delete tmp->puerta;
             delete tmp;
         }
@@ -170,7 +170,7 @@ void Controlador::crear(const bool mantener, int x, int y)
         SDL_GetMouseState(&x, &y);
 
     Entrada* entrada = new Entrada{renderer, x, y, mantener};
-    window->añadir(entrada->getImg(), Window::MEDIO);
+    window->añadir(entrada->getImg(), ListaIMG::MEDIO);
 
     if(listaEntradas == nullptr)
     {
@@ -239,7 +239,7 @@ bool Controlador::borrar(Entrada* entrada)
 
         if(listaEntradas->siguiente == nullptr) //Y es la única entrada de listaEntradas
         {
-            window->borrar(listaEntradas->entrada->getImg(), Window::MEDIO);
+            window->borrar(listaEntradas->entrada->getImg(), ListaIMG::MEDIO);
             delete listaEntradas->entrada;
             delete listaEntradas;
             listaEntradas = nullptr;
@@ -248,7 +248,7 @@ bool Controlador::borrar(Entrada* entrada)
         {
             const ListaEntradas* tmp{listaEntradas};
             listaEntradas = listaEntradas->siguiente;
-            window->borrar(listaEntradas->entrada->getImg(), Window::MEDIO);
+            window->borrar(listaEntradas->entrada->getImg(), ListaIMG::MEDIO);
             delete tmp->entrada;
             delete tmp;
         }
@@ -268,7 +268,7 @@ bool Controlador::borrar(Entrada* entrada)
         {
             borrarConexiones(entrada);
             anterior->siguiente = tmp->siguiente;
-            window->borrar(tmp->entrada->getImg(), Window::MEDIO);
+            window->borrar(tmp->entrada->getImg(), ListaIMG::MEDIO);
             delete tmp->entrada;
             delete tmp;
         }
@@ -290,7 +290,7 @@ void Controlador::crear(int x, int y)
         SDL_GetMouseState(&x, &y);
 
     Salida* salida = new Salida{renderer, x, y};
-    window->añadir(salida->getImg(), Window::MEDIO);
+    window->añadir(salida->getImg(), ListaIMG::MEDIO);
 
     if(listaSalidas == nullptr)
     {
@@ -324,7 +324,7 @@ bool Controlador::borrar(Salida* salida)
 
         if(listaSalidas->siguiente == nullptr) //Y es la única salida de listaSalidas
         {
-            window->borrar(listaSalidas->salida->getImg(), Window::MEDIO);
+            window->borrar(listaSalidas->salida->getImg(), ListaIMG::MEDIO);
             delete listaSalidas->salida;
             delete listaSalidas;
             listaSalidas = nullptr;
@@ -333,7 +333,7 @@ bool Controlador::borrar(Salida* salida)
         {
             const ListaSalidas* tmp{listaSalidas};
             listaSalidas = listaSalidas->siguiente;
-            window->borrar(listaSalidas->salida->getImg(), Window::MEDIO);
+            window->borrar(listaSalidas->salida->getImg(), ListaIMG::MEDIO);
             delete tmp->salida;
             delete tmp;
         }
@@ -353,7 +353,7 @@ bool Controlador::borrar(Salida* salida)
         {
             borrarConexiones(salida);
             anterior->siguiente = tmp->siguiente;
-            window->borrar(tmp->salida->getImg(), Window::MEDIO);
+            window->borrar(tmp->salida->getImg(), ListaIMG::MEDIO);
             delete tmp->salida;
             delete tmp;
         }

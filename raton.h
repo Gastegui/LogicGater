@@ -4,6 +4,7 @@
 
 #ifndef RATON_H
 #define RATON_H
+#include "ListaIMG.h"
 
 
 class IMG;
@@ -38,60 +39,12 @@ public:
         RUEDA
     };
 
-    struct lista_t
-    {
-        IMG* img;
-        lista_t* siguiente;
-    };
-
-    enum Altura
-    {
-        INVALIDO,
-        FONDO,
-        MEDIO,
-        FRENTE
-    };
-
 private:
-    lista_t* frente{nullptr};
-    lista_t* medio{nullptr};
-    lista_t* fondo{nullptr};
 
     void interactuar(IMG* actual);
     bool interactuarConexion(IMG* actual);
 
 public:
-    ~Raton()
-    {
-        lista_t* tmp;
-        if(frente != nullptr)
-        {
-            while(frente != nullptr)
-            {
-                tmp = frente;
-                frente = frente->siguiente;
-                delete tmp;
-            }
-        }
-        if(medio != nullptr)
-        {
-            while(medio != nullptr)
-            {
-                tmp = medio;
-                medio = medio->siguiente;
-                delete tmp;
-            }
-        }
-        if(fondo != nullptr)
-        {
-            while(fondo != nullptr)
-            {
-                tmp = fondo;
-                fondo = fondo->siguiente;
-                delete tmp;
-            }
-        }
-    }
 
     void setControlador(Controlador* controlador_) { controlador = controlador_; }
 
