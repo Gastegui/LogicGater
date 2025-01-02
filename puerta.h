@@ -41,6 +41,8 @@ class Puerta
     int x;
     int y;
     bool mover{false};
+
+    Raton* raton;
 public:
     enum Tipo
     {
@@ -54,12 +56,12 @@ private:
 
 public:
 
-    Puerta(SDL_Renderer* renderer, const Tipo tipo_, const int x_, const int y_)
-        : Puerta(renderer, tipo_, x_, y_, false, false, false)
+    Puerta(SDL_Renderer* renderer, const Tipo tipo_, const int x_, const int y_, Raton* raton)
+        : Puerta(renderer, tipo_, x_, y_, false, false, false, raton)
     {}
 
-    Puerta(SDL_Renderer* renderer, const Tipo tipo_, const int x_, const int y_, const bool arribaNegado_, const bool abajoNegado_, const bool salidaNegada_)
-        :arribaNegado{arribaNegado_}, abajoNegado{abajoNegado_}, salidaNegada{salidaNegada_}, id{idGenerator()}, x{x_}, y{y_}, tipo{tipo_},
+    Puerta(SDL_Renderer* renderer, const Tipo tipo_, const int x_, const int y_, const bool arribaNegado_, const bool abajoNegado_, const bool salidaNegada_, Raton* raton_)
+        :arribaNegado{arribaNegado_}, abajoNegado{abajoNegado_}, salidaNegada{salidaNegada_}, id{idGenerator()}, x{x_}, y{y_}, raton{raton_}, tipo{tipo_},
             imagen{renderer, x_, y_, arribaNegado_ ? "./img/puertas/entrada_arriba_negada.png" : "./img/puertas/entrada_arriba_normal.png",
                              abajoNegado_ ? "./img/puertas/entrada_abajo_negada.png" : "./img/puertas/entrada_abajo_normal.png",
                              tipo_ == AND ? "./img/puertas/and.png" : tipo_ == OR ? "./img/puertas/or.png" : "./img/puertas/xor.png",

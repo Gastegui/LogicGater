@@ -21,11 +21,12 @@ class Entrada
     bool mover{false};
 
     std::pair<int, int> linea{25, 25};
+    Raton* raton;
 
 public:
 
-    Entrada(SDL_Renderer* renderer, const int x, const int y, const bool mantener_ = false)
-        :mantener{mantener_}, img{"./img/entrada/apagado.png", renderer, x, y}
+    Entrada(SDL_Renderer* renderer, const int x, const int y, Raton* raton_, const bool mantener_ = false)
+        :mantener{mantener_}, img{"./img/entrada/apagado.png", renderer, x, y}, raton{raton_}
     {
         img.setClickable(this);
         linea.first += x;

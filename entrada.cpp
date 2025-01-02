@@ -18,6 +18,7 @@ void Entrada::click(const int x, const int y, const Raton::Evento evento)
     {
     case Controles::MoverAbajo:
         mover = true;
+        raton->setMoviendoImg(&img);
         break;
     case Controles::InteractuarAbajo:
         if(mantener)
@@ -25,6 +26,7 @@ void Entrada::click(const int x, const int y, const Raton::Evento evento)
         break;
     case Controles::MoverArriba:
         mover = false;
+        raton->setMoviendoImg(nullptr);
         break;
     case Controles::Interactuar:
         if(mantener)

@@ -148,6 +148,19 @@ void Raton::manejarRaton()
         }
     }
 
+    if(moviendoImg != nullptr)
+    {
+        const Controles::Accion accion = Controles::getUltimaAccion();
+        if(accion == Controles::MoverArriba)
+            moviendoImg = nullptr;
+        else if(accion == Controles::MovimientoRaton)
+        {
+            const SDL_Event* evento = Controles::getEvent();
+            moviendoImg->clickar(evento->motion.xrel, evento->motion.yrel, Raton::MOVIMIENTO);
+            return;
+        }
+    }
+
     const ListaIMG::Lista* lista{controlador->getListaIMG(ListaIMG::FRENTE)};
     IMG* actual = buscarLista(lista, posX, posY);
     if(actual != nullptr)

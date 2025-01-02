@@ -11,10 +11,8 @@
 #include "../raton.h"
 
 class Puerta;
-class Raton;
 class Entrada;
 class Salida;
-class Window;
 
 class IMG
 {

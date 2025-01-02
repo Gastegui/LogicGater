@@ -13,7 +13,7 @@ void Controlador::crear(const Puerta::Tipo tipo, int x, int y, const bool arriba
 {
     if(x == -1 && y == -1)
         SDL_GetMouseState(&x, &y);
-    Puerta* puerta = new Puerta{renderer, tipo, -window->getEsquinaX() + x, -window->getEsquinaY() + y, arribaNegado, abajoNegado, salidaNegada};
+    Puerta* puerta = new Puerta{renderer, tipo, -window->getEsquinaX() + x, -window->getEsquinaY() + y, arribaNegado, abajoNegado, salidaNegada, window->getRaton()};
     window->añadir(puerta->getIMG(), ListaIMG::MEDIO);
     if(listaPuertas == nullptr)
     {
@@ -168,7 +168,7 @@ void Controlador::crear(const bool mantener, int x, int y)
     if(x == -1 && y == -1)
         SDL_GetMouseState(&x, &y);
 
-    Entrada* entrada = new Entrada{renderer, -window->getEsquinaX() + x, -window->getEsquinaY() + y, mantener};
+    Entrada* entrada = new Entrada{renderer, -window->getEsquinaX() + x, -window->getEsquinaY() + y, window->getRaton(), mantener};
     window->añadir(entrada->getImg(), ListaIMG::MEDIO);
 
     if(listaEntradas == nullptr)
@@ -288,7 +288,7 @@ void Controlador::crear(int x, int y)
     if(x == -1 && y == -1)
         SDL_GetMouseState(&x, &y);
 
-    Salida* salida = new Salida{renderer, -window->getEsquinaX() + x, -window->getEsquinaY() + y};
+    Salida* salida = new Salida{renderer, -window->getEsquinaX() + x, -window->getEsquinaY() + y, window->getRaton()};
     window->añadir(salida->getImg(), ListaIMG::MEDIO);
 
     if(listaSalidas == nullptr)

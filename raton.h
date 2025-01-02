@@ -22,6 +22,7 @@ class Raton
 
     bool borrando{false};
     bool moviendoPantalla{false};
+    IMG* moviendoImg{nullptr};
 
 public:
     enum Evento
@@ -56,6 +57,7 @@ public:
     [[nodiscard]] bool getBorrando() const { return borrando; }
 
     void manejarRaton();
+    void setMoviendoImg(IMG* img) { moviendoImg = img; }
 };
 
 

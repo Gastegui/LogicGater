@@ -23,10 +23,11 @@ class Salida
     std::pair<int, int> linea{25, 25};
 
     bool mover{false};
+    Raton* raton;
 public:
 
-    Salida(SDL_Renderer* renderer, const int x, const int y)
-        :img{"./img/salida/apagado.png", renderer, x, y}
+    Salida(SDL_Renderer* renderer, const int x, const int y, Raton* raton_)
+        :img{"./img/salida/apagado.png", renderer, x, y}, raton{raton_}
     {
         img.setClickable(this);
         linea.first += x;

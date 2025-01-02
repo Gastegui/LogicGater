@@ -3,7 +3,6 @@
 //
 
 #include "puerta.h"
-#include "raton.h"
 #include "entrada.h"
 #include "controles.h"
 
@@ -48,9 +47,11 @@ void Puerta::click(const int x, const int y, const Raton::Evento evento)
             break;
         case Controles::MoverAbajo:
             mover = true;
+            raton->setMoviendoImg(&imagen);
             break;
         case Controles::MoverArriba:
             mover = false;
+            raton->setMoviendoImg(nullptr);
             break;
         case Controles::MovimientoRaton:
             if(mover)
