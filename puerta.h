@@ -108,6 +108,7 @@ public:
 
     bool simular();
     void simulacionTermindada();
+    void moverRel(int x_, int y_);
 };
 
 #endif //GATE_H

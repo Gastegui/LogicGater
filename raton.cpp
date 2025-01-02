@@ -6,8 +6,9 @@
 #include "Wrapper/image.h"
 #include "controlador.h"
 #include "controles.h"
+#include "Wrapper/window.h"
 
-IMG* buscarLista(const ListaIMG::Lista* lista, const int posX, const int posY)
+IMG* Raton::buscarLista(const ListaIMG::Lista* lista, const int posX, const int posY) const
 {
     // ReSharper disable once CppJoinDeclarationAndAssignment
     SDL_Rect* rect;
@@ -17,7 +18,7 @@ IMG* buscarLista(const ListaIMG::Lista* lista, const int posX, const int posY)
         if(lista->img->getClickable())
         {
             rect = lista->img->getRect();
-            if(rect->x <= posX && rect->x + rect->w >= posX && rect->y <= posY && rect->y + rect->h >= posY)
+            if(rect->x <= -window->getEsquinaX() + posX && rect->x + rect->w >= -window->getEsquinaX() + posX && rect->y <= -window->getEsquinaY() + posY && rect->y + rect->h >= -window->getEsquinaY() + posY)
                 return lista->img;
         }
 
@@ -123,10 +124,29 @@ bool Raton::interactuarConexion(IMG* actual)
     return false;
 }
 
+void Raton::setControlador(Controlador* controlador_)
+{
+    controlador = controlador_;
+    window = controlador->getWindow();
+}
+
 
 void Raton::manejarRaton()
 {
     SDL_GetMouseState(&posX, &posY);
+
+    if(moviendoPantalla)
+    {
+        const Controles::Accion accion = Controles::getUltimaAccion();
+        if(accion == Controles::MoverArriba)
+            moviendoPantalla = false;
+        else if(accion == Controles::MovimientoRaton)
+        {
+            const SDL_Event* evento = Controles::getEvent();
+            window->moverRel(evento->motion.xrel, evento->motion.yrel);
+            return;
+        }
+    }
 
     const ListaIMG::Lista* lista{controlador->getListaIMG(ListaIMG::FRENTE)};
     IMG* actual = buscarLista(lista, posX, posY);
@@ -160,11 +180,15 @@ void Raton::manejarRaton()
         return;
     }
 
-    if(imgAnterior != nullptr) //El raton no esta en ninguna imagen, y antes si lo estaba
+    //El ratón no está en ninguna imágen
+    if(imgAnterior != nullptr) //... y antes si lo estaba
     {
         imgAnterior->clickar(-1, -1, Evento::SALIR);
         imgAnterior = nullptr;
     }
+
+    if(Controles::getUltimaAccion() == Controles::MoverAbajo)
+        moviendoPantalla = true;
 }
 
 void Raton::setBorrando(const bool borrando_)

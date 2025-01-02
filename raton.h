@@ -9,6 +9,7 @@
 
 class IMG;
 class Controlador;
+class Window;
 
 class Raton
 {
@@ -17,8 +18,10 @@ class Raton
     IMG* imgAnterior{nullptr};
 
     Controlador* controlador{nullptr};
+    Window* window{nullptr};
 
     bool borrando{false};
+    bool moviendoPantalla{false};
 
 public:
     enum Evento
@@ -43,18 +46,16 @@ private:
 
     void interactuar(IMG* actual);
     bool interactuarConexion(IMG* actual);
+    IMG* buscarLista(const ListaIMG::Lista* lista, int posX, int posY) const;
 
 public:
 
-    void setControlador(Controlador* controlador_) { controlador = controlador_; }
+    void setControlador(Controlador* controlador_);
 
     void setBorrando(bool borrando_);
     [[nodiscard]] bool getBorrando() const { return borrando; }
 
     void manejarRaton();
-    bool añadir(IMG* img, int altura_, bool final);
-    bool borrar(const IMG* img, int altura_);
-    bool borrarTodo(int altura_);
 };
 
 

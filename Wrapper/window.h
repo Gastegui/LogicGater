@@ -18,6 +18,12 @@ class Salida;
 
 class Window
 {
+
+    int esquinaX = 0;
+    int esquinaY = 0;
+    const int width;
+    const int height;
+
     SDL_Window* window {nullptr};
     SDL_Renderer* renderer {nullptr};
     Raton raton{};
@@ -46,7 +52,7 @@ public:
     ListaLineas* lineas{nullptr};
 
     explicit Window(const char* img)
-        :window{SDL_CreateWindow("LogicGater", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1920, 1080, SDL_WINDOW_FULLSCREEN)}, renderer{SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC)}
+        :width(1920), height(1080), window{SDL_CreateWindow("LogicGater", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, SDL_WINDOW_FULLSCREEN)}, renderer{SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC)}
     {
         // ReSharper disable once CppDFAConstantConditions
         if(window != nullptr)
@@ -122,6 +128,9 @@ public:
     void borrarLineas(const Salida* salida);
 
     void manejarRaton();
+    void moverRel(int x, int y);
+    [[nodiscard]] int getEsquinaX() const { return esquinaX; }
+    [[nodiscard]] int getEsquinaY() const { return esquinaY; }
 };
 
 #endif //WINDOW_H

@@ -43,6 +43,7 @@ public:
     void simular();
 
     void click(int x, int y, Raton::Evento evento);
+    void moverRel(int x, int y);
 };
 
 

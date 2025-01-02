@@ -34,14 +34,17 @@ void Entrada::click(const int x, const int y, const Raton::Evento evento)
         break;
     case Controles::MovimientoRaton:
         if(mover)
-        {
-            img.mover(img.getRect()->x + x, img.getRect()->y + y);
-            linea.first += x;
-            linea.second += y;
-        }
+            moverRel(x, y);
         break;
     default:
         break;
     }
 
+}
+
+void Entrada::moverRel(const int x, const int y)
+{
+    img.mover(img.getRect()->x + x, img.getRect()->y + y);
+    linea.first += x;
+    linea.second += y;
 }

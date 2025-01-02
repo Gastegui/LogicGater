@@ -24,7 +24,7 @@ class Entrada
 
 public:
 
-    Entrada(SDL_Renderer* renderer, const int x, const int y, bool mantener_ = false)
+    Entrada(SDL_Renderer* renderer, const int x, const int y, const bool mantener_ = false)
         :mantener{mantener_}, img{"./img/entrada/apagado.png", renderer, x, y}
     {
         img.setClickable(this);
@@ -47,6 +47,7 @@ public:
     }
 
     void click(int x, int y, Raton::Evento evento);
+    void moverRel(int x, int y);
 };
 
 

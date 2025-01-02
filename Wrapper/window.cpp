@@ -27,7 +27,13 @@ void Window::rendererDraw() const
     lista = listaIMG.getLista(ListaIMG::MEDIO);
     while(lista != nullptr)
     {
-        SDL_RenderCopy(renderer, lista->img->getTexture(), nullptr, lista->img->getRect());
+        SDL_Rect rect{*lista->img->getRect()};
+        if(rect.x < -esquinaX + width && rect.x + rect.w > -esquinaX && rect.y < -esquinaY + height && rect.y + rect.h > -esquinaY)
+        {
+            rect.x += esquinaX;
+            rect.y += esquinaY;
+            SDL_RenderCopy(renderer, lista->img->getTexture(), nullptr, &rect);
+        }
         lista = lista->siguiente;
     }
 
@@ -45,7 +51,9 @@ void Window::rendererDraw() const
         else
             b = lista2->destinoSalida->getLineaPos();
 
-        SDL_RenderDrawLine(renderer, a->first, a->second, b->first, b->second);
+        if((a->first > -esquinaX && a->first < -esquinaX + width && a->second > -esquinaY && a->second < -esquinaY + height) ||
+                (b->first > -esquinaX && b->first < -esquinaX + width && b->second > -esquinaY && b->second < -esquinaY + height))
+            SDL_RenderDrawLine(renderer, a->first + esquinaX, a->second + esquinaY, b->first + esquinaX, b->second + esquinaY);
         lista2 = lista2->siguiente;
     }
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
@@ -307,4 +315,10 @@ void Window::borrarLineas(const Salida* salida)
             lista = lista->siguiente;
         }
     }
+}
+
+void Window::moverRel(const int x, const int y)
+{
+    esquinaX += x;
+    esquinaY += y;
 }

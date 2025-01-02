@@ -96,6 +96,7 @@ public:
     {
         return window->getListaIMG(altura);
     }
+    [[nodiscard]] Window* getWindow() const { return window; }
 
     //Crea una puerta
     void crear(Puerta::Tipo tipo, int x, int y, bool arribaNegado = false, bool abajoNegado = false, bool salidaNegada = false);

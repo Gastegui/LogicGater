@@ -21,15 +21,18 @@ void Salida::click(const int x, const int y, const Raton::Evento evento)
         break;
     case Controles::MovimientoRaton:
         if(mover)
-        {
-            img.mover(img.getRect()->x + x, img.getRect()->y + y);
-            linea.first += x;
-            linea.second += y;
-        }
+            moverRel(x, y);
         break;
     default:
         break;
     }
+}
+
+void Salida::moverRel(const int x, const int y)
+{
+    img.mover(img.getRect()->x + x, img.getRect()->y + y);
+    linea.first += x;
+    linea.second += y;
 }
 
 void Salida::simular()

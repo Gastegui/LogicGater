@@ -54,15 +54,7 @@ void Puerta::click(const int x, const int y, const Raton::Evento evento)
             break;
         case Controles::MovimientoRaton:
             if(mover)
-            {
-                imagen.mover(imagen.getRect()->x + x, imagen.getRect()->y + y);
-                lineaArriba.first += x;
-                lineaArriba.second += y;
-                lineaAbajo.first += x;
-                lineaAbajo.second += y;
-                lineaSalida.first += x;
-                lineaSalida.second += y;
-            }
+                moverRel(x, y);
             break;
         default:
             break;
@@ -120,4 +112,17 @@ bool Puerta::simular() // NOLINT(*-no-recursion)
 void Puerta::simulacionTermindada()
 {
     simulando = false;
+}
+
+void Puerta::moverRel(const int x_, const int y_)
+{
+    imagen.mover(imagen.getRect()->x + x_, imagen.getRect()->y + y_);
+    lineaArriba.first += x_;
+    lineaArriba.second += y_;
+    lineaAbajo.first += x_;
+    lineaAbajo.second += y_;
+    lineaSalida.first += x_;
+    lineaSalida.second += y_;
+    x += x_;
+    y += y_;
 }
