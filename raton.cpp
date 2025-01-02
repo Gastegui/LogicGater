@@ -49,7 +49,7 @@ void Raton::interactuar(IMG* actual)
     if(imgAnterior == nullptr) //El raton a entrado a una imagen desde sin estar antes en otra
     {
         imgAnterior = actual;
-        actual->clickar(posX - actual->getRect()->x, posY - actual->getRect()->y, Evento::ENTRAR);
+        actual->clickar(-window->getEsquinaX() + posX - actual->getRect()->x, -window->getEsquinaY() + posY - actual->getRect()->y, Evento::ENTRAR);
     }
     else
     {
@@ -61,29 +61,28 @@ void Raton::interactuar(IMG* actual)
                 actual->clickar(evento->motion.xrel, evento->motion.yrel, Raton::MOVIMIENTO);
             }
             else
-                actual->clickar(posX - actual->getRect()->x, posY - actual->getRect()->y, Raton::NADA);
+                actual->clickar(-window->getEsquinaX() + posX - actual->getRect()->x, -window->getEsquinaY() + posY - actual->getRect()->y, Raton::NADA);
         }
         else //Se salta de una imagen a otra directamente
         {
             imgAnterior->clickar(-1, -1,  Evento::SALIR);
             imgAnterior = actual;
-            actual->clickar(posX - actual->getRect()->x, posY - actual->getRect()->y, Evento::ENTRAR);
+            actual->clickar(-window->getEsquinaX() + posX - actual->getRect()->x, -window->getEsquinaY() + posY - actual->getRect()->y, Evento::ENTRAR);
         }
     }
 }
 
 bool Raton::interactuarConexion(IMG* actual)
 {
-
     if(borrando)
     {
         if(Controles::getUltimaAccion() == Controles::ConexionArriba)
         {
             if(actual->getPadrePuerta())
             {
-                const bool borrarArriba{posY < actual->getRect()->y + actual->getRect()->h / 2 && posX <= actual->getRect()->x + actual->getRect()->w / 2};
-                const bool borrarAbajo{posY >= actual->getRect()->y + actual->getRect()->h / 2 && posX <= actual->getRect()->x + actual->getRect()->w / 2};
-                const bool borrarSalida{posX > actual->getRect()->x + actual->getRect()->w / 2};
+                const bool borrarArriba{-window->getEsquinaY() + posY < actual->getRect()->y + actual->getRect()->h / 2 && -window->getEsquinaX() + posX <= actual->getRect()->x + actual->getRect()->w / 2};
+                const bool borrarAbajo{-window->getEsquinaY() + posY >= actual->getRect()->y + actual->getRect()->h / 2 && -window->getEsquinaX() + posX <= actual->getRect()->x + actual->getRect()->w / 2};
+                const bool borrarSalida{-window->getEsquinaX() + posX > actual->getRect()->x + actual->getRect()->w / 2};
                 controlador->borrarConexiones(actual->getPadrePuerta(), borrarArriba, borrarAbajo, borrarSalida);
             }
             else if(actual->getPadreEntrada())
@@ -101,7 +100,7 @@ bool Raton::interactuarConexion(IMG* actual)
         if(Controles::getUltimaAccion() == Controles::ConexionArriba)
         {
             if(actual->getPadrePuerta() != nullptr)
-                controlador->destino(actual->getPadrePuerta(), posY < actual->getRect()->y + actual->getRect()->h / 2);
+                controlador->destino(actual->getPadrePuerta(), -window->getEsquinaY() + posY < actual->getRect()->y + actual->getRect()->h / 2);
             else if(actual->getPadreSalida() != nullptr)
                 controlador->destino(actual->getPadreSalida());
             else
