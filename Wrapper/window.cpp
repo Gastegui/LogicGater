@@ -51,9 +51,21 @@ void Window::rendererDraw() const
         else
             b = lista2->destinoSalida->getLineaPos();
 
+        //Comprueba si alguno de los dos puntos de la línea está dentro de la pantalla
         if((a->first > -esquinaX && a->first < -esquinaX + width && a->second > -esquinaY && a->second < -esquinaY + height) ||
                 (b->first > -esquinaX && b->first < -esquinaX + width && b->second > -esquinaY && b->second < -esquinaY + height))
             SDL_RenderDrawLine(renderer, a->first + esquinaX, a->second + esquinaY, b->first + esquinaX, b->second + esquinaY);
+        else
+        {
+            //Si no esta el origen o final de la línea dentro de la pantalla, comprueba si la línea intersecciona la pantalla
+            SDL_Rect rect{-esquinaX, -esquinaY, width, height};
+            int x1 = a->first;
+            int y1 = a->second;
+            int x2 = b->first;
+            int y2 = b->second;
+            if(SDL_IntersectRectAndLine(&rect, &x1, &y1, &x2, &y2))
+                SDL_RenderDrawLine(renderer, a->first + esquinaX, a->second + esquinaY, b->first + esquinaX, b->second + esquinaY);
+        }
         lista2 = lista2->siguiente;
     }
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
