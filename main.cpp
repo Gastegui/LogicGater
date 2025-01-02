@@ -49,6 +49,7 @@ int main(int argc, char* argv[])
     bool enMarcha = true;
     bool simulando = false;
     bool mostrarControles = true;
+    char strTMP[20];
     while (enMarcha)
     {
         while (SDL_PollEvent(&event))
@@ -130,6 +131,10 @@ int main(int argc, char* argv[])
             txt.setPos(1800, 1050);
             txt << "SIMULANDO";
         }
+
+        txt.setPos(10, 10);
+        snprintf(strTMP, 20, "X: %d Y: %d", -window.getEsquinaX(), -window.getEsquinaY());
+        txt << strTMP;
 
         window.render();
         SDL_Delay(16);
