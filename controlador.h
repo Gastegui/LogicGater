@@ -50,6 +50,9 @@ class Controlador
     ListaEntradas* listaEntradas{nullptr};
     ListaSalidas* listaSalidas{nullptr};
 
+    bool cuadricula{false};
+    int cuadriculaTamaño{50};
+
 public:
     explicit Controlador(Window* window_)
         :window{window_} ,renderer{window_->getRenderer()}
@@ -102,21 +105,21 @@ public:
     [[nodiscard]] Window* getWindow() const { return window; }
 
     //Crea una puerta
-    void crear(Puerta::Tipo tipo, int x, int y, bool arribaNegado = false, bool abajoNegado = false, bool salidaNegada = false);
+    void crear(Puerta::Tipo tipo, int x, int y, bool arribaNegado = false, bool abajoNegado = false, bool salidaNegada = false, unsigned int id = 0);
     //Borra una puerta
     bool borrar(Puerta* puerta);
     //Borra las conexiones deseadas de una puerta. (Todas por defenco)
     void borrarConexiones(Puerta* puerta, bool arriba = true, bool abajo = true, bool salida = true);
 
     //Crea una entrada
-    void crear(bool mantener, int x, int y);
+    void crear(bool mantener, int x, int y, unsigned int id = 0);
     //Borra una entrada
     bool borrar(Entrada* entrada);
     //Borra todas las conexiones de una entrada
     void borrarConexiones(Entrada* entrada) const;
 
     //Crea una salida
-    void crear(int x, int y);
+    void crear(int x, int y, unsigned int id = 0);
     //Borra una salida
     bool borrar(Salida* salida);
     //Bora todas las conexiones de una salida
@@ -133,11 +136,16 @@ public:
     int limpiar();
 
     void simular() const;
+    void simularInstantaneo() const;
 
     [[nodiscard]] Puerta* getPuerta(unsigned int id) const;
     [[nodiscard]] Entrada* getEntrada(unsigned int id) const;
     [[nodiscard]] Salida* getSalida(unsigned int id) const;
 
+    void alternarCuadricula() { cuadricula = !cuadricula; }
+    void cambiarCuadriculaRel(const int cambio) { if(cuadriculaTamaño + cambio > 0) cuadriculaTamaño += cambio; }
+    [[nodiscard]] int getCuadriculaActiva() const { return cuadricula; }
+    [[nodiscard]] int getCuadriculaTamaño() const { return cuadriculaTamaño; }
 
 };
 

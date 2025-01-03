@@ -33,78 +33,52 @@ bool SistemaGuardado::guardar(const Controlador* controlador, const Window* wind
     const int esquinaY{window->getEsquinaY()};
     const Window::ListaLineas* listaLineas{window->lineas};
 
-    printf("Guardando...\n");
-
-    printf("-Puerta\n");
     outf << "-Puertas\n";
 
     while(listaPuertas != nullptr)
     {
-        printf("Puerta: id: %u, tipo: %d, arN: %d, abN: %d, sN: %d, x: %d, y: %d\n", listaPuertas->puerta->id, listaPuertas->puerta->tipo, listaPuertas->puerta->arribaNegado, listaPuertas->puerta->abajoNegado, listaPuertas->puerta->salidaNegada, listaPuertas->puerta->x, listaPuertas->puerta->y);
         outf << "Puerta: id: " << listaPuertas->puerta->id << " tipo: " << listaPuertas->puerta->tipo << " arribaNegado: " << listaPuertas->puerta->arribaNegado << " abajoNegado: " << listaPuertas->puerta->abajoNegado << " salidaNegada: " << listaPuertas->puerta->salidaNegada << " x: " << listaPuertas->puerta->x << " y: " << listaPuertas->puerta->y << "\n";
         listaPuertas = listaPuertas->siguiente;
     }
 
-    printf("-Entradas\n");
     outf << "-Entradas\n";
 
     while(listaEntradas != nullptr)
     {
-        printf("Entrada: id: %u, mantener: %d, x: %d, y: %d\n", listaEntradas->entrada->id, listaEntradas->entrada->mantener, listaEntradas->entrada->img.m_rect.x, listaEntradas->entrada->img.m_rect.y);
         outf << "Entrada: id: " << listaEntradas->entrada->id << " mantener: " << listaEntradas->entrada->mantener << " x: " << listaEntradas->entrada->img.m_rect.x << " y: " << listaEntradas->entrada->img.m_rect.y << "\n";
         listaEntradas = listaEntradas->siguiente;
     }
 
-    printf("-Salidas\n");
     outf << "-Salidas\n";
 
     while(listaSalidas != nullptr)
     {
-        printf("Salida: id: %u, x: %d, %d\n", listaSalidas->salida->id, listaSalidas->salida->img.m_rect.x, listaSalidas->salida->img.m_rect.y);
         outf << "Salida: id: " << listaSalidas->salida->id << " x: " << listaSalidas->salida->img.m_rect.x << " y: " << listaSalidas->salida->img.m_rect.y << "\n";
         listaSalidas = listaSalidas->siguiente;
     }
 
-    printf("-Lineas\n");
     outf << "-Lineas\n";
 
     while(listaLineas != nullptr)
     {
-        printf("Linea: ");
         outf << "Linea: ";
         if(listaLineas->origenEntrada != nullptr)
-        {
-            printf("orE: %u", listaLineas->origenEntrada->id);
             outf << "origenEntrada: " << listaLineas->origenEntrada->id;
-        }
         else
-        {
-            printf("orP: %u", listaLineas->origenPuerta->id);
             outf << "origenPuerta: " << listaLineas->origenPuerta->id;
-        }
         if(listaLineas->destinoSalida != nullptr)
-        {
-            printf("deS: %u", listaLineas->destinoSalida->id);
             outf << " destinoSalida: " << listaLineas->destinoSalida->id;
-        }
         else
-        {
-            printf("deP: %u, puertaArriba: %d", listaLineas->destinoPuerta->id, listaLineas->puertaArriba);
             outf << " destinoPuerta: " << listaLineas->destinoPuerta->id << " puertaArriba: " << listaLineas->puertaArriba;
-        }
 
-        printf("\n");
         outf << "\n";
         listaLineas = listaLineas->siguiente;
     }
 
-    printf("-Otros\n");
     outf << "-Otros\n";
 
-    printf("Coordenadas: x: %d, y: %d\n", esquinaX, esquinaY);
     outf << "Coordenadas: x: " << esquinaX << " y: " << esquinaY << "\n";
 
-    printf("Velocidad simulacion: %d\n", velocidadSimulacion);
     outf << "VelocidadSimulacion: " << velocidadSimulacion << "\n";
 
     return true;
@@ -131,6 +105,7 @@ int SistemaGuardado::cargar(Controlador* controlador, Window* window)
     std::string tmp{};
 
     //Puertas
+    unsigned int puertaId{0};
     int puertaTipo{0};
     bool puertaArribaNegado{false};
     bool puertaAbajoNegado{false};
@@ -139,11 +114,13 @@ int SistemaGuardado::cargar(Controlador* controlador, Window* window)
     int puertaY{0};
 
     //Entradas
+    unsigned int entradaId{0};
     bool entradaMantener{false};
     int entradaX{0};
     int entradaY{0};
 
     //Salidas
+    unsigned int salidaId{0};
     int salidaX{false};
     int salidaY{false};
 
@@ -169,7 +146,7 @@ int SistemaGuardado::cargar(Controlador* controlador, Window* window)
         if(tmp == "Puerta:"s)
         {
             iss >> tmp; //id:
-            iss >> tmp; //x
+            iss >> puertaId; //x
             iss >> tmp; //Tipo:
             iss >> puertaTipo;
             iss >> tmp; //arribaNegado:
@@ -182,29 +159,29 @@ int SistemaGuardado::cargar(Controlador* controlador, Window* window)
             iss >> puertaX;
             iss >> tmp; //y:
             iss >> puertaY;
-            controlador->crear(puertaTipo == 0 ? Puerta::AND : puertaTipo == 1 ? Puerta::OR : Puerta::XOR, puertaX, puertaY, puertaArribaNegado, puertaAbajoNegado, puertaSalidaNegada);
+            controlador->crear(puertaTipo == 0 ? Puerta::AND : puertaTipo == 1 ? Puerta::OR : Puerta::XOR, puertaX, puertaY, puertaArribaNegado, puertaAbajoNegado, puertaSalidaNegada, puertaId);
         }
         else if(tmp == "Entrada:"s)
         {
             iss >> tmp; //id:
-            iss >> tmp; //x
+            iss >> entradaId; //x
             iss >> tmp; //mantener:
             iss >> entradaMantener;
             iss >> tmp; //x:
             iss >> entradaX;
             iss >> tmp; //y:
             iss >> entradaY;
-            controlador->crear(entradaMantener, entradaX, entradaY);
+            controlador->crear(entradaMantener, entradaX, entradaY, entradaId);
         }
         else if(tmp == "Salida:"s)
         {
             iss >> tmp; //id:
-            iss >> tmp; //x
+            iss >> salidaId; //x
             iss >> tmp; //x:
             iss >> salidaX;
             iss >> tmp; //y:
             iss >> salidaY;
-            controlador->crear(salidaX, salidaY);
+            controlador->crear(salidaX, salidaY, salidaId);
         }
         else if(tmp == "Linea:"s)
         {
@@ -240,10 +217,7 @@ int SistemaGuardado::cargar(Controlador* controlador, Window* window)
                 ret = controlador->destino(controlador->getPuerta(lineaDestinoPuerta), lineaPuertaArriba);
 
             if(!ret)
-            {
-                printf("No se ha podido crear la línea \"%s\": %u %u %d\n", input.c_str(), lineaOrigenPuerta, lineaDestinoPuerta, lineaPuertaArriba);
                 controlador->desmarcarOrigen();
-            }
         }
         else if(tmp == "Coordenadas:"s)
         {
@@ -258,6 +232,10 @@ int SistemaGuardado::cargar(Controlador* controlador, Window* window)
             iss >> velocidadSimulacion;
         }
     }
+
+    Puerta::gastarIds(puertaId);
+    Entrada::gastarIds(entradaId);
+    Salida::gastarIds(salidaId);
 
     return velocidadSimulacion;
 }

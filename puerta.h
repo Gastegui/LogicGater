@@ -23,6 +23,7 @@ class Puerta
     bool salidaNegada;
 
     bool siguiente{false};
+    bool simulandoAntiguo{false};
 
     IO* arriba{nullptr};
     IO* abajo{nullptr};
@@ -38,6 +39,12 @@ class Puerta
     {
         static unsigned int id = 1;
         return id++;
+    }
+
+    static void gastarIds(const unsigned int cantidad)
+    {
+        for(unsigned int i = 0; i < cantidad; i++)
+            idGenerator();
     }
 
     int x;
@@ -63,11 +70,15 @@ public:
     {}
 
     Puerta(SDL_Renderer* renderer, const Tipo tipo_, const int x_, const int y_, const bool arribaNegado_, const bool abajoNegado_, const bool salidaNegada_, Raton* raton_)
-        :arribaNegado{arribaNegado_}, abajoNegado{abajoNegado_}, salidaNegada{salidaNegada_}, id{idGenerator()}, x{x_}, y{y_}, raton{raton_}, tipo{tipo_},
-            imagen{renderer, x_, y_, arribaNegado_ ? "./img/puertas/entrada_arriba_negada.png" : "./img/puertas/entrada_arriba_normal.png",
-                             abajoNegado_ ? "./img/puertas/entrada_abajo_negada.png" : "./img/puertas/entrada_abajo_normal.png",
-                             tipo_ == AND ? "./img/puertas/and.png" : tipo_ == OR ? "./img/puertas/or.png" : "./img/puertas/xor.png",
-                             salidaNegada_ ? "./img/puertas/salida_negada.png" : "./img/puertas/salida_normal.png"}
+        :Puerta(renderer, tipo_, x_, y_, arribaNegado_, abajoNegado_, salidaNegada_, raton_, idGenerator())
+    {}
+
+    Puerta(SDL_Renderer* renderer, const Tipo tipo_, const int x_, const int y_, const bool arribaNegado_, const bool abajoNegado_, const bool salidaNegada_, Raton* raton_, const unsigned int id_)
+            :arribaNegado{arribaNegado_}, abajoNegado{abajoNegado_}, salidaNegada{salidaNegada_}, id{id_}, x{x_}, y{y_}, raton{raton_}, tipo{tipo_},
+                imagen{renderer, x_, y_, arribaNegado_ ? "./img/puertas/entrada_arriba_negada.png" : "./img/puertas/entrada_arriba_normal.png",
+                                 abajoNegado_ ? "./img/puertas/entrada_abajo_negada.png" : "./img/puertas/entrada_abajo_normal.png",
+                                 tipo_ == AND ? "./img/puertas/and.png" : tipo_ == OR ? "./img/puertas/or.png" : "./img/puertas/xor.png",
+                                 salidaNegada_ ? "./img/puertas/salida_negada.png" : "./img/puertas/salida_normal.png"}
     {
         imagen.setClickable(this);
         lineaArriba.first += x;
@@ -77,6 +88,7 @@ public:
         lineaSalida.first += x;
         lineaSalida.second += y;
     }
+
 
     void setArriba(IO* arriba_) { arriba = arriba_; }
     void setAbajo(IO* abajo_) { abajo = abajo_; }
@@ -113,6 +125,8 @@ public:
 
     void simular();
     void actualizar();
+    bool simularAntiguo();
+    void simulacionAntiguaTermindada();
     void moverRel(int x_, int y_);
 };
 

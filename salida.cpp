@@ -50,3 +50,22 @@ void Salida::simular()
     else
         img.cambiarImagen("./img/salida/apagado.png");
 }
+
+void Salida::simularAntiguo()
+{
+    if(entrada == nullptr )
+    {
+        img.cambiarImagen("./img/salida/apagado.png");
+        return;
+    }
+
+    if(entrada->getPadrePuerta() != nullptr)
+        entrada->getPadrePuerta()->simularAntiguo();
+
+    //Si la salida está directamente conectada a una entrada, al hacer entrada->get() ya se pilla su valor sin simular
+
+    if(entrada->get())
+        img.cambiarImagen("./img/salida/encendido.png");
+    else
+        img.cambiarImagen("./img/salida/apagado.png");
+}

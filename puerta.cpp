@@ -103,6 +103,59 @@ void Puerta::simular() // NOLINT(*-no-recursion)
     siguiente = ret;
 }
 
+bool Puerta::simularAntiguo()
+{
+    bool a{false};
+    bool b{false};
+    bool ret{false};
+
+    if(simulandoAntiguo)
+        return salida.get();
+
+    simulandoAntiguo = true;
+
+    if(arriba != nullptr)
+    {
+        if(arriba->getPadreEntrada() != nullptr)
+            a = arriba->getPadreEntrada()->get();
+        else if(arriba->getPadrePuerta() != nullptr)
+            a = arriba->getPadrePuerta()->simularAntiguo();
+    }
+
+    if(abajo != nullptr)
+    {
+        if(abajo->getPadreEntrada() != nullptr)
+            b = abajo->getPadreEntrada()->get();
+        else if(abajo->getPadrePuerta() != nullptr)
+            b = abajo->getPadrePuerta()->simularAntiguo();
+    }
+
+    if(arribaNegado)
+        a = !a;
+
+    if(abajoNegado)
+        b = !b;
+
+    if(tipo == AND)
+        ret = a && b;
+    else if(tipo == OR)
+        ret = a || b;
+    else if(tipo == XOR)
+        ret = a != b;
+
+    if(salidaNegada)
+        ret = !ret;
+
+    salida.set(ret);
+
+    return ret;
+}
+
+void Puerta::simulacionAntiguaTermindada()
+{
+    simulandoAntiguo = false;
+}
+
 void Puerta::actualizar()
 {
     salida.set(siguiente);

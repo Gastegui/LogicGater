@@ -151,11 +151,45 @@ void Raton::manejarRaton()
     {
         const Controles::Accion accion = Controles::getUltimaAccion();
         if(accion == Controles::MoverArriba)
+        {
             moviendoImg = nullptr;
+            cuadriculaX = 0;
+            cuadriculaY = 0;
+        }
         else if(accion == Controles::MovimientoRaton)
         {
             const SDL_Event* evento = Controles::getEvent();
-            moviendoImg->clickar(evento->motion.xrel, evento->motion.yrel, Raton::MOVIMIENTO);
+            if(!controlador->getCuadriculaActiva())
+                moviendoImg->clickar(evento->motion.xrel, evento->motion.yrel, Raton::MOVIMIENTO);
+            else
+            {
+                for(int i = 0; i < abs(evento->motion.xrel); i++)
+                {
+                    if(evento->motion.xrel > 0)
+                        cuadriculaX += 1;
+                    else
+                        cuadriculaX -= 1;
+
+                    if((cuadriculaX + moviendoImg->getRect()->x) % controlador->getCuadriculaTamaño() == 0)
+                    {
+                        moviendoImg->clickar(cuadriculaX, 0, Raton::MOVIMIENTO);
+                        cuadriculaX = 0;
+                    }
+                }
+                for(int i = 0; i < abs(evento->motion.yrel); i++)
+                {
+                    if(evento->motion.yrel > 0)
+                        cuadriculaY += 1;
+                    else
+                        cuadriculaY -= 1;
+
+                    if((cuadriculaY + moviendoImg->getRect()->y) % controlador->getCuadriculaTamaño() == 0)
+                    {
+                        moviendoImg->clickar(0, cuadriculaY, Raton::MOVIMIENTO);
+                        cuadriculaY = 0;
+                    }
+                }
+            }
             return;
         }
     }

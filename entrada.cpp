@@ -16,30 +16,30 @@ void Entrada::click(const int x, const int y, const Raton::Evento evento)
     }
     switch (Controles::getUltimaAccion())
     {
-    case Controles::MoverAbajo:
-        mover = true;
-        raton->setMoviendoImg(&img);
-        break;
-    case Controles::InteractuarAbajo:
-        if(mantener)
-            set(true);
-        break;
-    case Controles::MoverArriba:
-        mover = false;
-        raton->setMoviendoImg(nullptr);
-        break;
-    case Controles::Interactuar:
-        if(mantener)
-            set(false);
-        else
-            set(!get());
-        break;
-    case Controles::MovimientoRaton:
-        if(mover)
-            moverRel(x, y);
-        break;
-    default:
-        break;
+        case Controles::MoverAbajo:
+            mover = true;
+            raton->setMoviendoImg(&img);
+            break;
+        case Controles::InteractuarAbajo:
+            if(mantener)
+                set(true);
+            break;
+        case Controles::MoverArriba:
+            mover = false;
+            raton->setMoviendoImg(nullptr);
+            break;
+        case Controles::Interactuar:
+            if(mantener)
+                set(false);
+            else
+                set(!get());
+            break;
+        case Controles::MovimientoRaton:
+            if(mover)
+                moverRel(x, y);
+            break;
+        default:
+            break;
     }
 
 }

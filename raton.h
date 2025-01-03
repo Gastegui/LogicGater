@@ -24,6 +24,9 @@ class Raton
     bool moviendoPantalla{false};
     IMG* moviendoImg{nullptr};
 
+    int cuadriculaX{0};
+    int cuadriculaY{0};
+
 public:
     enum Evento
     {

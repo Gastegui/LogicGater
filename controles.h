@@ -41,6 +41,9 @@ public:
         Cerrar,             //Escape
         Guardar,            //G
         Cargar,             //C
+        Cuadricula,         //E
+        CuadriculaAgrandar, //R
+        CuadriculaDisminuir,//F
         MostrarControles    //M
     };
 
@@ -82,6 +85,9 @@ public:
         acciones.insert(std::make_pair("pX", Cerrar));
         acciones.insert(std::make_pair("sg", Guardar));
         acciones.insert(std::make_pair("sc", Cargar));
+        acciones.insert(std::make_pair("se", Cuadricula));
+        acciones.insert(std::make_pair("sr", CuadriculaAgrandar));
+        acciones.insert(std::make_pair("sf", CuadriculaDisminuir));
         acciones.insert(std::make_pair("sm", MostrarControles));
     }
     static Accion getNuevaAccion(const SDL_Event* evento);

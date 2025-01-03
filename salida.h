@@ -35,10 +35,20 @@ class Salida
         return id++;
     }
 
+    static void gastarIds(const unsigned int cantidad)
+    {
+        for(unsigned int i = 0; i < cantidad; i++)
+            idGenerator();
+    }
+
 public:
 
     Salida(SDL_Renderer* renderer, const int x, const int y, Raton* raton_)
-        :img{"./img/salida/apagado.png", renderer, x, y}, raton{raton_}, id{idGenerator()}
+        :Salida(renderer, x, y, raton_, idGenerator())
+    {}
+
+    Salida(SDL_Renderer* renderer, const int x, const int y, Raton* raton_, const unsigned int id_)
+        :img{"./img/salida/apagado.png", renderer, x, y}, raton{raton_}, id{id_}
     {
         img.setClickable(this);
         linea.first += x;
@@ -54,6 +64,7 @@ public:
     [[nodiscard]] unsigned int getId() const { return id; }
 
     void simular();
+    void simularAntiguo();
 
     void click(int x, int y, Raton::Evento evento);
     void moverRel(int x, int y);

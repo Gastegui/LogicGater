@@ -50,7 +50,7 @@ int main(int argc, char* argv[])
     bool enMarcha = true;
     bool simulando = false;
     bool mostrarControles = true;
-    char strTMP[25] = {" "};
+    char strTMP[50] = {" "};
     Uint64 ultimaSimulacion = SDL_GetTicks64();
     int velocidadSimulacion = 50;
 
@@ -99,7 +99,7 @@ int main(int argc, char* argv[])
                     simulando = false;
                     break;
                 case Controles::SimularAcelerar:
-                    if(velocidadSimulacion != 0)
+                    if(velocidadSimulacion != -5)
                         velocidadSimulacion -= 5;
                     break;
                 case Controles::SimularDecelerar:
@@ -120,6 +120,11 @@ int main(int argc, char* argv[])
                     break;
                 case Controles::Cargar:
                     {
+                        window.limpiar();
+                        txt.setPos(500, 500);
+                        txt << "Cargando...";
+                        window.render(false);
+
                         const int ret = SistemaGuardado::cargar(&controlador, &window);
                         if(ret == -1)
                             snprintf(mensajeStr, 40, "No se ha podido cargar");
@@ -133,6 +138,15 @@ int main(int argc, char* argv[])
                         mensajeTiempo = SDL_GetTicks64();
                     }
                     break;
+                case Controles::Cuadricula:
+                    controlador.alternarCuadricula();
+                    break;
+                case Controles::CuadriculaAgrandar:
+                    controlador.cambiarCuadriculaRel(5);
+                    break;
+                case Controles::CuadriculaDisminuir:
+                    controlador.cambiarCuadriculaRel(-5);
+                    break;
                 case Controles::Nada:
                 default:
                     break;
@@ -141,16 +155,21 @@ int main(int argc, char* argv[])
                 window.manejarRaton();
         }
 
-        if(simulando && ultimaSimulacion + velocidadSimulacion <= SDL_GetTicks64())
+        if(simulando)
         {
-            controlador.simular();
-            ultimaSimulacion = SDL_GetTicks64();
+            if(velocidadSimulacion >= 0 && ultimaSimulacion + velocidadSimulacion <= SDL_GetTicks64())
+            {
+                controlador.simular();
+                ultimaSimulacion = SDL_GetTicks64();
+            }
+            else
+                controlador.simularInstantaneo();
         }
 
         window.limpiar();
         if(mostrarControles)
         {
-            txt.setPos(0, 300);
+            txt.setPos(0, 210);
             txt << "Creación:" << "    A: puerta AND" << "    O: puerta OR" << "    X: puerta XOR" << "    I: interruptor" << "    B: botón" << "    S: salida";
             txt << "Modificadores:" << "    Espacio: crear conexión" << "    Retroceso: modo borrar";
             if(!window.getRaton()->getBorrando())
@@ -158,6 +177,7 @@ int main(int argc, char* argv[])
             else
                 txt << "Ratón:" << "    Izquierda: borrar elemento" << "    Medio: borrar conexión";
             txt << "Simulación:" << "    Entrar: simular una vez" << "    Q: empezar simulación" << "    W: parar simulación" << "    -: acelerar simulación" << "    +: decelerar simulación";
+            txt << "Cuadrícula:" << "    E: alternar" << "    R: aumentar" << "    F: disminuir";
             txt << "Otros:" << "    L: borrar elementos desconectados" << "    M: ocultar controles" << "    G: guardar" << "    C: cargar" << "    Escape: cerrar";
         }
         else
@@ -168,14 +188,28 @@ int main(int argc, char* argv[])
 
         if(simulando)
         {
-            txt.setPos(1700, 1050);
-            snprintf(strTMP, 25, "SIMULANDO (%d ms)", velocidadSimulacion);
+            if(velocidadSimulacion >= 0)
+            {
+                txt.setPos(1700, 1050);
+                snprintf(strTMP, 50, "SIMULANDO (%d ms)", velocidadSimulacion);
+            }
+            else
+            {
+                txt.setPos(1640, 1050);
+                snprintf(strTMP, 50, "SIMULANDO (instantáneo)");
+            }
             txt << strTMP;
         }
 
         txt.setPos(10, 10);
-        snprintf(strTMP, 25, "X: %d Y: %d", -window.getEsquinaX(), -window.getEsquinaY());
+        snprintf(strTMP, 50, "X: %d Y: %d", -window.getEsquinaX(), -window.getEsquinaY());
         txt << strTMP;
+
+        if(controlador.getCuadriculaActiva())
+        {
+            snprintf(strTMP, 50, "Cuadrícula activa. Tamaño: %d", controlador.getCuadriculaTamaño());
+            txt << strTMP;
+        }
 
         if(mensajeTiempo + mensajeDuracion > SDL_GetTicks64())
         {

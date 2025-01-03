@@ -34,10 +34,20 @@ class Entrada
         return id++;
     }
 
+    static void gastarIds(const unsigned int cantidad)
+    {
+        for(unsigned int i = 0; i < cantidad; i++)
+            idGenerator();
+    }
+
 public:
 
     Entrada(SDL_Renderer* renderer, const int x, const int y, Raton* raton_, const bool mantener_ = false)
-        :mantener{mantener_}, img{"./img/entrada/apagado.png", renderer, x, y}, raton{raton_}, id{idGenerator()}
+        :Entrada(renderer, x, y, raton_, idGenerator(), mantener_)
+    {}
+
+    Entrada(SDL_Renderer* renderer, const int x, const int y, Raton* raton_, const unsigned int id_, const bool mantener_ = false)
+        :mantener{mantener_}, img{"./img/entrada/apagado.png", renderer, x, y}, raton{raton_}, id{id_}
     {
         img.setClickable(this);
         linea.first += x;
