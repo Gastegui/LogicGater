@@ -17,9 +17,12 @@ class Window;
 class IO;
 class Entrada;
 class Salida;
+class SistemaGuardado;
 
 class Controlador
 {
+    friend class SistemaGuardado;
+
     struct ListaPuertas
     {
         Puerta* puerta{nullptr};
@@ -124,12 +127,17 @@ public:
     void desmarcarOrigen();
     [[nodiscard]] bool getConectando() const { return origen != nullptr; }
 
-    void destino(Puerta* puerta, bool arriba);
-    void destino(Salida* salida);
+    bool destino(Puerta* puerta, bool arriba);
+    bool destino(Salida* salida);
 
     int limpiar();
 
     void simular() const;
+
+    [[nodiscard]] Puerta* getPuerta(unsigned int id) const;
+    [[nodiscard]] Entrada* getEntrada(unsigned int id) const;
+    [[nodiscard]] Salida* getSalida(unsigned int id) const;
+
 
 };
 

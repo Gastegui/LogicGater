@@ -12,10 +12,12 @@
 class IO;
 class IMG;
 class Raton;
-
+class SistemaGuardado;
 
 class Salida
 {
+    friend class SistemaGuardado;
+
     IO* entrada{};
 
     IMG img;
@@ -24,10 +26,19 @@ class Salida
 
     bool mover{false};
     Raton* raton;
+
+    unsigned int id;
+
+    static unsigned int idGenerator()
+    {
+        static unsigned int id = 1;
+        return id++;
+    }
+
 public:
 
     Salida(SDL_Renderer* renderer, const int x, const int y, Raton* raton_)
-        :img{"./img/salida/apagado.png", renderer, x, y}, raton{raton_}
+        :img{"./img/salida/apagado.png", renderer, x, y}, raton{raton_}, id{idGenerator()}
     {
         img.setClickable(this);
         linea.first += x;
@@ -40,6 +51,7 @@ public:
     [[nodiscard]] std::pair<int, int>* getLineaPos() { return &linea; }
     [[nodiscard]] bool get() const { return entrada->get(); }
     [[nodiscard]] bool getDesconectado() const { return entrada == nullptr; }
+    [[nodiscard]] unsigned int getId() const { return id; }
 
     void simular();
 

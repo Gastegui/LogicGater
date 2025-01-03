@@ -7,6 +7,7 @@
 #include "./Wrapper/window.h"
 #include "controlador.h"
 #include "controles.h"
+#include "SistemaGuardado.h"
 
 int main(int argc, char* argv[])
 {
@@ -49,9 +50,14 @@ int main(int argc, char* argv[])
     bool enMarcha = true;
     bool simulando = false;
     bool mostrarControles = true;
-    char strTMP[25];
+    char strTMP[25] = {" "};
     Uint64 ultimaSimulacion = SDL_GetTicks64();
     int velocidadSimulacion = 50;
+
+    char mensajeStr[40] = {" "};
+    constexpr int mensajeDuracion = 5000;
+    Uint64 mensajeTiempo = SDL_GetTicks64() + mensajeDuracion + 1;
+
     while (enMarcha)
     {
         while (SDL_PollEvent(&event))
@@ -105,6 +111,28 @@ int main(int argc, char* argv[])
                 case Controles::MostrarControles:
                     mostrarControles = !mostrarControles;
                     break;
+                case Controles::Guardar:
+                    if(SistemaGuardado::guardar(&controlador, &window, velocidadSimulacion))
+                        snprintf(mensajeStr, 40, "Se ha guardado");
+                    else
+                        snprintf(mensajeStr, 40, "No se ha podido guardar");
+                    mensajeTiempo = SDL_GetTicks64();
+                    break;
+                case Controles::Cargar:
+                    {
+                        const int ret = SistemaGuardado::cargar(&controlador, &window);
+                        if(ret == -1)
+                            snprintf(mensajeStr, 40, "No se ha podido cargar");
+                        else if(ret == -2)
+                            snprintf(mensajeStr, 40, "No se puede cargar si se ha creado algo");
+                        else
+                        {
+                            snprintf(mensajeStr, 40, "Se ha cargado");
+                            velocidadSimulacion = ret;
+                        }
+                        mensajeTiempo = SDL_GetTicks64();
+                    }
+                    break;
                 case Controles::Nada:
                 default:
                     break;
@@ -122,7 +150,7 @@ int main(int argc, char* argv[])
         window.limpiar();
         if(mostrarControles)
         {
-            txt.setPos(0, 360);
+            txt.setPos(0, 300);
             txt << "Creación:" << "    A: puerta AND" << "    O: puerta OR" << "    X: puerta XOR" << "    I: interruptor" << "    B: botón" << "    S: salida";
             txt << "Modificadores:" << "    Espacio: crear conexión" << "    Retroceso: modo borrar";
             if(!window.getRaton()->getBorrando())
@@ -130,7 +158,7 @@ int main(int argc, char* argv[])
             else
                 txt << "Ratón:" << "    Izquierda: borrar elemento" << "    Medio: borrar conexión";
             txt << "Simulación:" << "    Entrar: simular una vez" << "    Q: empezar simulación" << "    W: parar simulación" << "    -: acelerar simulación" << "    +: decelerar simulación";
-            txt << "Otros:" << "    L: borrar elementos desconectados" << "    M: ocultar controles" << "    C: cerrar";
+            txt << "Otros:" << "    L: borrar elementos desconectados" << "    M: ocultar controles" << "    G: guardar" << "    C: cargar" << "    Escape: cerrar";
         }
         else
         {
@@ -149,10 +177,16 @@ int main(int argc, char* argv[])
         snprintf(strTMP, 25, "X: %d Y: %d", -window.getEsquinaX(), -window.getEsquinaY());
         txt << strTMP;
 
-        window.render();
+        if(mensajeTiempo + mensajeDuracion > SDL_GetTicks64())
+        {
+            txt.setPos(900, 1050);
+            txt << mensajeStr;
+        }
+
         window.render(simulando);
         SDL_Delay(16);
     }
     //Mix_CloseAudio();
     return 0;
 }
+

@@ -143,10 +143,10 @@ void Controlador::marcarOrigen(Puerta* puerta)
     origen = puerta->getSalida();
 }
 
-void Controlador::destino(Puerta* puerta, const bool arriba)
+bool Controlador::destino(Puerta* puerta, const bool arriba)
 {
     if(origen == nullptr || (arriba && puerta->getArriba() != nullptr) || (!arriba && puerta->getAbajo() != nullptr))
-        return;
+        return false;
 
     if(arriba)
         puerta->setArriba(origen);
@@ -161,6 +161,7 @@ void Controlador::destino(Puerta* puerta, const bool arriba)
     origen->conectado();
 
     origen = nullptr;
+    return true;
 }
 
 void Controlador::crear(const bool mantener, int x, int y)
@@ -373,10 +374,10 @@ void Controlador::borrarConexiones(Salida* salida) const
     salida->setEntrada(nullptr);
 }
 
-void Controlador::destino(Salida* salida)
+bool Controlador::destino(Salida* salida)
 {
     if(origen == nullptr || salida->getEntrada() != nullptr)
-        return;
+        return false;
     salida->setEntrada(origen);
 
     if(origen->getPadreEntrada() != nullptr)
@@ -386,6 +387,8 @@ void Controlador::destino(Salida* salida)
 
     origen->conectado();
     origen = nullptr;
+
+    return true;
 }
 
 
@@ -484,4 +487,44 @@ int Controlador::limpiar()
     }
 
     return limpiados;
+}
+
+
+Puerta* Controlador::getPuerta(const unsigned int id) const
+{
+    const ListaPuertas* lista{listaPuertas};
+    while(lista != nullptr)
+    {
+        if(lista->puerta->getId() == id)
+            return lista->puerta;
+        lista = lista->siguiente;
+    }
+
+    return nullptr;
+}
+
+Entrada* Controlador::getEntrada(const unsigned int id) const
+{
+    const ListaEntradas* lista{listaEntradas};
+    while(lista != nullptr)
+    {
+        if(lista->entrada->getId() == id)
+            return lista->entrada;
+        lista = lista->siguiente;
+    }
+
+    return nullptr;
+}
+
+Salida* Controlador::getSalida(const unsigned int id) const
+{
+    const ListaSalidas* lista{listaSalidas};
+    while(lista != nullptr)
+    {
+        if(lista->salida->getId() == id)
+            return lista->salida;
+        lista = lista->siguiente;
+    }
+
+    return nullptr;
 }

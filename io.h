@@ -13,7 +13,7 @@ class IO
 {
     static unsigned int idGenerator()
     {
-        static unsigned int id{0};
+        static unsigned int id = 1;
         return id++;
     }
 

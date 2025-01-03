@@ -38,7 +38,9 @@ public:
         SimularParar,       //W
         SimularAcelerar,    //-
         SimularDecelerar,   //+
-        Cerrar,             //C
+        Cerrar,             //Escape
+        Guardar,            //G
+        Cargar,             //C
         MostrarControles    //M
     };
 
@@ -77,7 +79,9 @@ public:
         acciones.insert(std::make_pair("sw", SimularParar));
         acciones.insert(std::make_pair("s-", SimularAcelerar));
         acciones.insert(std::make_pair("s+", SimularDecelerar));
-        acciones.insert(std::make_pair("pc", Cerrar));
+        acciones.insert(std::make_pair("pX", Cerrar));
+        acciones.insert(std::make_pair("sg", Guardar));
+        acciones.insert(std::make_pair("sc", Cargar));
         acciones.insert(std::make_pair("sm", MostrarControles));
     }
     static Accion getNuevaAccion(const SDL_Event* evento);

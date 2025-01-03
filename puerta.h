@@ -13,9 +13,11 @@ class IMG;
 class Window;
 class Raton;
 class IO;
+class SistemaGuardado;
 
 class Puerta
 {
+    friend class SistemaGuardado;
     bool arribaNegado;
     bool abajoNegado;
     bool salidaNegada;
@@ -34,7 +36,7 @@ class Puerta
 
     static unsigned int idGenerator()
     {
-        static unsigned int id = 0;
+        static unsigned int id = 1;
         return id++;
     }
 
@@ -83,6 +85,7 @@ public:
     [[nodiscard]] IO* getAbajo() const { return abajo; }
     [[nodiscard]] bool getDesconectado() const { return arriba == nullptr && abajo == nullptr && salida.getConexiones() == 0; }
     [[nodiscard]] IMG* getIMG() { return &imagen; }
+    [[nodiscard]] unsigned int getId() const { return id; }
 
     [[nodiscard]] std::pair<int, int>* getLineaArribaPos() { return &lineaArriba; }
     [[nodiscard]] std::pair<int, int>* getLineaAbajoPos() { return &lineaAbajo; }

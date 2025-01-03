@@ -13,9 +13,12 @@
 class Puerta;
 class Entrada;
 class Salida;
+class SistemaGuardado;
 
 class IMG
 {
+    friend class SistemaGuardado;
+
     SDL_Renderer* m_renderer{nullptr};
     SDL_Texture* m_texture{nullptr};
     SDL_Rect     m_rect{};
@@ -28,7 +31,7 @@ class IMG
 
     static unsigned int idGenerator()
     {
-        static unsigned int imgIdGenerator = 0;
+        static unsigned int imgIdGenerator = 1;
         return imgIdGenerator++;
     }
 
