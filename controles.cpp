@@ -14,7 +14,7 @@ Window* Controles::window = nullptr;
 Controles::Accion Controles::getNuevaAccion(const SDL_Event* evento)
 {
     accionAnterior = Nada;
-    std::string str = "--";
+    std::string str = "..";
     if(evento->type == SDL_KEYDOWN || evento->type == SDL_MOUSEBUTTONDOWN)
         str[0] = 'p';
     else if (evento->type == SDL_KEYUP || evento->type == SDL_MOUSEBUTTONUP)
@@ -65,6 +65,12 @@ Controles::Accion Controles::getNuevaAccion(const SDL_Event* evento)
                     case SDLK_ESCAPE:
                         str[1] = 'X';
                         break;
+                    case SDLK_PLUS:
+                        str[1] = '+';
+                        break;
+                    case SDLK_MINUS:
+                        str[1] = '-';
+                        break;
                     default:
                         break;
                 }
@@ -79,7 +85,7 @@ Controles::Accion Controles::getNuevaAccion(const SDL_Event* evento)
         default:
             break;
     }
-    if(str != "--" && acciones.contains(str))
+    if(str != ".." && acciones.contains(str))
         accionAnterior = acciones[str];
     if(window != nullptr && window->getRaton()->getBorrando() && !(accionAnterior == Interactuar || accionAnterior == InteractuarAbajo ||
                                                                     accionAnterior == ConexionArriba || accionAnterior == ConexionAbajo ||

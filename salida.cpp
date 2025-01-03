@@ -45,11 +45,6 @@ void Salida::simular()
         return;
     }
 
-    if(entrada->getPadrePuerta() != nullptr)
-        entrada->getPadrePuerta()->simular();
-
-    //Si la salida está directamente conectada a una entrada, al hacer entrada->get() ya se pilla su valor sin simular
-
     if(entrada->get())
         img.cambiarImagen("./img/salida/encendido.png");
     else

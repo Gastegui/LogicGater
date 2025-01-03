@@ -49,7 +49,9 @@ int main(int argc, char* argv[])
     bool enMarcha = true;
     bool simulando = false;
     bool mostrarControles = true;
-    char posStr[25];
+    char strTMP[25];
+    Uint64 ultimaSimulacion = SDL_GetTicks64();
+    int velocidadSimulacion = 50;
     while (enMarcha)
     {
         while (SDL_PollEvent(&event))
@@ -90,6 +92,13 @@ int main(int argc, char* argv[])
                 case Controles::SimularParar:
                     simulando = false;
                     break;
+                case Controles::SimularAcelerar:
+                    if(velocidadSimulacion != 0)
+                        velocidadSimulacion -= 5;
+                    break;
+                case Controles::SimularDecelerar:
+                    velocidadSimulacion += 5;
+                    break;
                 case Controles::Cerrar:
                     enMarcha = false;
                     break;
@@ -104,20 +113,23 @@ int main(int argc, char* argv[])
                 window.manejarRaton();
         }
 
-        if(simulando)
+        if(simulando && ultimaSimulacion + velocidadSimulacion <= SDL_GetTicks64())
+        {
             controlador.simular();
+            ultimaSimulacion = SDL_GetTicks64();
+        }
 
         window.limpiar();
         if(mostrarControles)
         {
-            txt.setPos(0, 420);
+            txt.setPos(0, 360);
             txt << "Creación:" << "    A: puerta AND" << "    O: puerta OR" << "    X: puerta XOR" << "    I: interruptor" << "    B: botón" << "    S: salida";
             txt << "Modificadores:" << "    Espacio: crear conexión" << "    Retroceso: modo borrar";
             if(!window.getRaton()->getBorrando())
                 txt << "Ratón:" << "    Izquierda: interactuar" << "    Medio: crear conexión" << "    Derecha: Mover";
             else
                 txt << "Ratón:" << "    Izquierda: borrar elemento" << "    Medio: borrar conexión";
-            txt << "Simulación:" << "    Entrar: simular una vez" << "    Q: empezar simulación" << "    W: parar simulación";
+            txt << "Simulación:" << "    Entrar: simular una vez" << "    Q: empezar simulación" << "    W: parar simulación" << "    -: acelerar simulación" << "    +: decelerar simulación";
             txt << "Otros:" << "    L: borrar elementos desconectados" << "    M: ocultar controles" << "    C: cerrar";
         }
         else
@@ -128,13 +140,14 @@ int main(int argc, char* argv[])
 
         if(simulando)
         {
-            txt.setPos(1800, 1050);
-            txt << "SIMULANDO";
+            txt.setPos(1700, 1050);
+            snprintf(strTMP, 25, "SIMULANDO (%d ms)", velocidadSimulacion);
+            txt << strTMP;
         }
 
         txt.setPos(10, 10);
-        snprintf(posStr, 25, "X: %d Y: %d", -window.getEsquinaX(), -window.getEsquinaY());
-        txt << posStr;
+        snprintf(strTMP, 25, "X: %d Y: %d", -window.getEsquinaX(), -window.getEsquinaY());
+        txt << strTMP;
 
         window.render();
         SDL_Delay(16);

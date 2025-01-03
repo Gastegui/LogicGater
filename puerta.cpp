@@ -62,23 +62,18 @@ void Puerta::click(const int x, const int y, const Raton::Evento evento)
     }
 }
 
-bool Puerta::simular() // NOLINT(*-no-recursion)
+void Puerta::simular() // NOLINT(*-no-recursion)
 {
     bool a{false};
     bool b{false};
     bool ret{false};
-
-    if(simulando)
-        return salida.get();
-
-    simulando = true;
 
     if(arriba != nullptr)
     {
         if(arriba->getPadreEntrada() != nullptr)
             a = arriba->getPadreEntrada()->get();
         else if(arriba->getPadrePuerta() != nullptr)
-            a = arriba->getPadrePuerta()->simular();
+            a = arriba->getPadrePuerta()->getSalida()->get();
     }
 
     if(abajo != nullptr)
@@ -86,7 +81,7 @@ bool Puerta::simular() // NOLINT(*-no-recursion)
         if(abajo->getPadreEntrada() != nullptr)
             b = abajo->getPadreEntrada()->get();
         else if(abajo->getPadrePuerta() != nullptr)
-            b = abajo->getPadrePuerta()->simular();
+            b = abajo->getPadrePuerta()->getSalida()->get();
     }
 
     if(arribaNegado)
@@ -105,14 +100,12 @@ bool Puerta::simular() // NOLINT(*-no-recursion)
     if(salidaNegada)
         ret = !ret;
 
-    salida.set(ret);
-
-    return ret;
+    siguiente = ret;
 }
 
-void Puerta::simulacionTermindada()
+void Puerta::actualizar()
 {
-    simulando = false;
+    salida.set(siguiente);
 }
 
 void Puerta::moverRel(const int x_, const int y_)

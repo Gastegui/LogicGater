@@ -36,6 +36,8 @@ public:
         SimularPaso,        //Enter
         SimularEmpezar,     //Q
         SimularParar,       //W
+        SimularAcelerar,    //-
+        SimularDecelerar,   //+
         Cerrar,             //C
         MostrarControles    //M
     };
@@ -73,6 +75,8 @@ public:
         acciones.insert(std::make_pair("sR", SimularPaso));
         acciones.insert(std::make_pair("sq", SimularEmpezar));
         acciones.insert(std::make_pair("sw", SimularParar));
+        acciones.insert(std::make_pair("s-", SimularAcelerar));
+        acciones.insert(std::make_pair("s+", SimularDecelerar));
         acciones.insert(std::make_pair("pc", Cerrar));
         acciones.insert(std::make_pair("sm", MostrarControles));
     }

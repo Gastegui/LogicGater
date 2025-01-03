@@ -391,21 +391,27 @@ void Controlador::destino(Salida* salida)
 
 void Controlador::simular() const
 {
-    const ListaSalidas* lista{listaSalidas};
+    const ListaPuertas* listaP{listaPuertas};
+    while(listaP != nullptr)
+    {
+        listaP->puerta->simular();
+        listaP = listaP->siguiente;
+    }
 
+    listaP = listaPuertas;
+    while(listaP != nullptr)
+    {
+        listaP->puerta->actualizar();
+        listaP = listaP->siguiente;
+    }
+
+    const ListaSalidas* lista{listaSalidas};
     while(lista != nullptr)
     {
         lista->salida->simular();
         lista = lista->siguiente;
     }
 
-    const ListaPuertas* listaP{listaPuertas};
-
-    while(listaP != nullptr)
-    {
-        listaP->puerta->simulacionTermindada();
-        listaP = listaP->siguiente;
-    }
 }
 
 int Controlador::limpiar()

@@ -20,7 +20,7 @@ class Puerta
     bool abajoNegado;
     bool salidaNegada;
 
-    bool simulando{false};
+    bool siguiente{false};
 
     IO* arriba{nullptr};
     IO* abajo{nullptr};
@@ -108,8 +108,8 @@ public:
 
     void click(int x, int y, Raton::Evento evento);
 
-    bool simular();
-    void simulacionTermindada();
+    void simular();
+    void actualizar();
     void moverRel(int x_, int y_);
 };
 
