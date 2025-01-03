@@ -33,7 +33,7 @@ class Window
 
 
     void rendererClear() const;
-    void rendererDraw() const;
+    void rendererDraw(bool simulando) const;
     void rendererPresent() const;
 
 public:
@@ -48,7 +48,10 @@ public:
 
         ListaLineas* siguiente{nullptr};
     };
+private:
+    static void renderLine(SDL_Renderer* renderer, int x1, int y1, int x2, int y2, const ListaLineas* linea, bool simulando);
 
+public:
     ListaLineas* lineas{nullptr};
 
     explicit Window(const char* img)
@@ -100,7 +103,7 @@ public:
     }
 
     void limpiar() const;
-    void render() const;
+    void render(bool simulando) const;
 
     [[nodiscard]] ListaIMG::Lista* getListaIMG(const ListaIMG::Altura altura) const
     {

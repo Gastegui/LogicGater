@@ -42,7 +42,7 @@ int main(int argc, char* argv[])
         return 1;
     }
 
-    window.render();
+    window.render(false);
 
     SDL_Event event;
     Controles::init(&event, &window);
@@ -150,6 +150,7 @@ int main(int argc, char* argv[])
         txt << strTMP;
 
         window.render();
+        window.render(simulando);
         SDL_Delay(16);
     }
     //Mix_CloseAudio();
