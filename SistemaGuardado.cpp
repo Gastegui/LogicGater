@@ -15,7 +15,7 @@
 #include "entrada.h"
 #include "salida.h"
 
-bool SistemaGuardado::guardar(const Controlador* controlador, const Window* window, const int velocidadSimulacion)
+bool SistemaGuardado::guardar(const Controlador* controlador, const Window* window, Valores* valores)
 {
     std::ofstream outf{"Guardado.txt"};
 
@@ -76,16 +76,15 @@ bool SistemaGuardado::guardar(const Controlador* controlador, const Window* wind
     }
 
     outf << "-Otros\n";
-
     outf << "Coordenadas: x: " << esquinaX << " y: " << esquinaY << "\n";
-
-    outf << "VelocidadSimulacion: " << velocidadSimulacion << "\n";
+    outf << "VelocidadSimulacion: " << valores->velocidadSimulacion << "\n";
+    outf << "CuadriculaTamaño: " << valores->cuadriculaTamaño << "\n";
 
     return true;
 }
 
 
-int SistemaGuardado::cargar(Controlador* controlador, Window* window)
+int SistemaGuardado::cargar(Controlador* controlador, Window* window, Valores* valores)
 {
     std::ifstream inf{ "Guardado.txt" };
 
@@ -134,7 +133,6 @@ int SistemaGuardado::cargar(Controlador* controlador, Window* window)
     //Otros
     int coordenadaX{0};
     int coordenadaY{0};
-    int velocidadSimulacion{50};
 
     while(std::getline(inf, input))
     {
@@ -228,14 +226,14 @@ int SistemaGuardado::cargar(Controlador* controlador, Window* window)
             window->mover(coordenadaX, coordenadaY);
         }
         else if(tmp == "VelocidadSimulacion:"s)
-        {
-            iss >> velocidadSimulacion;
-        }
+            iss >> valores->velocidadSimulacion;
+        else if(tmp == "CuadriculaTamaño:"s)
+            iss >> valores->cuadriculaTamaño;
     }
 
     Puerta::gastarIds(puertaId);
     Entrada::gastarIds(entradaId);
     Salida::gastarIds(salidaId);
 
-    return velocidadSimulacion;
+    return 0;
 }

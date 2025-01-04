@@ -11,9 +11,16 @@ class Window;
 class SistemaGuardado
 {
 public:
-    static bool guardar(const Controlador* controlador, const Window* window, int velocidadSimulacion);
 
-    static int cargar(Controlador* controlador, Window* window);
+    struct Valores
+    {
+        int velocidadSimulacion = 50;
+        int cuadriculaTamaño = 50;
+    };
+
+    static bool guardar(const Controlador* controlador, const Window* window, Valores* valores);
+
+    static int cargar(Controlador* controlador, Window* window, Valores* valores);
 };
 
 

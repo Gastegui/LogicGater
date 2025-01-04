@@ -52,7 +52,7 @@ int main(int argc, char* argv[])
     bool mostrarControles = true;
     char strTMP[50] = {" "};
     Uint64 ultimaSimulacion = SDL_GetTicks64();
-    int velocidadSimulacion = 50;
+    SistemaGuardado::Valores valores;
 
     char mensajeStr[40] = {" "};
     constexpr int mensajeDuracion = 5000;
@@ -99,11 +99,11 @@ int main(int argc, char* argv[])
                     simulando = false;
                     break;
                 case Controles::SimularAcelerar:
-                    if(velocidadSimulacion != -5)
-                        velocidadSimulacion -= 5;
+                    if(valores.velocidadSimulacion != -5)
+                        valores.velocidadSimulacion -= 5;
                     break;
                 case Controles::SimularDecelerar:
-                    velocidadSimulacion += 5;
+                    valores.velocidadSimulacion += 5;
                     break;
                 case Controles::Cerrar:
                     enMarcha = false;
@@ -112,7 +112,7 @@ int main(int argc, char* argv[])
                     mostrarControles = !mostrarControles;
                     break;
                 case Controles::Guardar:
-                    if(SistemaGuardado::guardar(&controlador, &window, velocidadSimulacion))
+                    if(SistemaGuardado::guardar(&controlador, &window, &valores))
                         snprintf(mensajeStr, 40, "Se ha guardado");
                     else
                         snprintf(mensajeStr, 40, "No se ha podido guardar");
@@ -125,16 +125,14 @@ int main(int argc, char* argv[])
                         txt << "Cargando...";
                         window.render(false);
 
-                        const int ret = SistemaGuardado::cargar(&controlador, &window);
+                        const int ret = SistemaGuardado::cargar(&controlador, &window, &valores);
                         if(ret == -1)
                             snprintf(mensajeStr, 40, "No se ha podido cargar");
                         else if(ret == -2)
                             snprintf(mensajeStr, 40, "No se puede cargar si se ha creado algo");
                         else
-                        {
                             snprintf(mensajeStr, 40, "Se ha cargado");
-                            velocidadSimulacion = ret;
-                        }
+
                         mensajeTiempo = SDL_GetTicks64();
                     }
                     break;
@@ -142,10 +140,10 @@ int main(int argc, char* argv[])
                     controlador.alternarCuadricula();
                     break;
                 case Controles::CuadriculaAgrandar:
-                    controlador.cambiarCuadriculaRel(5);
+                    valores.cuadriculaTamaño = controlador.cambiarCuadriculaRel(5);
                     break;
                 case Controles::CuadriculaDisminuir:
-                    controlador.cambiarCuadriculaRel(-5);
+                    valores.cuadriculaTamaño = controlador.cambiarCuadriculaRel(-5);
                     break;
                 case Controles::Nada:
                 default:
@@ -157,12 +155,12 @@ int main(int argc, char* argv[])
 
         if(simulando)
         {
-            if(velocidadSimulacion >= 0 && ultimaSimulacion + velocidadSimulacion <= SDL_GetTicks64())
+            if(valores.velocidadSimulacion >= 0 && ultimaSimulacion + valores.velocidadSimulacion <= SDL_GetTicks64())
             {
                 controlador.simular();
                 ultimaSimulacion = SDL_GetTicks64();
             }
-            else if(velocidadSimulacion < 0)
+            else if(valores.velocidadSimulacion < 0)
                 controlador.simularInstantaneo();
         }
 
@@ -188,10 +186,10 @@ int main(int argc, char* argv[])
 
         if(simulando)
         {
-            if(velocidadSimulacion >= 0)
+            if(valores.velocidadSimulacion >= 0)
             {
                 txt.setPos(1700, 1050);
-                snprintf(strTMP, 50, "SIMULANDO (%d ms)", velocidadSimulacion);
+                snprintf(strTMP, 50, "SIMULANDO (%d ms)", valores.velocidadSimulacion);
             }
             else
             {

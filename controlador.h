@@ -143,7 +143,7 @@ public:
     [[nodiscard]] Salida* getSalida(unsigned int id) const;
 
     void alternarCuadricula() { cuadricula = !cuadricula; }
-    void cambiarCuadriculaRel(const int cambio) { if(cuadriculaTamaño + cambio > 0) cuadriculaTamaño += cambio; }
+    int cambiarCuadriculaRel(const int cambio) { if(cuadriculaTamaño + cambio > 0) cuadriculaTamaño += cambio; return cuadriculaTamaño; }
     [[nodiscard]] int getCuadriculaActiva() const { return cuadricula; }
     [[nodiscard]] int getCuadriculaTamaño() const { return cuadriculaTamaño; }
 
