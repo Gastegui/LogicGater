@@ -162,7 +162,7 @@ int main(int argc, char* argv[])
                 controlador.simular();
                 ultimaSimulacion = SDL_GetTicks64();
             }
-            else
+            else if(velocidadSimulacion < 0)
                 controlador.simularInstantaneo();
         }
 

@@ -62,7 +62,7 @@ void Puerta::click(const int x, const int y, const Raton::Evento evento)
     }
 }
 
-void Puerta::simular() // NOLINT(*-no-recursion)
+void Puerta::simular()
 {
     bool a{false};
     bool b{false};
@@ -103,7 +103,7 @@ void Puerta::simular() // NOLINT(*-no-recursion)
     siguiente = ret;
 }
 
-bool Puerta::simularAntiguo()
+bool Puerta::simularAntiguo() // NOLINT(*-no-recursion)
 {
     bool a{false};
     bool b{false};
