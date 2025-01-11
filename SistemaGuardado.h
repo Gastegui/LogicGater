@@ -18,7 +18,7 @@ public:
         int cuadriculaTamaño = 50;
     };
 
-    static bool guardar(const Controlador* controlador, const Window* window, Valores* valores);
+    static bool guardar(const Controlador* controlador, const Window* window, const Valores* valores);
 
     static int cargar(Controlador* controlador, Window* window, Valores* valores);
 };

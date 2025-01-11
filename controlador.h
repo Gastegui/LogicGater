@@ -5,10 +5,10 @@
 #ifndef CONTROLADOR_H
 #define CONTROLADOR_H
 
+#include <map>
+#include <ranges>
+
 #include "puerta.h"
-#include "entrada.h"
-#include "salida.h"
-#include "io.h"
 #include "Wrapper/window.h"
 
 class Puerta;
@@ -23,35 +23,16 @@ class Controlador
 {
     friend class SistemaGuardado;
 
-    struct ListaPuertas
-    {
-        Puerta* puerta{nullptr};
-        ListaPuertas* siguiente{nullptr};
-    };
-
-    struct ListaEntradas
-    {
-        Entrada* entrada{nullptr};
-        ListaEntradas* siguiente{nullptr};
-    };
-
-    struct ListaSalidas
-    {
-        Salida* salida{nullptr};
-        ListaSalidas* siguiente{nullptr};
-    };
 
     Window* window{nullptr};
     SDL_Renderer* renderer{nullptr};
 
     IO* origen{nullptr};
 
-    ListaPuertas* listaPuertas{nullptr};
-    ListaEntradas* listaEntradas{nullptr};
-    ListaSalidas* listaSalidas{nullptr};
-
     bool cuadricula{false};
     int cuadriculaTamaño{50};
+
+    std::map<unsigned int, Simulable*> simulables;
 
 public:
     explicit Controlador(Window* window_)
@@ -60,42 +41,10 @@ public:
 
     ~Controlador()
     {
-        if(listaPuertas != nullptr)
-        {
-            // ReSharper disable once CppJoinDeclarationAndAssignment
-            const ListaPuertas* tmp;
-            while(listaPuertas != nullptr)
-            {
-                tmp = listaPuertas;
-                listaPuertas = listaPuertas->siguiente;
-                delete tmp->puerta;
-                delete tmp;
-            }
-        }
-        if(listaEntradas != nullptr)
-        {
-            // ReSharper disable once CppJoinDeclarationAndAssignment
-            const ListaEntradas* tmp;
-            while(listaEntradas != nullptr)
-            {
-                tmp = listaEntradas;
-                listaEntradas = listaEntradas->siguiente;
-                delete tmp->entrada;
-                delete tmp;
-            }
-        }
-        if(listaSalidas != nullptr)
-        {
-            // ReSharper disable once CppJoinDeclarationAndAssignment
-            const ListaSalidas* tmp;
-            while(listaSalidas != nullptr)
-            {
-                tmp = listaSalidas;
-                listaSalidas = listaSalidas->siguiente;
-                delete tmp->salida;
-                delete tmp;
-            }
-        }
+        for (const auto& value : simulables | std::views::values)
+            // ReSharper disable once CppDFADeletedPointer
+            delete value;
+        simulables.clear();
     }
 
     [[nodiscard]] ListaIMG::Lista* getListaIMG(const ListaIMG::Altura altura) const

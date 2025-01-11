@@ -3,6 +3,8 @@
 //
 
 #include "controlador.h"
+#include "salida.h"
+#include "entrada.h"
 
 void Controlador::desmarcarOrigen()
 {
@@ -19,26 +21,8 @@ void Controlador::crear(const Puerta::Tipo tipo, int x, int y, const bool arriba
     else
         puerta = new Puerta{renderer, tipo, -window->getEsquinaX() + x, -window->getEsquinaY() + y, arribaNegado, abajoNegado, salidaNegada, window->getRaton(), id};
 
-    window->añadir(puerta->getIMG(), ListaIMG::MEDIO);
-    if(listaPuertas == nullptr)
-    {
-        listaPuertas = new ListaPuertas;
-        listaPuertas->puerta = puerta;
-        listaPuertas->siguiente = nullptr;
-    }
-    else
-    {
-        ListaPuertas* tmp{listaPuertas};
-        while(tmp->siguiente != nullptr)
-        {
-            tmp = tmp->siguiente;
-        }
-
-        tmp->siguiente = new ListaPuertas;
-        tmp = tmp->siguiente;
-        tmp->puerta = puerta;
-        tmp->siguiente = nullptr;
-    }
+    window->añadir(puerta->getImg(), ListaIMG::MEDIO);
+    simulables.insert(std::make_pair(puerta->getId(), puerta));
 }
 
 void Controlador::borrarConexiones(Puerta* puerta, const bool arriba, const bool abajo, const bool salida)
@@ -47,46 +31,55 @@ void Controlador::borrarConexiones(Puerta* puerta, const bool arriba, const bool
         origen = nullptr;
 
     window->borrarLineas(puerta, arriba, abajo, salida);
+    printf("%d %d %d\n", arriba, abajo, salida);
 
     if(arriba && puerta->getArriba() != nullptr)
     {
+        printf("Arriba\n");
         puerta->getArriba()->desconectado();
         puerta->setArriba(nullptr);
     }
 
     if(abajo && puerta->getAbajo() != nullptr)
     {
+        printf("Abajo\n");
         puerta->getAbajo()->desconectado();
         puerta->setAbajo(nullptr);
     }
 
     if(salida && puerta->getSalida()->getConexiones() != 0)
     {
-        const ListaPuertas* listaP{listaPuertas};
-        while(listaP != nullptr)
+        printf("Output\n");
+        for (const auto& value : simulables | std::views::values)
         {
-            if(listaP->puerta->getArriba() == puerta->getSalida())
+            if(dynamic_cast<Puerta*>(value) != nullptr)
             {
-                puerta->getSalida()->desconectado();
-                listaP->puerta->setArriba(nullptr);
+                printf("Puerta ");
+                Puerta* puerta_ = dynamic_cast<Puerta*>(value);
+                if(puerta_->getArriba() == puerta->getSalida())
+                {
+                    printf("Arriba\n");
+                    puerta->getSalida()->desconectado();
+                    puerta_->setArriba(nullptr);
+                }
+                if(puerta_->getAbajo() == puerta->getSalida())
+                {
+                    printf("Abajo\n");
+                    puerta->getSalida()->desconectado();
+                    puerta_->setAbajo(nullptr);
+                }
             }
-            if(listaP->puerta->getAbajo() == puerta->getSalida())
+            else if(dynamic_cast<Salida*>(value) != nullptr)
             {
-                puerta->getSalida()->desconectado();
-                listaP->puerta->setAbajo(nullptr);
+                printf("Salida ");
+                Salida* salida_ = dynamic_cast<Salida*>(value);
+                if(salida_->getEntrada() == puerta->getSalida())
+                {
+                    printf("Borrar\n");
+                    puerta->getSalida()->desconectado();
+                    salida_->setEntrada(nullptr);
+                }
             }
-            listaP = listaP->siguiente;
-        }
-
-        const ListaSalidas* listaS{listaSalidas};
-        while(listaS != nullptr)
-        {
-            if(listaS->salida->getEntrada() == puerta->getSalida())
-            {
-                puerta->getSalida()->desconectado();
-                listaS->salida->setEntrada(nullptr);
-            }
-            listaS = listaS->siguiente;
         }
     }
 }
@@ -94,52 +87,16 @@ void Controlador::borrarConexiones(Puerta* puerta, const bool arriba, const bool
 
 bool Controlador::borrar(Puerta* puerta)
 {
-    if(listaPuertas == nullptr)
+    if(!simulables.contains(puerta->getId()))
         return false;
 
-    if(listaPuertas->puerta == puerta) //Es la primera puerta de la listaPuertas
-    {
-        borrarConexiones(puerta);
+    borrarConexiones(puerta);
+    window->borrar(puerta->getImg(), ListaIMG::MEDIO);
 
-        if(listaPuertas->siguiente == nullptr) //Y es la única puerta de la listaPuertas
-        {
-            window->borrar(listaPuertas->puerta->getIMG(), ListaIMG::MEDIO);
-            delete listaPuertas->puerta;
-            delete listaPuertas;
-            listaPuertas = nullptr;
-        }
-        else //Y hay más elementos
-        {
-            const ListaPuertas* tmp{listaPuertas};
-            listaPuertas = listaPuertas->siguiente;
-            window->borrar(tmp->puerta->getIMG(), ListaIMG::MEDIO);
-            delete tmp->puerta;
-            delete tmp;
-        }
-    }
-    else //No es la primera puerta de la listaPuertas
-    {
-        ListaPuertas* anterior{listaPuertas};
-        const ListaPuertas* tmp{anterior->siguiente};
+    if(simulables.erase(puerta->getId()) == 0)
+        return false;
 
-        while(tmp->siguiente != nullptr && tmp->puerta != puerta)
-        {
-            anterior = anterior->siguiente;
-            tmp = tmp->siguiente;
-        }
-
-        if(tmp->puerta == puerta)
-        {
-            borrarConexiones(puerta);
-            anterior->siguiente = tmp->siguiente;
-            window->borrar(tmp->puerta->getIMG(), ListaIMG::MEDIO);
-            delete tmp->puerta;
-            delete tmp;
-        }
-        else
-            return false;
-    }
-
+    delete puerta;
     return true;
 }
 
@@ -181,110 +138,55 @@ void Controlador::crear(const bool mantener, int x, int y, const unsigned int id
         entrada = new Entrada{renderer, -window->getEsquinaX() + x, -window->getEsquinaY() + y, window->getRaton(), id, mantener};
     window->añadir(entrada->getImg(), ListaIMG::MEDIO);
 
-    if(listaEntradas == nullptr)
-    {
-        listaEntradas = new ListaEntradas;
-        listaEntradas->entrada = entrada;
-        listaEntradas->siguiente = nullptr;
-    }
-    else
-    {
-        ListaEntradas* tmp{listaEntradas};
-        while(tmp->siguiente != nullptr)
-        {
-            tmp = tmp->siguiente;
-        }
+    simulables.insert(std::make_pair(entrada->getId(), entrada));
 
-        tmp->siguiente = new ListaEntradas;
-        tmp = tmp->siguiente;
-        tmp->entrada = entrada;
-        tmp->siguiente = nullptr;
-    }
 }
 
 void Controlador::borrarConexiones(Entrada* entrada) const
 {
-    const ListaPuertas* listaP{listaPuertas};
-
     window->borrarLineas(entrada);
 
-    while(listaP != nullptr)
+    for (const auto& value : simulables | std::views::values)
     {
-        if(listaP->puerta->getArriba() == entrada->getSalida())
+        if(dynamic_cast<Puerta*>(value) != nullptr)
         {
-            entrada->getSalida()->desconectado();
-            listaP->puerta->setArriba(nullptr);
+            Puerta* puerta_ = dynamic_cast<Puerta*>(value);
+            if(puerta_->getArriba() == entrada->getSalida())
+            {
+                entrada->getSalida()->desconectado();
+                puerta_->setArriba(nullptr);
+            }
+            if(puerta_->getAbajo() == entrada->getSalida())
+            {
+                entrada->getSalida()->desconectado();
+                puerta_->setAbajo(nullptr);
+            }
         }
-        if(listaP->puerta->getAbajo() == entrada->getSalida())
+        else if(dynamic_cast<Salida*>(value) != nullptr)
         {
-            entrada->getSalida()->desconectado();
-            listaP->puerta->setAbajo(nullptr);
+            Salida* salida_ = dynamic_cast<Salida*>(value);
+            if(salida_->getEntrada() == entrada->getSalida())
+            {
+                entrada->getSalida()->desconectado();
+                salida_->setEntrada(nullptr);
+            }
         }
-
-        listaP = listaP->siguiente;
-    }
-
-    const ListaSalidas* listaS{listaSalidas}; //Acabo de añadir esto
-    while(listaS != nullptr)
-    {
-        if(listaS->salida->getEntrada() == entrada->getSalida())
-        {
-            entrada->getSalida()->desconectado();
-            listaS->salida->setEntrada(nullptr);
-        }
-        listaS = listaS->siguiente;
     }
 }
 
 
 bool Controlador::borrar(Entrada* entrada)
 {
-    if(listaEntradas == nullptr)
+    if(!simulables.contains(entrada->getId()))
         return false;
 
-    if(listaEntradas->entrada == entrada) //Es la primera entrada de listaEntradas
-    {
-        borrarConexiones(entrada);
+    borrarConexiones(entrada);
+    window->borrar(entrada->getImg(), ListaIMG::MEDIO);
 
-        if(listaEntradas->siguiente == nullptr) //Y es la única entrada de listaEntradas
-        {
-            window->borrar(listaEntradas->entrada->getImg(), ListaIMG::MEDIO);
-            delete listaEntradas->entrada;
-            delete listaEntradas;
-            listaEntradas = nullptr;
-        }
-        else //Y hay más elementos
-        {
-            const ListaEntradas* tmp{listaEntradas};
-            listaEntradas = listaEntradas->siguiente;
-            window->borrar(tmp->entrada->getImg(), ListaIMG::MEDIO);
-            delete tmp->entrada;
-            delete tmp;
-        }
-    }
-    else //No es el primer entrada de listaEntradas
-    {
-        ListaEntradas* anterior{listaEntradas};
-        const ListaEntradas* tmp{anterior->siguiente};
+    if(simulables.erase(entrada->getId()) == 0)
+        return false;
 
-        while(tmp->siguiente != nullptr && tmp->entrada != entrada)
-        {
-            anterior = anterior->siguiente;
-            tmp = tmp->siguiente;
-        }
-
-        if(tmp->entrada == entrada)
-        {
-            borrarConexiones(entrada);
-            anterior->siguiente = tmp->siguiente;
-            window->borrar(tmp->entrada->getImg(), ListaIMG::MEDIO);
-            delete tmp->entrada;
-            delete tmp;
-        }
-        else
-            return false;
-    }
-
+    delete entrada;
     return true;
 }
 
@@ -305,75 +207,22 @@ void Controlador::crear(int x, int y, const unsigned int id)
         salida = new Salida{renderer, -window->getEsquinaX() + x, -window->getEsquinaY() + y, window->getRaton(), id};
     window->añadir(salida->getImg(), ListaIMG::MEDIO);
 
-    if(listaSalidas == nullptr)
-    {
-        listaSalidas = new ListaSalidas;
-        listaSalidas->salida = salida;
-        listaSalidas->siguiente = nullptr;
-    }
-    else
-    {
-        ListaSalidas* tmp{listaSalidas};
-        while(tmp->siguiente != nullptr)
-        {
-            tmp = tmp->siguiente;
-        }
+    simulables.insert(std::make_pair(salida->getId(), salida));
 
-        tmp->siguiente = new ListaSalidas;
-        tmp = tmp->siguiente;
-        tmp->salida = salida;
-        tmp->siguiente = nullptr;
-    }
 }
 
 bool Controlador::borrar(Salida* salida)
 {
-    if(listaSalidas == nullptr)
+    if(!simulables.contains(salida->getId()))
         return false;
 
-    if(listaSalidas->salida == salida) //Es la primera salida de listaSalidas
-    {
-        borrarConexiones(salida);
+    borrarConexiones(salida);
+    window->borrar(salida->getImg(), ListaIMG::MEDIO);
 
-        if(listaSalidas->siguiente == nullptr) //Y es la única salida de listaSalidas
-        {
-            window->borrar(listaSalidas->salida->getImg(), ListaIMG::MEDIO);
-            delete listaSalidas->salida;
-            delete listaSalidas;
-            listaSalidas = nullptr;
-        }
-        else //Y hay más elementos
-        {
-            const ListaSalidas* tmp{listaSalidas};
-            listaSalidas = listaSalidas->siguiente;
-            window->borrar(tmp->salida->getImg(), ListaIMG::MEDIO);
-            delete tmp->salida;
-            delete tmp;
-        }
-    }
-    else //No es la primera salida de listaSalidas
-    {
-        ListaSalidas* anterior{listaSalidas};
-        const ListaSalidas* tmp{anterior->siguiente};
+    if(simulables.erase(salida->getId()) == 0)
+        return false;
 
-        while(tmp->siguiente != nullptr && tmp->salida != salida)
-        {
-            anterior = anterior->siguiente;
-            tmp = tmp->siguiente;
-        }
-
-        if(tmp->salida == salida)
-        {
-            borrarConexiones(salida);
-            anterior->siguiente = tmp->siguiente;
-            window->borrar(tmp->salida->getImg(), ListaIMG::MEDIO);
-            delete tmp->salida;
-            delete tmp;
-        }
-        else
-            return false;
-    }
-
+    delete salida;
     return true;
 }
 
@@ -407,157 +256,99 @@ bool Controlador::destino(Salida* salida)
 
 void Controlador::simular() const
 {
-    const ListaPuertas* listaP{listaPuertas};
-    while(listaP != nullptr)
-    {
-        listaP->puerta->simular();
-        listaP = listaP->siguiente;
-    }
+    for (const auto& value : std::views::values(simulables))
+        if(dynamic_cast<Puerta*>(value) != nullptr)
+            value->simular();
 
-    listaP = listaPuertas;
-    while(listaP != nullptr)
-    {
-        listaP->puerta->actualizar();
-        listaP = listaP->siguiente;
-    }
+    for (const auto& value : simulables | std::views::values)
+        if(dynamic_cast<Puerta*>(value) != nullptr)
+            value->actualizar();
 
-    const ListaSalidas* lista{listaSalidas};
-    while(lista != nullptr)
-    {
-        lista->salida->simular();
-        lista = lista->siguiente;
-    }
+    for (const auto& value : simulables | std::views::values)
+        if(dynamic_cast<Salida*>(value) != nullptr)
+            value->simular();
 
 }
 
 void Controlador::simularInstantaneo() const
 {
-    const ListaSalidas* lista{listaSalidas};
+    for (const auto& value : simulables | std::views::values)
+        if(dynamic_cast<Salida*>(value) != nullptr)
+            dynamic_cast<Salida*>(value)->simularAntiguo();
 
-    while(lista != nullptr)
-    {
-        lista->salida->simularAntiguo();
-        lista = lista->siguiente;
-    }
-
-    const ListaPuertas* listaP{listaPuertas};
-
-    while(listaP != nullptr)
-    {
-        listaP->puerta->simulacionAntiguaTermindada();
-        listaP = listaP->siguiente;
-    }
+    for (const auto& value : simulables | std::views::values)
+        if(dynamic_cast<Puerta*>(value) != nullptr)
+            dynamic_cast<Puerta*>(value)->simulacionAntiguaTermindada();
 }
 
 
 int Controlador::limpiar()
 {
     int limpiados = 0;
+    Puerta* borrarPuerta{nullptr};
+    Salida* borrarSalida{nullptr};
+    Entrada* borrarEntrada{nullptr};
 
-    const ListaPuertas* puertas{listaPuertas};
-    if(puertas != nullptr)
+    for (const auto& value : simulables | std::views::values)
     {
-        while(puertas->siguiente != nullptr)
+        if(borrarPuerta != nullptr)
         {
-            if(puertas->siguiente->puerta->getDesconectado())
-            {
-                borrar(puertas->siguiente->puerta);
-                limpiados++;
-            }
-            else
-                puertas = puertas->siguiente;
-        }
-
-        if(listaPuertas->puerta->getDesconectado())
-        {
-            borrar(listaPuertas->puerta);
+            borrar(borrarPuerta);
+            borrarPuerta = nullptr;
             limpiados++;
         }
-    }
-
-    const ListaEntradas* entradas{listaEntradas};
-    if(entradas != nullptr)
-    {
-        while(entradas->siguiente != nullptr)
+        if(borrarSalida != nullptr)
         {
-            if(entradas->siguiente->entrada->getDesconectado())
-            {
-                borrar(entradas->siguiente->entrada);
-                limpiados++;
-            }
-            else
-                entradas = entradas->siguiente;
-        }
-
-        if(listaEntradas->entrada->getDesconectado())
-        {
-            borrar(listaEntradas->entrada);
+            borrar(borrarSalida);
+            borrarSalida = nullptr;
             limpiados++;
         }
-    }
 
-    const ListaSalidas* salidas{listaSalidas};
-
-    if(salidas != nullptr)
-    {
-
-        while(salidas->siguiente != nullptr)
+        if(borrarEntrada != nullptr)
         {
-            if(salidas->siguiente->salida->getDesconectado())
-            {
-                borrar(salidas->siguiente->salida);
-                limpiados++;
-            }
-            else
-                salidas = salidas->siguiente;
-        }
-
-        if(listaSalidas->salida->getDesconectado())
-        {
-            borrar(listaSalidas->salida);
+            borrar(borrarEntrada);
+            borrarEntrada = nullptr;
             limpiados++;
         }
-    }
 
+        if(dynamic_cast<Puerta*>(value) != nullptr)
+        {
+            borrarPuerta = dynamic_cast<Puerta*>(value); //Se usa como tmp
+            if(!borrarPuerta->getDesconectado())
+                borrarPuerta = nullptr;
+        }
+
+        if(dynamic_cast<Salida*>(value) != nullptr)
+        {
+            borrarSalida = dynamic_cast<Salida*>(value); //Se usa como tmp
+            if(!borrarSalida->getDesconectado())
+                borrarSalida = nullptr;
+        }
+        if(dynamic_cast<Entrada*>(value) != nullptr)
+        {
+            borrarEntrada = dynamic_cast<Entrada*>(value); //Se usa como tmp
+            if(!borrarEntrada->getDesconectado())
+                borrarEntrada = nullptr;
+        }
+    }
     return limpiados;
 }
 
 
 Puerta* Controlador::getPuerta(const unsigned int id) const
 {
-    const ListaPuertas* lista{listaPuertas};
-    while(lista != nullptr)
-    {
-        if(lista->puerta->getId() == id)
-            return lista->puerta;
-        lista = lista->siguiente;
-    }
-
-    return nullptr;
+    const auto it = simulables.find(id);
+    return it != simulables.end() ? dynamic_cast<Puerta*>(it->second) : nullptr;
 }
 
 Entrada* Controlador::getEntrada(const unsigned int id) const
 {
-    const ListaEntradas* lista{listaEntradas};
-    while(lista != nullptr)
-    {
-        if(lista->entrada->getId() == id)
-            return lista->entrada;
-        lista = lista->siguiente;
-    }
-
-    return nullptr;
+    const auto it = simulables.find(id);
+    return it != simulables.end() ? dynamic_cast<Entrada*>(it->second) : nullptr;
 }
 
 Salida* Controlador::getSalida(const unsigned int id) const
 {
-    const ListaSalidas* lista{listaSalidas};
-    while(lista != nullptr)
-    {
-        if(lista->salida->getId() == id)
-            return lista->salida;
-        lista = lista->siguiente;
-    }
-
-    return nullptr;
+    const auto it = simulables.find(id);
+    return it != simulables.end() ? dynamic_cast<Salida*>(it->second) : nullptr;
 }

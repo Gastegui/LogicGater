@@ -8,13 +8,14 @@
 #include "io.h"
 #include "Wrapper/image.h"
 #include "raton.h"
+#include "simulable.h"
 
 class IO;
 class IMG;
 class Raton;
 class SistemaGuardado;
 
-class Salida
+class Salida final : public Simulable
 {
     friend class SistemaGuardado;
 
@@ -27,11 +28,9 @@ class Salida
     bool mover{false};
     Raton* raton;
 
-    unsigned int id;
-
     static unsigned int idGenerator()
     {
-        static unsigned int id = 1;
+        static unsigned int id = 1 + 1<<29;
         return id++;
     }
 
@@ -48,12 +47,14 @@ public:
     {}
 
     Salida(SDL_Renderer* renderer, const int x, const int y, Raton* raton_, const unsigned int id_)
-        :img{"./img/salida/apagado.png", renderer, x, y}, raton{raton_}, id{id_}
+        :Simulable{id_}, img{"./img/salida/apagado.png", renderer, x, y}, raton{raton_}
     {
         img.setClickable(this);
         linea.first += x;
         linea.second += y;
     }
+
+    ~Salida() override = default;
 
     void setEntrada(IO* entrada_) { entrada = entrada_; }
     [[nodiscard]] IO* getEntrada() const { return entrada; }
@@ -61,15 +62,13 @@ public:
     [[nodiscard]] std::pair<int, int>* getLineaPos() { return &linea; }
     [[nodiscard]] bool get() const { return entrada->get(); }
     [[nodiscard]] bool getDesconectado() const { return entrada == nullptr; }
-    [[nodiscard]] unsigned int getId() const { return id; }
 
-    void simular();
+    void simular() override;
+    void actualizar() override {}
     void simularAntiguo();
 
     void click(int x, int y, Raton::Evento evento);
     void moverRel(int x, int y);
 };
-
-
 
 #endif //SALIDA_H

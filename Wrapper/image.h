@@ -31,8 +31,8 @@ class IMG
 
     static unsigned int idGenerator()
     {
-        static unsigned int imgIdGenerator = 1;
-        return imgIdGenerator++;
+        static unsigned int id = 1 + 1<<27;
+        return id++;
     }
 
     bool crearPuerta(const char* entradaArriba, const char* entradaAbajo, const char* cuerpo, const char* salida);

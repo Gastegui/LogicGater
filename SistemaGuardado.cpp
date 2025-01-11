@@ -15,7 +15,7 @@
 #include "entrada.h"
 #include "salida.h"
 
-bool SistemaGuardado::guardar(const Controlador* controlador, const Window* window, Valores* valores)
+bool SistemaGuardado::guardar(const Controlador* controlador, const Window* window, const Valores* valores)
 {
     std::ofstream outf{"Guardado.txt"};
 
@@ -25,36 +25,29 @@ bool SistemaGuardado::guardar(const Controlador* controlador, const Window* wind
         return false;
     }
 
-    const Controlador::ListaPuertas* listaPuertas{controlador->listaPuertas} ;
-    const Controlador::ListaEntradas* listaEntradas{controlador->listaEntradas};
-    const Controlador::ListaSalidas* listaSalidas{controlador->listaSalidas};
-
     const int esquinaX{window->getEsquinaX()};
     const int esquinaY{window->getEsquinaY()};
     const Window::ListaLineas* listaLineas{window->lineas};
 
-    outf << "-Puertas\n";
+    outf << "-Elementos\n";
 
-    while(listaPuertas != nullptr)
+    for (const auto& value : controlador->simulables | std::views::values)
     {
-        outf << "Puerta: id: " << listaPuertas->puerta->id << " tipo: " << listaPuertas->puerta->tipo << " arribaNegado: " << listaPuertas->puerta->arribaNegado << " abajoNegado: " << listaPuertas->puerta->abajoNegado << " salidaNegada: " << listaPuertas->puerta->salidaNegada << " x: " << listaPuertas->puerta->x << " y: " << listaPuertas->puerta->y << "\n";
-        listaPuertas = listaPuertas->siguiente;
-    }
-
-    outf << "-Entradas\n";
-
-    while(listaEntradas != nullptr)
-    {
-        outf << "Entrada: id: " << listaEntradas->entrada->id << " mantener: " << listaEntradas->entrada->mantener << " x: " << listaEntradas->entrada->img.m_rect.x << " y: " << listaEntradas->entrada->img.m_rect.y << "\n";
-        listaEntradas = listaEntradas->siguiente;
-    }
-
-    outf << "-Salidas\n";
-
-    while(listaSalidas != nullptr)
-    {
-        outf << "Salida: id: " << listaSalidas->salida->id << " x: " << listaSalidas->salida->img.m_rect.x << " y: " << listaSalidas->salida->img.m_rect.y << "\n";
-        listaSalidas = listaSalidas->siguiente;
+        if(dynamic_cast<Puerta*>(value) != nullptr)
+        {
+            const Puerta* puerta = dynamic_cast<Puerta*>(value);
+            outf << "Puerta: id: " <<puerta->getId() << " tipo: " <<puerta->tipo << " arribaNegado: " <<puerta->arribaNegado << " abajoNegado: " <<puerta->abajoNegado << " salidaNegada: " <<puerta->salidaNegada << " x: " <<puerta->x << " y: " <<puerta->y << "\n";
+        }
+        else if(dynamic_cast<Salida*>(value) != nullptr)
+        {
+            const Salida* salida = dynamic_cast<Salida*>(value);
+            outf << "Salida: id: " << salida->getId() << " x: " << salida->img.m_rect.x << " y: " << salida->img.m_rect.y << "\n";
+        }
+        else if(dynamic_cast<Entrada*>(value) != nullptr)
+        {
+            const Entrada* entrada = dynamic_cast<Entrada*>(value);
+            outf << "Entrada: id: " << entrada->getId() << " mantener: " << entrada->mantener << " x: " << entrada->img.m_rect.x << " y: " << entrada->img.m_rect.y << "\n";
+        }
     }
 
     outf << "-Lineas\n";
@@ -63,13 +56,13 @@ bool SistemaGuardado::guardar(const Controlador* controlador, const Window* wind
     {
         outf << "Linea: ";
         if(listaLineas->origenEntrada != nullptr)
-            outf << "origenEntrada: " << listaLineas->origenEntrada->id;
+            outf << "origenEntrada: " << listaLineas->origenEntrada->getId();
         else
-            outf << "origenPuerta: " << listaLineas->origenPuerta->id;
+            outf << "origenPuerta: " << listaLineas->origenPuerta->getId();
         if(listaLineas->destinoSalida != nullptr)
-            outf << " destinoSalida: " << listaLineas->destinoSalida->id;
+            outf << " destinoSalida: " << listaLineas->destinoSalida->getId();
         else
-            outf << " destinoPuerta: " << listaLineas->destinoPuerta->id << " puertaArriba: " << listaLineas->puertaArriba;
+            outf << " destinoPuerta: " << listaLineas->destinoPuerta->getId() << " puertaArriba: " << listaLineas->puertaArriba;
 
         outf << "\n";
         listaLineas = listaLineas->siguiente;
@@ -139,7 +132,7 @@ int SistemaGuardado::cargar(Controlador* controlador, Window* window, Valores* v
         std::istringstream iss(input);
         iss >> tmp;
 
-        if(tmp == "-Puertas"s || tmp == "-Entradas"s || tmp == "-Salidas"s || tmp == "-Lineas"s || tmp == "-Otros"s)
+        if(tmp == "-Elementos"s || tmp == "-Lineas"s || tmp == "-Otros"s)
             continue;
         if(tmp == "Puerta:"s)
         {

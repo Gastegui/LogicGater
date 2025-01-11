@@ -49,7 +49,7 @@ void Raton::interactuar(IMG* actual)
     if(imgAnterior == nullptr) //El raton a entrado a una imagen desde sin estar antes en otra
     {
         imgAnterior = actual;
-        actual->clickar(-window->getEsquinaX() + posX - actual->getRect()->x, -window->getEsquinaY() + posY - actual->getRect()->y, Evento::ENTRAR);
+        actual->clickar(-window->getEsquinaX() + posX - actual->getRect()->x, -window->getEsquinaY() + posY - actual->getRect()->y, ENTRAR);
     }
     else
     {
@@ -58,16 +58,16 @@ void Raton::interactuar(IMG* actual)
             if(accion == Controles::MovimientoRaton)
             {
                 const SDL_Event* evento = Controles::getEvent();
-                actual->clickar(evento->motion.xrel, evento->motion.yrel, Raton::MOVIMIENTO);
+                actual->clickar(evento->motion.xrel, evento->motion.yrel, MOVIMIENTO);
             }
             else
-                actual->clickar(-window->getEsquinaX() + posX - actual->getRect()->x, -window->getEsquinaY() + posY - actual->getRect()->y, Raton::NADA);
+                actual->clickar(-window->getEsquinaX() + posX - actual->getRect()->x, -window->getEsquinaY() + posY - actual->getRect()->y, NADA);
         }
         else //Se salta de una imagen a otra directamente
         {
-            imgAnterior->clickar(-1, -1,  Evento::SALIR);
+            imgAnterior->clickar(-1, -1,  SALIR);
             imgAnterior = actual;
-            actual->clickar(-window->getEsquinaX() + posX - actual->getRect()->x, -window->getEsquinaY() + posY - actual->getRect()->y, Evento::ENTRAR);
+            actual->clickar(-window->getEsquinaX() + posX - actual->getRect()->x, -window->getEsquinaY() + posY - actual->getRect()->y, ENTRAR);
         }
     }
 }
@@ -160,7 +160,7 @@ void Raton::manejarRaton()
         {
             const SDL_Event* evento = Controles::getEvent();
             if(!controlador->getCuadriculaActiva())
-                moviendoImg->clickar(evento->motion.xrel, evento->motion.yrel, Raton::MOVIMIENTO);
+                moviendoImg->clickar(evento->motion.xrel, evento->motion.yrel, MOVIMIENTO);
             else
             {
                 for(int i = 0; i < abs(evento->motion.xrel); i++)
@@ -172,7 +172,7 @@ void Raton::manejarRaton()
 
                     if((cuadriculaX + moviendoImg->getRect()->x) % controlador->getCuadriculaTamaño() == 0)
                     {
-                        moviendoImg->clickar(cuadriculaX, 0, Raton::MOVIMIENTO);
+                        moviendoImg->clickar(cuadriculaX, 0, MOVIMIENTO);
                         cuadriculaX = 0;
                     }
                 }
@@ -185,7 +185,7 @@ void Raton::manejarRaton()
 
                     if((cuadriculaY + moviendoImg->getRect()->y) % controlador->getCuadriculaTamaño() == 0)
                     {
-                        moviendoImg->clickar(0, cuadriculaY, Raton::MOVIMIENTO);
+                        moviendoImg->clickar(0, cuadriculaY, MOVIMIENTO);
                         cuadriculaY = 0;
                     }
                 }
@@ -229,7 +229,7 @@ void Raton::manejarRaton()
     //El ratón no está en ninguna imágen
     if(imgAnterior != nullptr) //... y antes si lo estaba
     {
-        imgAnterior->clickar(-1, -1, Evento::SALIR);
+        imgAnterior->clickar(-1, -1, SALIR);
         imgAnterior = nullptr;
     }
 

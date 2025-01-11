@@ -13,9 +13,9 @@ void Window::rendererClear() const
     SDL_RenderClear(renderer);
 }
 
-void Window::renderLine(SDL_Renderer* renderer, const int x1, const int y1, const int x2, const int y2, const ListaLineas* linea, const bool simulando)
+void Window::renderLine(SDL_Renderer* renderer, const int x1, const int y1, const int x2, const int y2, const ListaLineas* linea)
 {
-    if(simulando && ((linea->origenEntrada != nullptr && linea->origenEntrada->get()) || (linea->origenPuerta != nullptr && linea->origenPuerta->getSalida()->get())))
+    if((linea->origenEntrada != nullptr && linea->origenEntrada->get()) || (linea->origenPuerta != nullptr && linea->origenPuerta->getSalida()->get()))
         SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
     else
         SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
@@ -23,7 +23,7 @@ void Window::renderLine(SDL_Renderer* renderer, const int x1, const int y1, cons
     SDL_RenderDrawLine(renderer, x1, y1, x2, y2);
 }
 
-void Window::rendererDraw(const bool simulando) const
+void Window::rendererDraw() const
 {
     const ListaIMG::Lista* lista{listaIMG.getLista(ListaIMG::FONDO)};
     const ListaLineas* lista2{lineas};
@@ -64,7 +64,7 @@ void Window::rendererDraw(const bool simulando) const
         //Comprueba si alguno de los dos puntos de la línea está dentro de la pantalla
         if((a->first > -esquinaX && a->first < -esquinaX + width && a->second > -esquinaY && a->second < -esquinaY + height) ||
                 (b->first > -esquinaX && b->first < -esquinaX + width && b->second > -esquinaY && b->second < -esquinaY + height))
-            renderLine(renderer, a->first + esquinaX, a->second + esquinaY, b->first + esquinaX, b->second + esquinaY, lista2, simulando);
+            renderLine(renderer, a->first + esquinaX, a->second + esquinaY, b->first + esquinaX, b->second + esquinaY, lista2);
         else
         {
             //Si no esta el origen o final de la línea dentro de la pantalla, comprueba si la línea intersecciona la pantalla
@@ -74,7 +74,7 @@ void Window::rendererDraw(const bool simulando) const
             int x2 = b->first;
             int y2 = b->second;
             if(SDL_IntersectRectAndLine(&rect, &x1, &y1, &x2, &y2))
-                renderLine(renderer, a->first + esquinaX, a->second + esquinaY, b->first + esquinaX, b->second + esquinaY, lista2, simulando);
+                renderLine(renderer, a->first + esquinaX, a->second + esquinaY, b->first + esquinaX, b->second + esquinaY, lista2);
         }
         lista2 = lista2->siguiente;
     }
@@ -99,9 +99,9 @@ void Window::limpiar() const
 }
 
 
-void Window::render(const bool simulando) const
+void Window::render() const
 {
-    rendererDraw(simulando);
+    rendererDraw();
     rendererPresent();
 }
 

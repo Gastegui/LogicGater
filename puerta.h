@@ -8,6 +8,7 @@
 #include "./Wrapper/image.h"
 #include "raton.h"
 #include "io.h"
+#include "simulable.h"
 
 class IMG;
 class Window;
@@ -15,7 +16,7 @@ class Raton;
 class IO;
 class SistemaGuardado;
 
-class Puerta
+class Puerta final : public Simulable
 {
     friend class SistemaGuardado;
     bool arribaNegado;
@@ -33,11 +34,10 @@ class Puerta
     std::pair<int, int> lineaAbajo{0, 37};
     std::pair<int, int> lineaSalida{99, 24};
 
-    unsigned int id;
 
     static unsigned int idGenerator()
     {
-        static unsigned int id = 1;
+        static unsigned int id = 1 + 1<<31;
         return id++;
     }
 
@@ -74,7 +74,7 @@ public:
     {}
 
     Puerta(SDL_Renderer* renderer, const Tipo tipo_, const int x_, const int y_, const bool arribaNegado_, const bool abajoNegado_, const bool salidaNegada_, Raton* raton_, const unsigned int id_)
-            :arribaNegado{arribaNegado_}, abajoNegado{abajoNegado_}, salidaNegada{salidaNegada_}, id{id_}, x{x_}, y{y_}, raton{raton_}, tipo{tipo_},
+            :Simulable(id_), arribaNegado{arribaNegado_}, abajoNegado{abajoNegado_}, salidaNegada{salidaNegada_}, x{x_}, y{y_}, raton{raton_}, tipo{tipo_},
                 imagen{renderer, x_, y_, arribaNegado_ ? "./img/puertas/entrada_arriba_negada.png" : "./img/puertas/entrada_arriba_normal.png",
                                  abajoNegado_ ? "./img/puertas/entrada_abajo_negada.png" : "./img/puertas/entrada_abajo_normal.png",
                                  tipo_ == AND ? "./img/puertas/and.png" : tipo_ == OR ? "./img/puertas/or.png" : "./img/puertas/xor.png",
@@ -89,6 +89,7 @@ public:
         lineaSalida.second += y;
     }
 
+    ~Puerta() override = default;
 
     void setArriba(IO* arriba_) { arriba = arriba_; }
     void setAbajo(IO* abajo_) { abajo = abajo_; }
@@ -96,8 +97,7 @@ public:
     [[nodiscard]] IO* getArriba() const { return arriba; }
     [[nodiscard]] IO* getAbajo() const { return abajo; }
     [[nodiscard]] bool getDesconectado() const { return arriba == nullptr && abajo == nullptr && salida.getConexiones() == 0; }
-    [[nodiscard]] IMG* getIMG() { return &imagen; }
-    [[nodiscard]] unsigned int getId() const { return id; }
+    [[nodiscard]] IMG* getImg() { return &imagen; }
 
     [[nodiscard]] std::pair<int, int>* getLineaArribaPos() { return &lineaArriba; }
     [[nodiscard]] std::pair<int, int>* getLineaAbajoPos() { return &lineaAbajo; }
@@ -123,8 +123,8 @@ public:
 
     void click(int x, int y, Raton::Evento evento);
 
-    void simular();
-    void actualizar();
+    void simular() override;
+    void actualizar() override;
     bool simularAntiguo();
     void simulacionAntiguaTermindada();
     void moverRel(int x_, int y_);

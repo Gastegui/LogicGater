@@ -43,7 +43,7 @@ int main(int argc, char* argv[])
         return 1;
     }
 
-    window.render(false);
+    window.render();
 
     SDL_Event event;
     Controles::init(&event, &window);
@@ -123,7 +123,7 @@ int main(int argc, char* argv[])
                         window.limpiar();
                         txt.setPos(500, 500);
                         txt << "Cargando...";
-                        window.render(false);
+                        window.render();
 
                         const int ret = SistemaGuardado::cargar(&controlador, &window, &valores);
                         if(ret == -1)
@@ -215,7 +215,7 @@ int main(int argc, char* argv[])
             txt << mensajeStr;
         }
 
-        window.render(simulando);
+        window.render();
         SDL_Delay(16);
     }
     //Mix_CloseAudio();

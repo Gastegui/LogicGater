@@ -36,6 +36,7 @@ add_executable(LogicGater main.cpp
         ListaIMG.cpp
         ListaIMG.h
         SistemaGuardado.cpp
-        SistemaGuardado.h)
+        SistemaGuardado.h
+        simulable.h)
 
 target_link_libraries(LogicGater ${SDL2_LIBRARIES} SDL2_ttf SDL2_mixer SDL2_image)
