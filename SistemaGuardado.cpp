@@ -87,7 +87,7 @@ int SistemaGuardado::cargar(Controlador* controlador, Window* window, Valores* v
         return -1;
     }
 
-    if(controlador->getPuerta(1) != nullptr || controlador->getEntrada(1) != nullptr || controlador->getSalida(1) != nullptr)
+    if(controlador->getSimulablesLenght() != 0)
         return -2;
 
     using namespace std::literals::string_literals;

@@ -95,7 +95,7 @@ public:
     int cambiarCuadriculaRel(const int cambio) { if(cuadriculaTamaño + cambio > 0) cuadriculaTamaño += cambio; return cuadriculaTamaño; }
     [[nodiscard]] int getCuadriculaActiva() const { return cuadricula; }
     [[nodiscard]] int getCuadriculaTamaño() const { return cuadriculaTamaño; }
-
+    [[nodiscard]] unsigned long getSimulablesLenght() const {return simulables.size(); }
 };
 
 #endif //CONTROLADOR_H
