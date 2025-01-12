@@ -50,9 +50,16 @@ int main(int argc, char* argv[])
     bool enMarcha = true;
     bool simulando = false;
     bool mostrarControles = true;
+    bool guardar = false;
+    bool cargar = false;
+
     char strTMP[50] = {" "};
+
     Uint64 ultimaSimulacion = SDL_GetTicks64();
     SistemaGuardado::Valores valores;
+
+    std::string inputStr = {" "};
+    bool escribiendo = false;
 
     char mensajeStr[40] = {" "};
     constexpr int mensajeDuracion = 5000;
@@ -112,29 +119,16 @@ int main(int argc, char* argv[])
                     mostrarControles = !mostrarControles;
                     break;
                 case Controles::Guardar:
-                    if(SistemaGuardado::guardar(&controlador, &window, &valores))
-                        snprintf(mensajeStr, 40, "Se ha guardado");
-                    else
-                        snprintf(mensajeStr, 40, "No se ha podido guardar");
-                    mensajeTiempo = SDL_GetTicks64();
+                    Controles::setTextInput();
+                    inputStr = "";
+                    guardar = true;
+                    escribiendo = true;
                     break;
                 case Controles::Cargar:
-                    {
-                        window.limpiar();
-                        txt.setPos(500, 500);
-                        txt << "Cargando...";
-                        window.render();
-
-                        const int ret = SistemaGuardado::cargar(&controlador, &window, &valores);
-                        if(ret == -1)
-                            snprintf(mensajeStr, 40, "No se ha podido cargar");
-                        else if(ret == -2)
-                            snprintf(mensajeStr, 40, "No se puede cargar si se ha creado algo");
-                        else
-                            snprintf(mensajeStr, 40, "Se ha cargado");
-
-                        mensajeTiempo = SDL_GetTicks64();
-                    }
+                    Controles::setTextInput();
+                    inputStr = "";
+                    cargar = true;
+                    escribiendo = true;
                     break;
                 case Controles::Cuadricula:
                     controlador.alternarCuadricula();
@@ -145,12 +139,71 @@ int main(int argc, char* argv[])
                 case Controles::CuadriculaDisminuir:
                     valores.cuadriculaTamaño = controlador.cambiarCuadriculaRel(-5);
                     break;
+                case Controles::TextInput:
+                    {
+                        const SDL_Event* evento = Controles::getEvent();
+                        switch (evento->type)
+                        {
+                            case SDL_KEYDOWN:
+                                switch(evento->key.keysym.sym)
+                                {
+                                    case SDLK_RETURN:
+                                        Controles::unsetTextInput();
+                                        escribiendo = false;
+                                        break;
+                                    case SDLK_BACKSPACE:
+                                        if (!inputStr.empty())
+                                            inputStr.pop_back();
+                                        break;
+                                    default:
+                                        break;
+                                }
+                                break;
+                            case SDL_QUIT:
+                                enMarcha = false;
+                                break;
+                            case SDL_TEXTINPUT:
+                                inputStr += evento->text.text;
+                                break;
+                            default:
+                                break;
+                        }
+                    }
                 case Controles::Nada:
                 default:
                     break;
             }
             if(enMarcha)
                 window.manejarRaton();
+        }
+
+        if(guardar && !escribiendo)
+        {
+            if(SistemaGuardado::guardar(&controlador, &window, &valores, inputStr))
+                snprintf(mensajeStr, 40, "Se ha guardado");
+            else
+                snprintf(mensajeStr, 40, "No se ha podido guardar");
+            mensajeTiempo = SDL_GetTicks64();
+            guardar = false;
+        }
+
+        if(cargar && !escribiendo)
+        {
+            window.limpiar();
+            txt.setPos(500, 500);
+            txt << "Cargando...";
+            window.render();
+            printf("%s\n", inputStr.c_str());
+            const int ret = SistemaGuardado::cargar(&controlador, &window, &valores, inputStr);
+            if(ret == -1)
+                snprintf(mensajeStr, 40, "No se ha podido cargar");
+            else if(ret == -2)
+                snprintf(mensajeStr, 40, "No se puede cargar si se ha creado algo");
+            else
+                snprintf(mensajeStr, 40, "Se ha cargado");
+
+            mensajeTiempo = SDL_GetTicks64();
+            cargar = false;
         }
 
         if(simulando)
@@ -213,6 +266,21 @@ int main(int argc, char* argv[])
         {
             txt.setPos(900, 1050);
             txt << mensajeStr;
+        }
+
+        if(cargar && escribiendo)
+        {
+            txt.setPos(500, 500);
+            txt << "Escribe el nombre del archivo: ";
+            txt.setPos(840, 500);
+            txt << (inputStr.empty() ? " " : inputStr.c_str());
+        }
+        if(guardar && escribiendo)
+        {
+            txt.setPos(500, 500);
+            txt << "Escribe el nombre del archivo: ";
+            txt.setPos(840, 500);
+            txt << (inputStr.empty() ? " " : inputStr.c_str());
         }
 
         window.render();

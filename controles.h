@@ -18,6 +18,7 @@ public:
     enum Accion
     {
         Nada,               //
+        TextInput,          //SDL_TEXTINPUT
         Interactuar,        //Soltar clic izquierdo    (sirve para encender/apagar, invertir polaridad, borrar)
         InteractuarAbajo,   //Pulsar click izquierdo
         MovimientoRaton,    //SDL_MOUSEMOTION
@@ -52,6 +53,7 @@ private:
     static SDL_Event* evento;
     static std::map<std::string, Accion> acciones;
     static Window* window;
+    static bool escribiendo;
 public:
     static void init(SDL_Event* evento_, Window* window_)
     {
@@ -93,6 +95,8 @@ public:
     static Accion getNuevaAccion(const SDL_Event* evento);
     [[nodiscard]] static Accion getUltimaAccion() { return accionAnterior; }
     [[nodiscard]] static SDL_Event* getEvent() { return evento; }
+    static void setTextInput() { escribiendo = true; SDL_StartTextInput(); }
+    static void unsetTextInput() { escribiendo = false; SDL_StopTextInput(); }
 };
 
 

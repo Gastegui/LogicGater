@@ -15,9 +15,9 @@
 #include "entrada.h"
 #include "salida.h"
 
-bool SistemaGuardado::guardar(const Controlador* controlador, const Window* window, const Valores* valores)
+bool SistemaGuardado::guardar(const Controlador* controlador, const Window* window, const Valores* valores, const std::string& archivo)
 {
-    std::ofstream outf{"Guardado.txt"};
+    std::ofstream outf{archivo.c_str()};
 
     if(!outf)
     {
@@ -77,9 +77,9 @@ bool SistemaGuardado::guardar(const Controlador* controlador, const Window* wind
 }
 
 
-int SistemaGuardado::cargar(Controlador* controlador, Window* window, Valores* valores)
+int SistemaGuardado::cargar(Controlador* controlador, Window* window, Valores* valores, const std::string& archivo)
 {
-    std::ifstream inf{ "Guardado.txt" };
+    std::ifstream inf{ archivo.c_str() };
 
     if(!inf)
     {

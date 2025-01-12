@@ -10,9 +10,16 @@ Controles::Accion Controles::accionAnterior = Nada;
 SDL_Event* Controles::evento = nullptr;
 std::map<std::string, Controles::Accion> Controles::acciones;
 Window* Controles::window = nullptr;
+bool Controles::escribiendo = false;
 
 Controles::Accion Controles::getNuevaAccion(const SDL_Event* evento)
 {
+    if(escribiendo)
+    {
+        accionAnterior = TextInput;
+        return accionAnterior;
+    }
+
     accionAnterior = Nada;
     std::string str = "..";
     if(evento->type == SDL_KEYDOWN || evento->type == SDL_MOUSEBUTTONDOWN)
