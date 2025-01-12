@@ -31,51 +31,42 @@ void Controlador::borrarConexiones(Puerta* puerta, const bool arriba, const bool
         origen = nullptr;
 
     window->borrarLineas(puerta, arriba, abajo, salida);
-    printf("%d %d %d\n", arriba, abajo, salida);
 
     if(arriba && puerta->getArriba() != nullptr)
     {
-        printf("Arriba\n");
         puerta->getArriba()->desconectado();
         puerta->setArriba(nullptr);
     }
 
     if(abajo && puerta->getAbajo() != nullptr)
     {
-        printf("Abajo\n");
         puerta->getAbajo()->desconectado();
         puerta->setAbajo(nullptr);
     }
 
     if(salida && puerta->getSalida()->getConexiones() != 0)
     {
-        printf("Output\n");
         for (const auto& value : simulables | std::views::values)
         {
             if(dynamic_cast<Puerta*>(value) != nullptr)
             {
-                printf("Puerta ");
                 Puerta* puerta_ = dynamic_cast<Puerta*>(value);
                 if(puerta_->getArriba() == puerta->getSalida())
                 {
-                    printf("Arriba\n");
                     puerta->getSalida()->desconectado();
                     puerta_->setArriba(nullptr);
                 }
                 if(puerta_->getAbajo() == puerta->getSalida())
                 {
-                    printf("Abajo\n");
                     puerta->getSalida()->desconectado();
                     puerta_->setAbajo(nullptr);
                 }
             }
             else if(dynamic_cast<Salida*>(value) != nullptr)
             {
-                printf("Salida ");
                 Salida* salida_ = dynamic_cast<Salida*>(value);
                 if(salida_->getEntrada() == puerta->getSalida())
                 {
-                    printf("Borrar\n");
                     puerta->getSalida()->desconectado();
                     salida_->setEntrada(nullptr);
                 }
