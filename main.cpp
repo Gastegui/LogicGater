@@ -220,7 +220,7 @@ int main(int argc, char* argv[])
         window.limpiar();
         if(mostrarControles)
         {
-            txt.setPos(0, 210);
+            txt.setPos(0, 180);
             txt << "Creación:" << "    A: puerta AND" << "    O: puerta OR" << "    X: puerta XOR" << "    I: interruptor" << "    B: botón" << "    S: salida";
             txt << "Modificadores:" << "    Espacio: crear conexión" << "    Retroceso: modo borrar";
             if(!window.getRaton()->getBorrando())
