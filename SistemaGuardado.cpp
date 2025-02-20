@@ -11,9 +11,9 @@
 
 #include "controlador.h"
 #include "Wrapper/window.h"
-#include "puerta.h"
-#include "entrada.h"
-#include "salida.h"
+#include "Elementos/puerta.h"
+#include "Elementos/entrada.h"
+#include "Elementos/salida.h"
 
 bool SistemaGuardado::guardar(const Controlador* controlador, const Window* window, const Valores* valores, const std::string& archivo)
 {

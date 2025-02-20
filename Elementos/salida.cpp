@@ -4,7 +4,7 @@
 
 #include "salida.h"
 #include "puerta.h"
-#include "controles.h"
+#include "../controles.h"
 
 void Salida::click(const int x, const int y, const Raton::Evento evento)
 {

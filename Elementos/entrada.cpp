@@ -3,7 +3,7 @@
 //
 
 #include "entrada.h"
-#include "controles.h"
+#include "../controles.h"
 
 void Entrada::click(const int x, const int y, const Raton::Evento evento)
 {

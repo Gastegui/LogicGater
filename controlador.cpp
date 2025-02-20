@@ -3,8 +3,8 @@
 //
 
 #include "controlador.h"
-#include "salida.h"
-#include "entrada.h"
+#include "Elementos/salida.h"
+#include "Elementos/entrada.h"
 
 void Controlador::desmarcarOrigen()
 {

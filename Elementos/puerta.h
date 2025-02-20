@@ -5,9 +5,9 @@
 #ifndef GATE_H
 #define GATE_H
 
-#include "./Wrapper/image.h"
-#include "raton.h"
-#include "io.h"
+#include "../Wrapper/image.h"
+#include "../raton.h"
+#include "../io.h"
 #include "simulable.h"
 
 class IMG;

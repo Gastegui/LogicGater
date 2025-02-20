@@ -4,9 +4,9 @@
 
 #include "image.h"
 #include "window.h"
-#include "../puerta.h"
-#include "../entrada.h"
-#include "../salida.h"
+#include "../Elementos/puerta.h"
+#include "../Elementos/entrada.h"
+#include "../Elementos/salida.h"
 
 bool IMG::crearPuerta(const char* entradaArriba, const char* entradaAbajo, const char* cuerpo, const char* salida)
 {

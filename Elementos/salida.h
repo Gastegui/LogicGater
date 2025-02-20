@@ -5,9 +5,9 @@
 #ifndef SALIDA_H
 #define SALIDA_H
 
-#include "io.h"
-#include "Wrapper/image.h"
-#include "raton.h"
+#include "../io.h"
+#include "../Wrapper/image.h"
+#include "../raton.h"
 #include "simulable.h"
 
 class IO;

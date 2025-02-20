@@ -8,7 +8,7 @@
 #include <map>
 #include <ranges>
 
-#include "puerta.h"
+#include "Elementos/puerta.h"
 #include "Wrapper/window.h"
 
 class Puerta;

@@ -4,9 +4,9 @@
 
 #include "window.h"
 #include "image.h"
-#include "../entrada.h"
-#include "../puerta.h"
-#include "../salida.h"
+#include "../Elementos/entrada.h"
+#include "../Elementos/puerta.h"
+#include "../Elementos/salida.h"
 
 void Window::rendererClear() const
 {
