@@ -15,10 +15,12 @@ class Window;
 class Raton;
 class IO;
 class SistemaGuardado;
+class Controlador;
 
 class Puerta final : public Simulable
 {
     friend class SistemaGuardado;
+    Controlador* controlador;
     bool arribaNegado;
     bool abajoNegado;
     bool salidaNegada;
@@ -28,12 +30,12 @@ class Puerta final : public Simulable
 
     IO* arriba{nullptr};
     IO* abajo{nullptr};
-    IO salida{this};
-
+    IO salida;
+    /*
     std::pair<int, int> lineaArriba{0, 11};
     std::pair<int, int> lineaAbajo{0, 37};
     std::pair<int, int> lineaSalida{99, 24};
-
+    */
 
     static unsigned int idGenerator()
     {
@@ -65,28 +67,25 @@ private:
 
 public:
 
-    Puerta(SDL_Renderer* renderer, const Tipo tipo_, const int x_, const int y_, Raton* raton)
-        : Puerta(renderer, tipo_, x_, y_, false, false, false, raton)
+    Puerta(SDL_Renderer* renderer, Controlador* controlador_, const Tipo tipo_, const int x_, const int y_, Raton* raton)
+        : Puerta(renderer, controlador_, tipo_, x_, y_, false, false, false, raton)
     {}
 
-    Puerta(SDL_Renderer* renderer, const Tipo tipo_, const int x_, const int y_, const bool arribaNegado_, const bool abajoNegado_, const bool salidaNegada_, Raton* raton_)
-        :Puerta(renderer, tipo_, x_, y_, arribaNegado_, abajoNegado_, salidaNegada_, raton_, idGenerator())
+    Puerta(SDL_Renderer* renderer, Controlador* controlador_, const Tipo tipo_, const int x_, const int y_, const bool arribaNegado_, const bool abajoNegado_, const bool salidaNegada_, Raton* raton_)
+        :Puerta(renderer, controlador_, tipo_, x_, y_, arribaNegado_, abajoNegado_, salidaNegada_, raton_, idGenerator())
     {}
 
-    Puerta(SDL_Renderer* renderer, const Tipo tipo_, const int x_, const int y_, const bool arribaNegado_, const bool abajoNegado_, const bool salidaNegada_, Raton* raton_, const unsigned int id_)
-            :Simulable(id_), arribaNegado{arribaNegado_}, abajoNegado{abajoNegado_}, salidaNegada{salidaNegada_}, x{x_}, y{y_}, raton{raton_}, tipo{tipo_},
-                imagen{renderer, x_, y_, arribaNegado_ ? "./img/puertas/entrada_arriba_negada.png" : "./img/puertas/entrada_arriba_normal.png",
-                                 abajoNegado_ ? "./img/puertas/entrada_abajo_negada.png" : "./img/puertas/entrada_abajo_normal.png",
-                                 tipo_ == AND ? "./img/puertas/and.png" : tipo_ == OR ? "./img/puertas/or.png" : "./img/puertas/xor.png",
-                                 salidaNegada_ ? "./img/puertas/salida_negada.png" : "./img/puertas/salida_normal.png"}
+    Puerta(SDL_Renderer* renderer, Controlador* controlador_, const Tipo tipo_, const int x_, const int y_, const bool arribaNegado_, const bool abajoNegado_, const bool salidaNegada_, Raton* raton_, const unsigned int id_)
+        : Simulable(id_), controlador(controlador_), arribaNegado{arribaNegado_}, abajoNegado{abajoNegado_}, salidaNegada{salidaNegada_}, salida(this, 99+x_, 24+y_), x{x_}, y{y_}, raton{raton_}, tipo{tipo_},
+          imagen{
+              renderer, x_, y_,
+              arribaNegado_ ? "./img/puertas/entrada_arriba_negada.png" : "./img/puertas/entrada_arriba_normal.png",
+              abajoNegado_ ? "./img/puertas/entrada_abajo_negada.png" : "./img/puertas/entrada_abajo_normal.png",
+              tipo_ == AND ? "./img/puertas/and.png" : tipo_ == OR ? "./img/puertas/or.png" : "./img/puertas/xor.png",
+              salidaNegada_ ? "./img/puertas/salida_negada.png" : "./img/puertas/salida_normal.png"
+          }
     {
         imagen.setClickable(this);
-        lineaArriba.first += x;
-        lineaArriba.second += y;
-        lineaAbajo.first += x;
-        lineaAbajo.second += y;
-        lineaSalida.first += x;
-        lineaSalida.second += y;
     }
 
     ~Puerta() override = default;
@@ -97,11 +96,7 @@ public:
     [[nodiscard]] IO* getArriba() const { return arriba; }
     [[nodiscard]] IO* getAbajo() const { return abajo; }
     [[nodiscard]] bool getDesconectado() const { return arriba == nullptr && abajo == nullptr && salida.getConexiones() == 0; }
-    [[nodiscard]] IMG* getImg() { return &imagen; }
-
-    [[nodiscard]] std::pair<int, int>* getLineaArribaPos() { return &lineaArriba; }
-    [[nodiscard]] std::pair<int, int>* getLineaAbajoPos() { return &lineaAbajo; }
-    [[nodiscard]] std::pair<int, int>* getLineaSalidePos() { return &lineaSalida; }
+    [[nodiscard]] IMG* getImg() override { return &imagen; }
 
     bool cambiar(const int arribaNegado_, const int abajoNegado_, const Tipo tipo_, const int salidaNegada_)
     {
@@ -121,13 +116,15 @@ public:
                              salidaNegada ? "./img/puertas/salida_negada.png" : "./img/puertas/salida_normal.png");
     }
 
-    void click(int x, int y, Raton::Evento evento);
 
     void simular() override;
     void actualizar() override;
     bool simularAntiguo();
     void simulacionAntiguaTermindada();
     void moverRel(int x_, int y_);
+    bool interactuar(int posX, int posY, INTERACCIONES interaccion) override;
+    void setIONull(IO* io) override;
+    [[nodiscard]] IO* getIOSalida() override { return &salida; }
 };
 
 #endif //GATE_H

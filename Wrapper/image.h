@@ -8,7 +8,8 @@
 #include <iostream>
 
 #include "SDL_image.h"
-#include "../raton.h"
+#include "../enums.h"
+#include "../Simulables/simulable.h"
 
 class Puerta;
 class Entrada;
@@ -25,9 +26,8 @@ class IMG
     unsigned int id;
     bool esPuerta{false};
     bool esClickable{false};
-    Puerta* puerta{nullptr};
-    Entrada* entrada{nullptr};
-    Salida* salida{nullptr};
+    Simulable* simulable{nullptr};
+    TIPOS_SIMULABLES tipoSimulable{TIPOS_SIMULABLES::Nada};
 
     static unsigned int idGenerator()
     {
@@ -82,13 +82,12 @@ public:
     [[nodiscard]] SDL_Rect* getRect() { return &m_rect; }
     [[nodiscard]] bool getClickable() const { return esClickable; }
 
-    void setClickable(Puerta* puerta_);
-    void setClickable(Entrada* boton_);
-    void setClickable(Salida* salida_);
-    [[nodiscard]] Puerta* getPadrePuerta() const { return puerta; }
-    [[nodiscard]] Entrada* getPadreEntrada() const { return entrada; }
-    [[nodiscard]] Salida* getPadreSalida() const { return salida; }
-
+    void setClickable(Simulable* simulable_)
+    {
+        simulable = simulable_;
+        tipoSimulable = simulable_->getTipo();
+    }
+    [[nodiscard]] Simulable* getSimulable() const { return simulable; }
 
     bool operator==(const IMG& a) const
     {
@@ -126,7 +125,7 @@ public:
         return crearPuerta(entradaArriba, entradaAbajo, cuerpo, salida);
     }
 
-    void clickar(int x, int y, Raton::Evento evento) const;
+    void interactuar(const int x, const int y, const INTERACCIONES interaccion) const { simulable->interactuar(x, y, interaccion); }
 };
 
 #endif //IMAGE_H

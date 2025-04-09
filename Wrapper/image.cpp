@@ -4,10 +4,6 @@
 
 #include "image.h"
 #include "window.h"
-#include "../Elementos/puerta.h"
-#include "../Elementos/entrada.h"
-#include "../Elementos/salida.h"
-
 bool IMG::crearPuerta(const char* entradaArriba, const char* entradaAbajo, const char* cuerpo, const char* salida)
 {
     m_texture = SDL_CreateTexture(m_renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, 100, 50);
@@ -40,35 +36,4 @@ bool IMG::crearPuerta(const char* entradaArriba, const char* entradaAbajo, const
     SDL_SetRenderTarget(m_renderer, nullptr);
 
     return true;
-}
-
-void IMG::setClickable(Puerta* puerta_)
-{
-    esClickable = true;
-    puerta = puerta_;
-}
-
-void IMG::setClickable(Entrada* boton_)
-{
-    esClickable = true;
-    entrada = boton_;
-}
-
-void IMG::setClickable(Salida* salida_)
-{
-    esClickable = true;
-    salida = salida_;
-}
-
-void IMG::clickar(const int x, const int y, const Raton::Evento evento) const
-{
-    if(!esClickable)
-        return;
-
-    if(puerta != nullptr)
-        puerta->click(x, y, evento);
-    else if(entrada != nullptr)
-        entrada->click(x, y, evento);
-    else if(salida != nullptr)
-        salida->click(x, y, evento);
 }

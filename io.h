@@ -4,10 +4,13 @@
 
 #ifndef IO_H
 #define IO_H
+#include "enums.h"
+#include "Simulables/simulable.h"
 
 class Puerta;
 class Entrada;
 class Salida;
+class Temporizador;
 
 class IO
 {
@@ -20,36 +23,36 @@ class IO
     unsigned int id;
     bool valor{false};
 
-    int lineaX{};
-    int lineaY{};
-
     int conexiones{0};
 
-    Puerta* puerta{nullptr};
-    Entrada* entrada{nullptr};
-    Salida* salida{nullptr};
+    std::pair<int, int> origen;
+    std::pair<int, int> destino;
+
+    Simulable* simulable;
+    TIPOS_SIMULABLES tipoSimulable;
+    unsigned int idSimulable;
+
 
 public:
 
-    explicit IO(Puerta* puerta_)
-        :id{idGenerator()}, puerta{puerta_}
-    {}
-
-    explicit IO(Entrada* entrada_)
-        :id{idGenerator()}, entrada{entrada_}
-    {}
-
-    explicit IO(Salida* salida_)
-        :id{idGenerator()}, salida{salida_}
+    explicit IO(Simulable* simulable_, const int posX, const int posY)
+        :id{idGenerator()}, origen{posX, posY}, simulable(simulable_), tipoSimulable(simulable_->getTipo()), idSimulable(simulable_->getId())
     {}
 
     void set(const bool b) { valor = b; }
     [[nodiscard]] bool get() const { return valor; }
     [[nodiscard]] unsigned int getId() const { return id; }
 
-    [[nodiscard]] Puerta* getPadrePuerta() const { return puerta; }
-    [[nodiscard]] Entrada* getPadreEntrada() const { return entrada; }
-    [[nodiscard]] Salida* getPadreSalida() const { return salida; }
+    [[nodiscard]] TIPOS_SIMULABLES getTipoSimulable() const { return tipoSimulable; }
+    [[nodiscard]] Simulable* getSimulable() const { return simulable; }
+    [[nodiscard]] unsigned int getIdSimulable() const { return idSimulable; }
+
+    [[nodiscard]] std::pair<int, int>* getLineaOrigen() { return &origen; }
+    void moverLineaOrigenRel(const int x, const int y) { origen.first += x; origen.second += y; }
+
+    [[nodiscard]] std::pair<int, int>* getLineaDestino() { return &destino; }
+    void moverLineaDestinoRel(const int x, const int y) { destino.first += x; destino.second += y; }
+    void setLineaDestino(const int x, const int y) { destino.first = x; destino.second = y; }
 
     void conectado() { conexiones++; }
     void desconectado() { conexiones--; }

@@ -6,13 +6,15 @@
 
 #include <iostream>
 
-Controles::Accion Controles::accionAnterior = Nada;
+using enum ACCION;
+
+ACCION Controles::accionAnterior = Nada;
 SDL_Event* Controles::evento = nullptr;
-std::map<std::string, Controles::Accion> Controles::acciones;
+std::map<std::string, ACCION> Controles::acciones;
 Window* Controles::window = nullptr;
 bool Controles::escribiendo = false;
 
-Controles::Accion Controles::getNuevaAccion(const SDL_Event* evento)
+ACCION Controles::getNuevaAccion(const SDL_Event* evento)
 {
     if(escribiendo)
     {
@@ -36,6 +38,12 @@ Controles::Accion Controles::getNuevaAccion(const SDL_Event* evento)
                 str[1] = 'M';
             else if(evento->button.button == SDL_BUTTON_RIGHT)
                 str[1] = 'D';
+            break;
+        case SDL_MOUSEWHEEL:
+            if(evento->wheel.y > 0)
+                str[1] = 'U';
+            else if(evento->wheel.y < 0)
+                str[1] = 'J';
             break;
         case SDL_KEYDOWN:
         case SDL_KEYUP:
@@ -94,7 +102,7 @@ Controles::Accion Controles::getNuevaAccion(const SDL_Event* evento)
     }
     if(str != ".." && acciones.contains(str))
         accionAnterior = acciones[str];
-    if(window != nullptr && window->getRaton()->getBorrando() && !(accionAnterior == Interactuar || accionAnterior == InteractuarAbajo ||
+    if(window != nullptr && window->getRaton()->getBorrando() && !(accionAnterior == InteractuarArriba || accionAnterior == InteractuarAbajo ||
                                                                     accionAnterior == ConexionArriba || accionAnterior == ConexionAbajo ||
                                                                     accionAnterior == MovimientoRaton))
         window->getRaton()->setBorrando(false);

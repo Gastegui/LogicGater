@@ -8,7 +8,8 @@
 #include <map>
 #include <ranges>
 
-#include "Elementos/puerta.h"
+#include "ListaLineas.h"
+#include "Simulables/puerta.h"
 #include "Wrapper/window.h"
 
 class Puerta;
@@ -34,9 +35,11 @@ class Controlador
 
     std::map<unsigned int, Simulable*> simulables;
 
+    ListaLineas listaLineas;
+
 public:
     explicit Controlador(Window* window_)
-        :window{window_} ,renderer{window_->getRenderer()}
+        :window{window_}, renderer{window_->getRenderer()}
     {}
 
     ~Controlador()
@@ -53,43 +56,59 @@ public:
     }
     [[nodiscard]] Window* getWindow() const { return window; }
 
+    [[nodiscard]] std::map<unsigned int, Simulable*> getSimulables() const { return simulables; }
+    [[nodiscard]] const ListaLineas* getListaLineas() const { return &listaLineas; }
+
     //Crea una puerta
     void crear(Puerta::Tipo tipo, int x, int y, bool arribaNegado = false, bool abajoNegado = false, bool salidaNegada = false, unsigned int id = 0);
-    //Borra una puerta
-    bool borrar(Puerta* puerta);
-    //Borra las conexiones deseadas de una puerta. (Todas por defenco)
-    void borrarConexiones(Puerta* puerta, bool arriba = true, bool abajo = true, bool salida = true);
 
     //Crea una entrada
     void crear(bool mantener, int x, int y, unsigned int id = 0);
-    //Borra una entrada
-    bool borrar(Entrada* entrada);
-    //Borra todas las conexiones de una entrada
-    void borrarConexiones(Entrada* entrada) const;
 
     //Crea una salida
     void crear(int x, int y, unsigned int id = 0);
-    //Borra una salida
-    bool borrar(Salida* salida);
-    //Bora todas las conexiones de una salida
-    void borrarConexiones(Salida* salida) const;
 
-    void marcarOrigen(Puerta* puerta);
-    void marcarOrigen(Entrada* boton);
-    void desmarcarOrigen();
+
+    void borrar(Simulable* simulable)
+    {
+        if (!simulables.contains(simulable->getId()))
+        {
+            std::cout << "No se ha podido borrar el " << toString(simulable->getTipo()) << " con id " << simulable->getId() << std::endl;
+            return;
+        }
+
+        if(simulables.erase(simulable->getId()) == 0)
+        {
+            std::cout << "No se ha podido borrar el " << toString(simulable->getTipo()) << " con id " << simulable->getId() << std::endl;
+            return;
+        }
+
+        borrarConexiones(simulable);
+        window->borrar(simulable->getImg(), ListaIMG::MEDIO);
+
+        delete simulable;
+    }
+
+    void añadirConexion(Simulable* simulable_destino, IO* destino) { listaLineas.añadir(origen->getSimulable(), simulable_destino, origen, destino); }
+    void borrarConexiones(const IO* io) { listaLineas.borrar(io); }
+    void borrarConexiones(const Simulable* simulable) { listaLineas.borrar(simulable); }
+
+    //Crea un temporizador
+    void crear(int x, int y, int duracion, unsigned int id = 0);
+
+    void marcarOrigen(IO* origen_) { origen = origen_; }
+    [[nodiscard]] IO* getOrigen() const { return origen; }
+
+    void desmarcarOrigen() { origen = nullptr; }
     [[nodiscard]] bool getConectando() const { return origen != nullptr; }
 
-    bool destino(Puerta* puerta, bool arriba);
-    bool destino(Salida* salida);
 
     int limpiar();
 
     void simular() const;
     void simularInstantaneo() const;
 
-    [[nodiscard]] Puerta* getPuerta(unsigned int id) const;
-    [[nodiscard]] Entrada* getEntrada(unsigned int id) const;
-    [[nodiscard]] Salida* getSalida(unsigned int id) const;
+    [[nodiscard]] Simulable* getSimulable(unsigned int id) const;
 
     void alternarCuadricula() { cuadricula = !cuadricula; }
     int cambiarCuadriculaRel(const int cambio) { if(cuadriculaTamaño + cambio > 0) cuadriculaTamaño += cambio; return cuadriculaTamaño; }

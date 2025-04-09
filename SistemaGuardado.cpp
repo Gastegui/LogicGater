@@ -11,9 +11,9 @@
 
 #include "controlador.h"
 #include "Wrapper/window.h"
-#include "Elementos/puerta.h"
-#include "Elementos/entrada.h"
-#include "Elementos/salida.h"
+#include "Simulables/puerta.h"
+#include "Simulables/entrada.h"
+#include "Simulables/salida.h"
 
 bool SistemaGuardado::guardar(const Controlador* controlador, const Window* window, const Valores* valores, const std::string& archivo)
 {
@@ -27,7 +27,7 @@ bool SistemaGuardado::guardar(const Controlador* controlador, const Window* wind
 
     const int esquinaX{window->getEsquinaX()};
     const int esquinaY{window->getEsquinaY()};
-    const Window::ListaLineas* listaLineas{window->lineas};
+    const ListaLineas::Lista* listaLineas{controlador->getListaLineas()->getLista()};
 
     outf << "-Elementos\n";
 
@@ -50,19 +50,15 @@ bool SistemaGuardado::guardar(const Controlador* controlador, const Window* wind
         }
     }
 
-    outf << "-Lineas\n";
+    outf << "-Conexiones\n";
 
     while(listaLineas != nullptr)
     {
-        outf << "Linea: ";
-        if(listaLineas->origenEntrada != nullptr)
-            outf << "origenEntrada: " << listaLineas->origenEntrada->getId();
-        else
-            outf << "origenPuerta: " << listaLineas->origenPuerta->getId();
-        if(listaLineas->destinoSalida != nullptr)
-            outf << " destinoSalida: " << listaLineas->destinoSalida->getId();
-        else
-            outf << " destinoPuerta: " << listaLineas->destinoPuerta->getId() << " puertaArriba: " << listaLineas->puertaArriba;
+        outf << "Conexion: ";
+        outf << "io_x: " << listaLineas->io_origen->getLineaDestino()->first;
+        outf << "io_y: " << listaLineas->io_origen->getLineaDestino()->second;
+        outf << " simulable_origen: " << listaLineas->simulable_origen->getId();
+        outf << " simulable_destino: " << listaLineas->simulable_destino->getId();
 
         outf << "\n";
         listaLineas = listaLineas->siguiente;
@@ -116,12 +112,11 @@ int SistemaGuardado::cargar(Controlador* controlador, Window* window, Valores* v
     int salidaX{false};
     int salidaY{false};
 
-    //Lineas
-    unsigned int lineaOrigenEntrada{0};
-    unsigned int lineaOrigenPuerta{0};
-    unsigned int lineaDestinoSalida{0};
-    unsigned int lineaDestinoPuerta{0};
-    bool lineaPuertaArriba{false};
+    //Conexiones
+    int io_x{0};
+    int io_y{0};
+    unsigned int simulable_origen{0};
+    unsigned int simulable_destino{0};
 
     //Otros
     int coordenadaX{0};
@@ -174,41 +169,31 @@ int SistemaGuardado::cargar(Controlador* controlador, Window* window, Valores* v
             iss >> salidaY;
             controlador->crear(salidaX, salidaY, salidaId);
         }
-        else if(tmp == "Linea:"s)
+        else if(tmp == "Conexion:"s)
         {
-            lineaOrigenEntrada = 0;
-            lineaOrigenPuerta = 0;
-            lineaDestinoSalida = 0;
-            lineaDestinoPuerta = 0;
+            io_x = 0;
+            io_y = 0;
+            simulable_origen = 0;
+            simulable_destino = 0;
 
-            iss >> tmp; //origen
-            if(tmp == "origenEntrada:"s)
-                iss >> lineaOrigenEntrada;
-            else if(tmp == "origenPuerta:"s)
-                iss >> lineaOrigenPuerta;
-            iss >> tmp; //Destino
-            if(tmp == "destinoSalida:"s)
-                iss >> lineaDestinoSalida;
-            else if(tmp == "destinoPuerta:"s)
+            iss >> tmp;
+            iss >> io_x;
+            iss >> tmp;
+            iss >> io_y;
+            iss >> tmp;
+            iss >> simulable_origen;
+            iss >> tmp;
+            iss >> simulable_destino;
+
+            if(simulable_origen == 0 || simulable_destino == 0)
+                std::cout << "Se ha leido una conexión inválida: " << io_x << " " << io_y << " " << simulable_origen << " " << simulable_destino << std::endl;
+            else
             {
-                iss >> lineaDestinoPuerta;
-                iss >> tmp; //puertaArriba
-                iss >> lineaPuertaArriba;
-            }
-
-            if(lineaOrigenEntrada != 0)
-                controlador->marcarOrigen(controlador->getEntrada(lineaOrigenEntrada));
-            else if(lineaOrigenPuerta != 0)
-                controlador->marcarOrigen(controlador->getPuerta(lineaOrigenPuerta));
-
-            bool ret{false};
-            if(lineaDestinoSalida != 0)
-                ret = controlador->destino(controlador->getSalida(lineaDestinoSalida));
-            else if(lineaDestinoPuerta != 0)
-                ret = controlador->destino(controlador->getPuerta(lineaDestinoPuerta), lineaPuertaArriba);
-
-            if(!ret)
+                controlador->marcarOrigen(controlador->getSimulable(simulable_origen)->getIOSalida());
+                controlador->getSimulable(simulable_destino)->interactuar(io_x, io_y, INTERACCIONES::ConexionArriba);
                 controlador->desmarcarOrigen();
+                controlador->añadirConexion(controlador->getSimulable(simulable_destino), controlador->getSimulable(simulable_origen)->getIOSalida());
+            }
         }
         else if(tmp == "Coordenadas:"s)
         {

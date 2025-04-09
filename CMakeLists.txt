@@ -16,8 +16,10 @@ add_executable(LogicGater main.cpp
         Wrapper/sound.h
         Wrapper/text.h
         Wrapper/image.h
-        Elementos/puerta.cpp
-        Elementos/puerta.h
+        ListaLineas.cpp
+        ListaLineas.h
+        Simulables/puerta.cpp
+        Simulables/puerta.h
         Wrapper/image.cpp
         Wrapper/window.cpp
         raton.cpp
@@ -26,10 +28,10 @@ add_executable(LogicGater main.cpp
         controlador.h
         io.cpp
         io.h
-        Elementos/entrada.cpp
-        Elementos/entrada.h
-        Elementos/salida.cpp
-        Elementos/salida.h
+        Simulables/entrada.cpp
+        Simulables/entrada.h
+        Simulables/salida.cpp
+        Simulables/salida.h
         controles.cpp
         controles.h
         Wrapper/text.cpp
@@ -37,6 +39,9 @@ add_executable(LogicGater main.cpp
         ListaIMG.h
         SistemaGuardado.cpp
         SistemaGuardado.h
-        Elementos/simulable.h
+        Simulables/simulable.h
+        #Simulables/Temporizador.cpp
+        #Simulables/Temporizador.h
+        enums.h)
 
 target_link_libraries(LogicGater ${SDL2_LIBRARIES} SDL2_ttf SDL2_mixer SDL2_image)

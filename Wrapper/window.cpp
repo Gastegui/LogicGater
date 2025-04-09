@@ -4,18 +4,18 @@
 
 #include "window.h"
 #include "image.h"
-#include "../Elementos/entrada.h"
-#include "../Elementos/puerta.h"
-#include "../Elementos/salida.h"
+#include "../Simulables/entrada.h"
+#include "../Simulables/puerta.h"
+#include "../controlador.h"
 
 void Window::rendererClear() const
 {
     SDL_RenderClear(renderer);
 }
 
-void Window::renderLine(SDL_Renderer* renderer, const int x1, const int y1, const int x2, const int y2, const ListaLineas* linea)
+void Window::renderLine(SDL_Renderer* renderer, const int x1, const int y1, const int x2, const int y2, const ListaLineas::Lista* linea)
 {
-    if((linea->origenEntrada != nullptr && linea->origenEntrada->get()) || (linea->origenPuerta != nullptr && linea->origenPuerta->getSalida()->get()))
+    if(linea->io_origen->get())
         SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
     else
         SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
@@ -26,9 +26,7 @@ void Window::renderLine(SDL_Renderer* renderer, const int x1, const int y1, cons
 void Window::rendererDraw() const
 {
     const ListaIMG::Lista* lista{listaIMG.getLista(ListaIMG::FONDO)};
-    const ListaLineas* lista2{lineas};
-    std::pair<int, int>* a;
-    std::pair<int, int>* b;
+    const ListaLineas::Lista* lista2{controlador->getListaLineas()->getLista()};
     while(lista != nullptr)
     {
         SDL_RenderCopy(renderer, lista->img->getTexture(), nullptr, lista->img->getRect());
@@ -51,30 +49,23 @@ void Window::rendererDraw() const
     SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
     while(lista2 != nullptr)
     {
-        if(lista2->origenPuerta)
-            a = lista2->origenPuerta->getLineaSalidePos();
-        else
-            a = lista2->origenEntrada->getLineaPos();
-
-        if(lista2->destinoPuerta)
-            b = lista2->puertaArriba ? lista2->destinoPuerta->getLineaArribaPos() : lista2->destinoPuerta->getLineaAbajoPos();
-        else
-            b = lista2->destinoSalida->getLineaPos();
+        const std::pair<int, int>* origen = lista2->io_origen->getLineaOrigen();   //TODO: ¡¡ESTOS DOS SON LOS MISMOS!!
+        const std::pair<int, int>* destino = lista2->io_destino->getLineaDestino(); //¡¡El destino y el origen son el mismo IO!!
 
         //Comprueba si alguno de los dos puntos de la línea está dentro de la pantalla
-        if((a->first > -esquinaX && a->first < -esquinaX + width && a->second > -esquinaY && a->second < -esquinaY + height) ||
-                (b->first > -esquinaX && b->first < -esquinaX + width && b->second > -esquinaY && b->second < -esquinaY + height))
-            renderLine(renderer, a->first + esquinaX, a->second + esquinaY, b->first + esquinaX, b->second + esquinaY, lista2);
+        if((origen->first > -esquinaX && origen->first < -esquinaX + width && origen->second > -esquinaY && origen->second < -esquinaY + height) ||
+                (destino->first > -esquinaX && destino->first < -esquinaX + width && destino->second > -esquinaY && destino->second < -esquinaY + height))
+            renderLine(renderer, origen->first + esquinaX, origen->second + esquinaY, destino->first + esquinaX, destino->second + esquinaY, lista2);
         else
         {
             //Si no esta el origen o final de la línea dentro de la pantalla, comprueba si la línea intersecciona la pantalla
             SDL_Rect rect{-esquinaX, -esquinaY, width, height};
-            int x1 = a->first;
-            int y1 = a->second;
-            int x2 = b->first;
-            int y2 = b->second;
+            int x1 = origen->first;
+            int y1 = origen->second;
+            int x2 = destino->first;
+            int y2 = destino->second;
             if(SDL_IntersectRectAndLine(&rect, &x1, &y1, &x2, &y2))
-                renderLine(renderer, a->first + esquinaX, a->second + esquinaY, b->first + esquinaX, b->second + esquinaY, lista2);
+                renderLine(renderer, origen->first + esquinaX, origen->second + esquinaY, destino->first + esquinaX, destino->second + esquinaY, lista2);
         }
         lista2 = lista2->siguiente;
     }
@@ -93,6 +84,8 @@ void Window::rendererPresent() const
     SDL_RenderPresent(renderer);
 }
 
+
+
 void Window::limpiar() const
 {
     rendererClear();
@@ -103,240 +96,6 @@ void Window::render() const
 {
     rendererDraw();
     rendererPresent();
-}
-
-void Window::manejarRaton()
-{
-    raton.manejarRaton();
-}
-
-
-void Window::añadirLinea(Puerta* origen, Puerta* destino, const bool arriba)
-{
-    ListaLineas* lista{lineas};
-
-    if(lineas == nullptr)
-    {
-        lineas = new ListaLineas;
-        lista = lineas;
-    }
-    else
-    {
-        while(lista->siguiente != nullptr)
-            lista = lista->siguiente;
-        lista->siguiente = new ListaLineas;
-        lista = lista->siguiente;
-    }
-
-    lista->siguiente = nullptr;
-    lista->origenPuerta = origen;
-    lista->destinoPuerta = destino;
-    lista->puertaArriba = arriba;
-}
-
-void Window::añadirLinea(Puerta* origen, Salida* destino)
-{
-    ListaLineas* lista{lineas};
-
-    if(lineas == nullptr)
-    {
-        lineas = new ListaLineas;
-        lista = lineas;
-    }
-    else
-    {
-        while(lista->siguiente != nullptr)
-            lista = lista->siguiente;
-        lista->siguiente = new ListaLineas;
-        lista = lista->siguiente;
-    }
-
-    lista->siguiente = nullptr;
-    lista->origenPuerta = origen;
-    lista->destinoSalida = destino;
-}
-
-void Window::añadirLinea(Entrada* origen, Puerta* destino, const bool arriba)
-{
-    ListaLineas* lista{lineas};
-
-    if(lineas == nullptr)
-    {
-        lineas = new ListaLineas;
-        lista = lineas;
-    }
-    else
-    {
-        while(lista->siguiente != nullptr)
-            lista = lista->siguiente;
-        lista->siguiente = new ListaLineas;
-        lista = lista->siguiente;
-    }
-
-    lista->siguiente = nullptr;
-    lista->origenEntrada = origen;
-    lista->destinoPuerta = destino;
-    lista->puertaArriba = arriba;
-}
-
-void Window::añadirLinea(Entrada* origen, Salida* destino)
-{
-    ListaLineas* lista{lineas};
-
-    if(lineas == nullptr)
-    {
-        lineas = new ListaLineas;
-        lista = lineas;
-    }
-    else
-    {
-        while(lista->siguiente != nullptr)
-            lista = lista->siguiente;
-        lista->siguiente = new ListaLineas;
-        lista = lista->siguiente;
-    }
-
-    lista->siguiente = nullptr;
-    lista->origenEntrada = origen;
-    lista->destinoSalida = destino;
-}
-
-void Window::borrarLineas(const Puerta* puerta, const bool arriba, const bool abajo, const bool salida)
-{
-    if(lineas == nullptr || puerta == nullptr)
-        return;
-
-    ListaLineas* lista{lineas};
-    ListaLineas* anterior{nullptr};
-    int i{arriba + abajo};
-
-    while(lista != nullptr)
-    {
-        if( (arriba && lista->destinoPuerta == puerta && lista->puertaArriba) || //La conexion de la entrada de arriba
-            (abajo && lista->destinoPuerta == puerta && !lista->puertaArriba) || //La conexion de la entrada de abajo
-            (salida && lista->origenPuerta == puerta))                           //Todas sus salidas
-        {
-            if(anterior != nullptr) //No es el primero de la lista
-            {
-                lista = lista->siguiente; //Si se está borrando el último de la lista se pondrá nullptr aquí
-                delete anterior->siguiente;
-                anterior->siguiente = lista;
-            }
-            else //Es el primero de la lista
-            {
-                if(lineas->siguiente == nullptr) //Es el único de la lista
-                {
-                    delete lineas;
-                    lineas = nullptr;
-                    return;
-                }
-                //No es el único de la lista
-                lineas = lineas->siguiente;
-                anterior = lista;
-                lista = lista->siguiente;
-                delete anterior;
-                anterior = nullptr;
-            }
-
-            if(!salida && i > 0) //Solo puede haber una única conexion en cada entrada, por lo que no tiene sentido seguir buscando
-            {
-                i--;
-                if(i == 0)
-                    return;
-            }
-
-        }
-        else //No ha conincidido con los filtros
-        {
-            anterior = lista;
-            lista = lista->siguiente;
-        }
-    }
-}
-
-
-void Window::borrarLineas(const Entrada* entrada)
-{
-    if(lineas == nullptr || entrada == nullptr)
-        return;
-
-    ListaLineas* lista{lineas};
-    ListaLineas* anterior{nullptr};
-
-    while(lista != nullptr)
-    {
-        if(lista->origenEntrada == entrada)
-        {
-            if(anterior != nullptr) //No es el primero de la lista
-            {
-                lista = lista->siguiente; //Si se está borrando el último de la lista se pondrá nullptr aquí
-                delete anterior->siguiente;
-                anterior->siguiente = lista;
-            }
-            else //Es el primero de la lista
-            {
-                if(lineas->siguiente == nullptr) //Es el único de la lista
-                {
-                    delete lineas;
-                    lineas = nullptr;
-                    return;
-                }
-                //No es el único de la lista
-                lineas = lineas->siguiente;
-                anterior = lista;
-                lista = lista->siguiente;
-                delete anterior;
-                anterior = nullptr;
-            }
-        }
-        else //No ha conincidido con los filtros
-        {
-            anterior = lista;
-            lista = lista->siguiente;
-        }
-    }
-}
-
-void Window::borrarLineas(const Salida* salida)
-{
-    if(lineas == nullptr || salida == nullptr)
-        return;
-
-    ListaLineas* lista{lineas};
-    ListaLineas* anterior{nullptr};
-
-    while(lista != nullptr)
-    {
-        if(lista->destinoSalida == salida)
-        {
-            if(anterior != nullptr) //No es el primero de la lista
-            {
-                lista = lista->siguiente; //Si se está borrando el último de la lista se pondrá nullptr aquí
-                delete anterior->siguiente;
-                anterior->siguiente = lista;
-            }
-            else //Es el primero de la lista
-            {
-                if(lineas->siguiente == nullptr) //Es el único de la lista
-                {
-                    delete lineas;
-                    lineas = nullptr;
-                    return;
-                }
-                //No es el único de la lista
-                lineas = lineas->siguiente;
-                anterior = lista;
-                lista = lista->siguiente;
-                delete anterior;
-                anterior = nullptr;
-            }
-        }
-        else //No ha conincidido con los filtros
-        {
-            anterior = lista;
-            lista = lista->siguiente;
-        }
-    }
 }
 
 void Window::moverRel(const int x, const int y)

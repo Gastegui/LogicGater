@@ -8,50 +8,15 @@
 #include <SDL_events.h>
 #include <string>
 
+#include "enums.h"
 #include "Wrapper/window.h"
 
 
 class Controles
 {
-public:
-
-    enum Accion
-    {
-        Nada,               //
-        TextInput,          //SDL_TEXTINPUT
-        Interactuar,        //Soltar clic izquierdo    (sirve para encender/apagar, invertir polaridad, borrar)
-        InteractuarAbajo,   //Pulsar click izquierdo
-        MovimientoRaton,    //SDL_MOUSEMOTION
-        MoverAbajo,         //Pulsar clic derecho
-        MoverArriba,        //Soltar clic derecho
-        ConexionAbajo,      //Pulsar clic central o espacio
-        ConexionArriba,     //Soltar clic central o espacio
-        AlternarBorrando,   //Backspace
-        BorrarSueltos,      //L
-        CrearAnd,           //A
-        CrearOr,            //O
-        CrearXor,           //X
-        CrearInterruptor,   //I
-        CrearBoton,         //B
-        CrearSalida,        //S
-        SimularPaso,        //Enter
-        SimularEmpezar,     //Q
-        SimularParar,       //W
-        SimularAcelerar,    //-
-        SimularDecelerar,   //+
-        Cerrar,             //Escape
-        Guardar,            //G
-        Cargar,             //C
-        Cuadricula,         //E
-        CuadriculaAgrandar, //R
-        CuadriculaDisminuir,//F
-        MostrarControles    //M
-    };
-
-private:
-    static Accion accionAnterior;
+    static ACCION accionAnterior;
     static SDL_Event* evento;
-    static std::map<std::string, Accion> acciones;
+    static std::map<std::string, ACCION> acciones;
     static Window* window;
     static bool escribiendo;
 public:
@@ -60,40 +25,42 @@ public:
         evento = evento_;
         window = window_;
 
-        accionAnterior = Nada;
+        accionAnterior = ACCION::Nada;
         //Primer caracter p: pulsar s: soltar
-        //Segundo caracter I: raton izquierda. M: raton medio. D: raton derecha. E: espacio. R: enter. B: borrar. T: tab. C: ctrl. S: shift. A: alt. X: escape. Cualquier caracter en minusculas: su tecla en el teclado
-        acciones.insert(std::make_pair("pI", InteractuarAbajo));
-        acciones.insert(std::make_pair("sI", Interactuar));
-        acciones.insert(std::make_pair("pD", MoverAbajo));
-        acciones.insert(std::make_pair("sD", MoverArriba));
-        acciones.insert(std::make_pair("pE", ConexionAbajo));
-        acciones.insert(std::make_pair("sE", ConexionArriba));
-        acciones.insert(std::make_pair("pM", ConexionAbajo));
-        acciones.insert(std::make_pair("sM", ConexionArriba));
-        acciones.insert(std::make_pair("sB", AlternarBorrando));
-        acciones.insert(std::make_pair("sl", BorrarSueltos));
-        acciones.insert(std::make_pair("sa", CrearAnd));
-        acciones.insert(std::make_pair("so", CrearOr));
-        acciones.insert(std::make_pair("sx", CrearXor));
-        acciones.insert(std::make_pair("si", CrearInterruptor));
-        acciones.insert(std::make_pair("sb", CrearBoton));
-        acciones.insert(std::make_pair("ss", CrearSalida));
-        acciones.insert(std::make_pair("sR", SimularPaso));
-        acciones.insert(std::make_pair("sq", SimularEmpezar));
-        acciones.insert(std::make_pair("sw", SimularParar));
-        acciones.insert(std::make_pair("s-", SimularAcelerar));
-        acciones.insert(std::make_pair("s+", SimularDecelerar));
-        acciones.insert(std::make_pair("pX", Cerrar));
-        acciones.insert(std::make_pair("sg", Guardar));
-        acciones.insert(std::make_pair("sc", Cargar));
-        acciones.insert(std::make_pair("se", Cuadricula));
-        acciones.insert(std::make_pair("sr", CuadriculaAgrandar));
-        acciones.insert(std::make_pair("sf", CuadriculaDisminuir));
-        acciones.insert(std::make_pair("sm", MostrarControles));
+        //Segundo caracter I: raton izquierda. M: raton medio. D: raton derecha. U: raton arriba. J: raton abajo E: espacio. R: enter. B: borrar. T: tab. C: ctrl. S: shift. A: alt. X: escape. Cualquier caracter en minusculas: su tecla en el teclado
+        acciones.insert(std::make_pair("pI", ACCION::InteractuarAbajo));
+        acciones.insert(std::make_pair("sI", ACCION::InteractuarArriba));
+        acciones.insert(std::make_pair("pD", ACCION::MoverAbajo));
+        acciones.insert(std::make_pair("sD", ACCION::MoverArriba));
+        acciones.insert(std::make_pair("pE", ACCION::ConexionAbajo));
+        acciones.insert(std::make_pair("sE", ACCION::ConexionArriba));
+        acciones.insert(std::make_pair("pM", ACCION::ConexionAbajo));
+        acciones.insert(std::make_pair("sM", ACCION::ConexionArriba));
+        acciones.insert(std::make_pair("sB", ACCION::AlternarBorrando));
+        acciones.insert(std::make_pair("sl", ACCION::BorrarSueltos));
+        acciones.insert(std::make_pair("sa", ACCION::CrearAnd));
+        acciones.insert(std::make_pair("so", ACCION::CrearOr));
+        acciones.insert(std::make_pair("sx", ACCION::CrearXor));
+        acciones.insert(std::make_pair("si", ACCION::CrearInterruptor));
+        acciones.insert(std::make_pair("sb", ACCION::CrearBoton));
+        acciones.insert(std::make_pair("ss", ACCION::CrearSalida));
+        acciones.insert(std::make_pair("sR", ACCION::SimularPaso));
+        acciones.insert(std::make_pair("sq", ACCION::SimularEmpezar));
+        acciones.insert(std::make_pair("sw", ACCION::SimularParar));
+        acciones.insert(std::make_pair("s-", ACCION::SimularAcelerar));
+        acciones.insert(std::make_pair("s+", ACCION::SimularDecelerar));
+        acciones.insert(std::make_pair("pX", ACCION::Cerrar));
+        acciones.insert(std::make_pair("sg", ACCION::Guardar));
+        acciones.insert(std::make_pair("sc", ACCION::Cargar));
+        acciones.insert(std::make_pair("se", ACCION::Cuadricula));
+        acciones.insert(std::make_pair("sr", ACCION::CuadriculaAgrandar));
+        acciones.insert(std::make_pair("sf", ACCION::CuadriculaDisminuir));
+        acciones.insert(std::make_pair("sm", ACCION::MostrarControles));
+        acciones.insert(std::make_pair(".U", ACCION::TemporizadorSubir));
+        acciones.insert(std::make_pair(".J", ACCION::TemporizadorBajar));
     }
-    static Accion getNuevaAccion(const SDL_Event* evento);
-    [[nodiscard]] static Accion getUltimaAccion() { return accionAnterior; }
+    static ACCION getNuevaAccion(const SDL_Event* evento);
+    [[nodiscard]] static ACCION getUltimaAccion() { return accionAnterior; }
     [[nodiscard]] static SDL_Event* getEvent() { return evento; }
     static void setTextInput() { escribiendo = true; SDL_StartTextInput(); }
     static void unsetTextInput() { escribiendo = false; SDL_StopTextInput(); }

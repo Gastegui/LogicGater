@@ -27,27 +27,6 @@ class Raton
     int cuadriculaX{0};
     int cuadriculaY{0};
 
-public:
-    enum Evento
-    {
-        NADA,
-        ABAJO,
-        ARRIBA,
-        ENTRAR,
-        SALIR,
-        MOVIMIENTO
-    };
-
-    enum Boton
-    {
-        NINGUNO,
-        IZQUIERDO,
-        DERECHO,
-        RUEDA
-    };
-
-private:
-
     void interactuar(IMG* actual);
     bool interactuarConexion(IMG* actual);
     IMG* buscarLista(const ListaIMG::Lista* lista, int posX, int posY) const;

@@ -18,12 +18,13 @@ class SistemaGuardado;
 class Salida final : public Simulable
 {
     friend class SistemaGuardado;
+    Controlador* controlador;
 
     IO* entrada{};
 
     IMG img;
 
-    std::pair<int, int> linea{25, 25};
+    //std::pair<int, int> linea{25, 25};
 
     bool mover{false};
     Raton* raton;
@@ -42,24 +43,21 @@ class Salida final : public Simulable
 
 public:
 
-    Salida(SDL_Renderer* renderer, const int x, const int y, Raton* raton_)
-        :Salida(renderer, x, y, raton_, idGenerator())
+    Salida(SDL_Renderer* renderer, Controlador* controlador_, const int x, const int y, Raton* raton_)
+        :Salida(renderer, controlador_, x, y, raton_, idGenerator())
     {}
 
-    Salida(SDL_Renderer* renderer, const int x, const int y, Raton* raton_, const unsigned int id_)
-        :Simulable{id_}, img{"./img/salida/apagado.png", renderer, x, y}, raton{raton_}
+    Salida(SDL_Renderer* renderer, Controlador* controlador_, const int x, const int y, Raton* raton_, const unsigned int id_)
+        :Simulable{id_}, controlador{controlador_}, img{"./img/salida/apagado.png", renderer, x, y}, raton{raton_}
     {
         img.setClickable(this);
-        linea.first += x;
-        linea.second += y;
     }
 
     ~Salida() override = default;
 
     void setEntrada(IO* entrada_) { entrada = entrada_; }
     [[nodiscard]] IO* getEntrada() const { return entrada; }
-    [[nodiscard]] IMG* getImg() { return &img; }
-    [[nodiscard]] std::pair<int, int>* getLineaPos() { return &linea; }
+    [[nodiscard]] IMG* getImg() override { return &img; }
     [[nodiscard]] bool get() const { return entrada->get(); }
     [[nodiscard]] bool getDesconectado() const { return entrada == nullptr; }
 
@@ -67,8 +65,10 @@ public:
     void actualizar() override {}
     void simularAntiguo();
 
-    void click(int x, int y, Raton::Evento evento);
     void moverRel(int x, int y);
+    bool interactuar(int posX, int posY, INTERACCIONES interaccion) override;
+    void setIONull(IO* io) override;
+    [[nodiscard]] IO* getIOSalida() override { return nullptr; }
 };
 
 #endif //SALIDA_H

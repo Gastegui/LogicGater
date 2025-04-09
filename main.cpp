@@ -71,75 +71,75 @@ int main(int argc, char* argv[])
         {
             switch (Controles::getNuevaAccion(&event))
             {
-                case Controles::BorrarSueltos:
+                case ACCION::BorrarSueltos:
                     printf("Se han borrado %d elementos\n", controlador.limpiar());
                     break;
-                case Controles::CrearAnd:
+                case ACCION::CrearAnd:
                     controlador.crear(Puerta::AND, -1, -1);
                     break;
-                case Controles::CrearOr:
+                case ACCION::CrearOr:
                     controlador.crear(Puerta::OR, -1, -1);
                     break;
-                case Controles::CrearXor:
+                case ACCION::CrearXor:
                     controlador.crear(Puerta::XOR, -1, -1);
                     break;
-                case Controles::CrearInterruptor:
+                case ACCION::CrearInterruptor:
                     controlador.crear(false, -1, -1);
                     break;
-                case Controles::CrearBoton:
+                case ACCION::CrearBoton:
                     controlador.crear(true, -1, -1);
                     break;
-                case Controles::CrearSalida:
+                case ACCION::CrearSalida:
                     controlador.crear(-1, -1);
                     break;
-                case Controles::AlternarBorrando:
+                case ACCION::AlternarBorrando:
                     window.getRaton()->setBorrando(!window.getRaton()->getBorrando());
                     break;
-                case Controles::SimularPaso:
+                case ACCION::SimularPaso:
                     controlador.simular();
                     simulando = false;
                     break;
-                case Controles::SimularEmpezar:
+                case ACCION::SimularEmpezar:
                     simulando = true;
                     break;
-                case Controles::SimularParar:
+                case ACCION::SimularParar:
                     simulando = false;
                     break;
-                case Controles::SimularAcelerar:
+                case ACCION::SimularAcelerar:
                     if(valores.velocidadSimulacion != -5)
                         valores.velocidadSimulacion -= 5;
                     break;
-                case Controles::SimularDecelerar:
+                case ACCION::SimularDecelerar:
                     valores.velocidadSimulacion += 5;
                     break;
-                case Controles::Cerrar:
+                case ACCION::Cerrar:
                     enMarcha = false;
                     break;
-                case Controles::MostrarControles:
+                case ACCION::MostrarControles:
                     mostrarControles = !mostrarControles;
                     break;
-                case Controles::Guardar:
+                case ACCION::Guardar:
                     Controles::setTextInput();
                     inputStr = "";
                     guardar = true;
                     escribiendo = true;
                     break;
-                case Controles::Cargar:
+                case ACCION::Cargar:
                     Controles::setTextInput();
                     inputStr = "";
                     cargar = true;
                     escribiendo = true;
                     break;
-                case Controles::Cuadricula:
+                case ACCION::Cuadricula:
                     controlador.alternarCuadricula();
                     break;
-                case Controles::CuadriculaAgrandar:
+                case ACCION::CuadriculaAgrandar:
                     valores.cuadriculaTamaño = controlador.cambiarCuadriculaRel(5);
                     break;
-                case Controles::CuadriculaDisminuir:
+                case ACCION::CuadriculaDisminuir:
                     valores.cuadriculaTamaño = controlador.cambiarCuadriculaRel(-5);
                     break;
-                case Controles::TextInput:
+                case ACCION::TextInput:
                     {
                         const SDL_Event* evento = Controles::getEvent();
                         switch (evento->type)
@@ -169,12 +169,12 @@ int main(int argc, char* argv[])
                                 break;
                         }
                     }
-                case Controles::Nada:
+                case ACCION::Nada:
                 default:
                     break;
             }
             if(enMarcha)
-                window.manejarRaton();
+                window.getRaton()->manejarRaton();
         }
 
         if(guardar && !escribiendo)

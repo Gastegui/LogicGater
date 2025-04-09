@@ -6,18 +6,17 @@
 #include "Wrapper/image.h"
 #include "controlador.h"
 #include "controles.h"
+#include "Simulables/entrada.h"
 #include "Wrapper/window.h"
 
 IMG* Raton::buscarLista(const ListaIMG::Lista* lista, const int posX, const int posY) const
 {
-    // ReSharper disable once CppJoinDeclarationAndAssignment
-    SDL_Rect* rect;
 
     while(lista != nullptr)
     {
         if(lista->img->getClickable())
         {
-            rect = lista->img->getRect();
+            const SDL_Rect* rect = lista->img->getRect();
             if(rect->x <= -window->getEsquinaX() + posX && rect->x + rect->w >= -window->getEsquinaX() + posX && rect->y <= -window->getEsquinaY() + posY && rect->y + rect->h >= -window->getEsquinaY() + posY)
                 return lista->img;
         }
@@ -30,17 +29,12 @@ IMG* Raton::buscarLista(const ListaIMG::Lista* lista, const int posX, const int 
 
 void Raton::interactuar(IMG* actual)
 {
-    const Controles::Accion accion = Controles::getUltimaAccion();
+    const ACCION accion = Controles::getUltimaAccion();
     if(borrando)
     {
-        if(accion == Controles::Interactuar)
+        if(accion == ACCION::InteractuarArriba)
         {
-            if(actual->getPadrePuerta())
-                controlador->borrar(actual->getPadrePuerta());
-            else if(actual->getPadreEntrada())
-                controlador->borrar(actual->getPadreEntrada());
-            else if(actual->getPadreSalida())
-                controlador->borrar(actual->getPadreSalida());
+            controlador->borrar(actual->getSimulable());
             borrando = false;
             return;
         }
@@ -49,25 +43,25 @@ void Raton::interactuar(IMG* actual)
     if(imgAnterior == nullptr) //El raton a entrado a una imagen desde sin estar antes en otra
     {
         imgAnterior = actual;
-        actual->clickar(-window->getEsquinaX() + posX - actual->getRect()->x, -window->getEsquinaY() + posY - actual->getRect()->y, ENTRAR);
+        actual->interactuar(-window->getEsquinaX() + posX - actual->getRect()->x, -window->getEsquinaY() + posY - actual->getRect()->y, INTERACCIONES::RatonEntrar);
     }
     else
     {
         if(imgAnterior == actual) //El raton sige encima de la misma imagen
         {
-            if(accion == Controles::MovimientoRaton)
+            if(accion == ACCION::MovimientoRaton)
             {
                 const SDL_Event* evento = Controles::getEvent();
-                actual->clickar(evento->motion.xrel, evento->motion.yrel, MOVIMIENTO);
+                actual->interactuar(evento->motion.xrel, evento->motion.yrel, INTERACCIONES::MovimientoRaton);
             }
             else
-                actual->clickar(-window->getEsquinaX() + posX - actual->getRect()->x, -window->getEsquinaY() + posY - actual->getRect()->y, NADA);
+                actual->interactuar(-window->getEsquinaX() + posX - actual->getRect()->x, -window->getEsquinaY() + posY - actual->getRect()->y, INTERACCIONES::Nada);
         }
         else //Se salta de una imagen a otra directamente
         {
-            imgAnterior->clickar(-1, -1,  SALIR);
+            imgAnterior->interactuar(-1, -1, INTERACCIONES::RatonSalir);
             imgAnterior = actual;
-            actual->clickar(-window->getEsquinaX() + posX - actual->getRect()->x, -window->getEsquinaY() + posY - actual->getRect()->y, ENTRAR);
+            actual->interactuar(-window->getEsquinaX() + posX - actual->getRect()->x, -window->getEsquinaY() + posY - actual->getRect()->y, INTERACCIONES::RatonEntrar);
         }
     }
 }
@@ -76,19 +70,11 @@ bool Raton::interactuarConexion(IMG* actual)
 {
     if(borrando)
     {
-        if(Controles::getUltimaAccion() == Controles::ConexionArriba)
+        if(Controles::getUltimaAccion() == ACCION::ConexionArriba)
         {
-            if(actual->getPadrePuerta())
-            {
-                const bool borrarArriba{-window->getEsquinaY() + posY < actual->getRect()->y + actual->getRect()->h / 2 && -window->getEsquinaX() + posX <= actual->getRect()->x + actual->getRect()->w / 2};
-                const bool borrarAbajo{-window->getEsquinaY() + posY >= actual->getRect()->y + actual->getRect()->h / 2 && -window->getEsquinaX() + posX <= actual->getRect()->x + actual->getRect()->w / 2};
-                const bool borrarSalida{-window->getEsquinaX() + posX > actual->getRect()->x + actual->getRect()->w / 2};
-                controlador->borrarConexiones(actual->getPadrePuerta(), borrarArriba, borrarAbajo, borrarSalida);
-            }
-            else if(actual->getPadreEntrada())
-                controlador->borrarConexiones(actual->getPadreEntrada());
-            else if(actual->getPadreSalida())
-                controlador->borrarConexiones(actual->getPadreSalida());
+            if(actual->getSimulable() != nullptr)
+                actual->getSimulable()->interactuar(-window->getEsquinaX() + posX - actual->getRect()->x, -window->getEsquinaY() + posY - actual->getRect()->y, INTERACCIONES::ConexionBorrar);
+
             borrando = false;
             return true;
         }
@@ -97,23 +83,20 @@ bool Raton::interactuarConexion(IMG* actual)
 
     if(controlador->getConectando())
     {
-        if(Controles::getUltimaAccion() == Controles::ConexionArriba)
+        if(Controles::getUltimaAccion() == ACCION::ConexionArriba)
         {
-            if(actual->getPadrePuerta() != nullptr)
-                controlador->destino(actual->getPadrePuerta(), -window->getEsquinaY() + posY < actual->getRect()->y + actual->getRect()->h / 2);
-            else if(actual->getPadreSalida() != nullptr)
-                controlador->destino(actual->getPadreSalida());
+            if(actual->getSimulable()->getTipo() == TIPOS_SIMULABLES::Puerta || actual->getSimulable()->getTipo() == TIPOS_SIMULABLES::Salida)
+                actual->getSimulable()->interactuar(-window->getEsquinaX() + posX - actual->getRect()->x, -window->getEsquinaY() + posY - actual->getRect()->y, INTERACCIONES::ConexionArriba);
             else
                 controlador->desmarcarOrigen();
+
             return true;
         }
     }
-    else if(Controles::getUltimaAccion() == Controles::ConexionAbajo)
+    else if(Controles::getUltimaAccion() == ACCION::ConexionAbajo)
     {
-        if(actual->getPadrePuerta() != nullptr)
-            controlador->marcarOrigen(actual->getPadrePuerta());
-        else if(actual->getPadreEntrada() != nullptr)
-            controlador->marcarOrigen(actual->getPadreEntrada());
+        if(actual->getSimulable()->getTipo() == TIPOS_SIMULABLES::Puerta || actual->getSimulable()->getTipo() == TIPOS_SIMULABLES::Entrada)
+            actual->getSimulable()->interactuar(-window->getEsquinaX() + posX - actual->getRect()->x, -window->getEsquinaY() + posY - actual->getRect()->y, INTERACCIONES::ConexionAbajo);
         else
             return false;
 
@@ -136,10 +119,10 @@ void Raton::manejarRaton()
 
     if(moviendoPantalla)
     {
-        const Controles::Accion accion = Controles::getUltimaAccion();
-        if(accion == Controles::MoverArriba)
+        const ACCION accion = Controles::getUltimaAccion();
+        if(accion == ACCION::MoverArriba)
             moviendoPantalla = false;
-        else if(accion == Controles::MovimientoRaton)
+        else if(accion == ACCION::MovimientoRaton)
         {
             const SDL_Event* evento = Controles::getEvent();
             window->moverRel(evento->motion.xrel, evento->motion.yrel);
@@ -149,19 +132,20 @@ void Raton::manejarRaton()
 
     if(moviendoImg != nullptr)
     {
-        const Controles::Accion accion = Controles::getUltimaAccion();
-        if(accion == Controles::MoverArriba)
+        const ACCION accion = Controles::getUltimaAccion();
+        if(accion == ACCION::MoverArriba)
         {
             moviendoImg = nullptr;
             cuadriculaX = 0;
             cuadriculaY = 0;
         }
-        else if(accion == Controles::MovimientoRaton)
+        else if(accion == ACCION::MovimientoRaton)
         {
             const SDL_Event* evento = Controles::getEvent();
+            //Si la cuadrícula no está activa, se le puede pasar directo el movimiento al elemento
             if(!controlador->getCuadriculaActiva())
-                moviendoImg->clickar(evento->motion.xrel, evento->motion.yrel, MOVIMIENTO);
-            else
+                moviendoImg->interactuar(evento->motion.xrel, evento->motion.yrel, INTERACCIONES::MovimientoRaton);
+            else //Pero si está activa hay que calcular cuanto moverlo
             {
                 for(int i = 0; i < abs(evento->motion.xrel); i++)
                 {
@@ -172,7 +156,7 @@ void Raton::manejarRaton()
 
                     if((cuadriculaX + moviendoImg->getRect()->x) % controlador->getCuadriculaTamaño() == 0)
                     {
-                        moviendoImg->clickar(cuadriculaX, 0, MOVIMIENTO);
+                        moviendoImg->interactuar(cuadriculaX, 0, INTERACCIONES::MovimientoRaton);
                         cuadriculaX = 0;
                     }
                 }
@@ -185,7 +169,7 @@ void Raton::manejarRaton()
 
                     if((cuadriculaY + moviendoImg->getRect()->y) % controlador->getCuadriculaTamaño() == 0)
                     {
-                        moviendoImg->clickar(0, cuadriculaY, MOVIMIENTO);
+                        moviendoImg->interactuar(0, cuadriculaY, INTERACCIONES::MovimientoRaton);
                         cuadriculaY = 0;
                     }
                 }
@@ -213,7 +197,7 @@ void Raton::manejarRaton()
     }
 
     //Por si se ha soltado la rueda en algun lugar que no sea clickable y conectable
-    if(controlador->getConectando() && Controles::getUltimaAccion() == Controles::ConexionArriba)
+    if(controlador->getConectando() && Controles::getUltimaAccion() == ACCION::ConexionArriba)
     {
         controlador->desmarcarOrigen();
     }
@@ -229,11 +213,11 @@ void Raton::manejarRaton()
     //El ratón no está en ninguna imágen
     if(imgAnterior != nullptr) //... y antes si lo estaba
     {
-        imgAnterior->clickar(-1, -1, SALIR);
+        imgAnterior->interactuar(-1, -1, INTERACCIONES::RatonSalir);
         imgAnterior = nullptr;
     }
 
-    if(Controles::getUltimaAccion() == Controles::MoverAbajo)
+    if(Controles::getUltimaAccion() == ACCION::MoverAbajo)
         moviendoPantalla = true;
 }
 
