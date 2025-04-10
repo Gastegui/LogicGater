@@ -64,8 +64,8 @@ bool Salida::interactuar(const int posX, const int posY, const INTERACCIONES int
                 setEntrada(origen);
                 origen->conectado();
                 origen->setLineaDestino(img.getRect()->x + 25, img.getRect()->y + 25);
-                controlador->desmarcarOrigen();
                 controlador->añadirConexion(this, entrada);
+                controlador->desmarcarOrigen();
                 return true;
             }
         case ConexionBorrar:

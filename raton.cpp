@@ -55,7 +55,7 @@ void Raton::interactuar(IMG* actual)
                 actual->interactuar(evento->motion.xrel, evento->motion.yrel, INTERACCIONES::MovimientoRaton);
             }
             else
-                actual->interactuar(-window->getEsquinaX() + posX - actual->getRect()->x, -window->getEsquinaY() + posY - actual->getRect()->y, INTERACCIONES::Nada);
+                actual->interactuar(-window->getEsquinaX() + posX - actual->getRect()->x, -window->getEsquinaY() + posY - actual->getRect()->y, static_cast<INTERACCIONES>(accion));
         }
         else //Se salta de una imagen a otra directamente
         {
@@ -66,7 +66,7 @@ void Raton::interactuar(IMG* actual)
     }
 }
 
-bool Raton::interactuarConexion(IMG* actual)
+bool Raton::interactuarConexion(IMG* actual) //TODO: NO SE PUEDEN SACAR DOS SALIDAS?
 {
     if(borrando)
     {
@@ -85,22 +85,15 @@ bool Raton::interactuarConexion(IMG* actual)
     {
         if(Controles::getUltimaAccion() == ACCION::ConexionArriba)
         {
-            if(actual->getSimulable()->getTipo() == TIPOS_SIMULABLES::Puerta || actual->getSimulable()->getTipo() == TIPOS_SIMULABLES::Salida)
-                actual->getSimulable()->interactuar(-window->getEsquinaX() + posX - actual->getRect()->x, -window->getEsquinaY() + posY - actual->getRect()->y, INTERACCIONES::ConexionArriba);
-            else
-                controlador->desmarcarOrigen();
+            if(!actual->getSimulable()->interactuar(-window->getEsquinaX() + posX - actual->getRect()->x, -window->getEsquinaY() + posY - actual->getRect()->y, INTERACCIONES::ConexionArriba))
+                controlador->desmarcarOrigen(); //Si no se puede conectar, desmarcar origen
 
             return true;
         }
     }
     else if(Controles::getUltimaAccion() == ACCION::ConexionAbajo)
     {
-        if(actual->getSimulable()->getTipo() == TIPOS_SIMULABLES::Puerta || actual->getSimulable()->getTipo() == TIPOS_SIMULABLES::Entrada)
-            actual->getSimulable()->interactuar(-window->getEsquinaX() + posX - actual->getRect()->x, -window->getEsquinaY() + posY - actual->getRect()->y, INTERACCIONES::ConexionAbajo);
-        else
-            return false;
-
-        return true;
+        return actual->getSimulable()->interactuar(-window->getEsquinaX() + posX - actual->getRect()->x, -window->getEsquinaY() + posY - actual->getRect()->y, INTERACCIONES::ConexionAbajo);
     }
 
     return false;

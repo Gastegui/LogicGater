@@ -155,8 +155,8 @@ bool Puerta::interactuar(const int posX, const int posY, const INTERACCIONES int
 
                 origen->conectado();
 
-                controlador->desmarcarOrigen();
                 controlador->añadirConexion(this, conectarArriba ? getArriba() : getAbajo());
+                controlador->desmarcarOrigen();
             }
             return true;
         case ConexionBorrar:

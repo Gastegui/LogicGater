@@ -35,7 +35,7 @@ class Controlador
 
     std::map<unsigned int, Simulable*> simulables;
 
-    ListaLineas listaLineas;
+    ListaLineas listaLineas{};
 
 public:
     explicit Controlador(Window* window_)
