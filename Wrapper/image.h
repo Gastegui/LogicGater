@@ -86,6 +86,7 @@ public:
     {
         simulable = simulable_;
         tipoSimulable = simulable_->getTipo();
+        esClickable = true;
     }
     [[nodiscard]] Simulable* getSimulable() const { return simulable; }
 
