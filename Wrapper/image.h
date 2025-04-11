@@ -31,7 +31,7 @@ class IMG
 
     static unsigned int idGenerator()
     {
-        static unsigned int id = 1 + 1<<27;
+        static unsigned int id = 1 + get_offset(ID_TIPOS::IMG);
         return id++;
     }
 

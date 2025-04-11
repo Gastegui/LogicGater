@@ -44,32 +44,13 @@ enum class ACCION
     ACCIONES
 };
 
-enum class TIPOS_SIMULABLES
+enum class INTERACCIONES
 {
-    Nada,
-    Puerta,
-    Salida,
-    Entrada,
-    Temporizador
+    ACCIONES
+    ConexionBorrar,
+    RatonEntrar, //Solo hacen falta entrar y salir, para poder gestionar cosas como hover o así. Arriba y abajo NO
+    RatonSalir,
 };
-
-constexpr static std::string toString(const TIPOS_SIMULABLES tipo)
-{
-    switch (tipo) {
-        case TIPOS_SIMULABLES::Nada:
-            return "NADA";
-        case TIPOS_SIMULABLES::Puerta:
-            return "Puerta";
-        case TIPOS_SIMULABLES::Salida:
-            return "Salida";
-        case TIPOS_SIMULABLES::Entrada:
-            return "Entrada";
-        case TIPOS_SIMULABLES::Temporizador:
-            return "Temporizador";
-        default:
-            return "Desconocido";
-    }
-}
 
 enum class TIPOS
 {
@@ -116,12 +97,55 @@ enum class ID_TIPOS : unsigned int
     Temporizador = static_cast<unsigned int>(1 << 26)
 };
 
-enum class INTERACCIONES
+constexpr static unsigned int get_offset(const ID_TIPOS tipo)
 {
-    ACCIONES
-    ConexionBorrar,
-    RatonEntrar, //Solo hacen falta entrar y salir, para poder gestionar cosas como hover o así. Arriba y abajo NO
-    RatonSalir,
+    switch (tipo)
+    {
+        case ID_TIPOS::Nada:
+            return 0;
+        case ID_TIPOS::Puerta:
+            return static_cast<unsigned int>(ID_TIPOS::Puerta);
+        case ID_TIPOS::Entrada:
+            return static_cast<unsigned int>(ID_TIPOS::Entrada);
+        case ID_TIPOS::Salida:
+            return static_cast<unsigned int>(ID_TIPOS::Salida);
+        case ID_TIPOS::Temporizador:
+            return static_cast<unsigned int>(ID_TIPOS::Temporizador);
+        case ID_TIPOS::IO:
+            return static_cast<unsigned int>(ID_TIPOS::IO);
+        case ID_TIPOS::IMG:
+            return static_cast<unsigned int>(ID_TIPOS::IMG);
+        default:
+            return 0;
+    }
+}
+
+
+enum class TIPOS_SIMULABLES
+{
+    Nada,
+    Puerta,
+    Salida,
+    Entrada,
+    Temporizador
 };
+
+constexpr static std::string toString(const TIPOS_SIMULABLES tipo)
+{
+    switch (tipo) {
+        case TIPOS_SIMULABLES::Nada:
+            return "NADA";
+        case TIPOS_SIMULABLES::Puerta:
+            return "Puerta";
+        case TIPOS_SIMULABLES::Salida:
+            return "Salida";
+        case TIPOS_SIMULABLES::Entrada:
+            return "Entrada";
+        case TIPOS_SIMULABLES::Temporizador:
+            return "Temporizador";
+        default:
+            return "Desconocido";
+    }
+}
 
 #endif //ENUMS_H

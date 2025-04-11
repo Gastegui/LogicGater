@@ -66,7 +66,7 @@ void Raton::interactuar(IMG* actual)
     }
 }
 
-bool Raton::interactuarConexion(IMG* actual) //TODO: NO SE PUEDEN SACAR DOS SALIDAS?
+bool Raton::interactuarConexion(IMG* actual)
 {
     if(borrando)
     {

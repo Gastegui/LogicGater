@@ -16,7 +16,7 @@ class IO
 {
     static unsigned int idGenerator()
     {
-        static unsigned int id = 1 + 1<<28;
+        static unsigned int id = 1 + get_offset(ID_TIPOS::IO);
         return id++;
     }
 

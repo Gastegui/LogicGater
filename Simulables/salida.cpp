@@ -63,7 +63,7 @@ bool Salida::interactuar(const int posX, const int posY, const INTERACCIONES int
 
                 setEntrada(origen);
                 origen->conectado();
-                controlador->añadirConexion(this, entrada);
+                controlador->añadirConexion(this);
                 controlador->desmarcarOrigen();
                 return true;
             }
@@ -71,7 +71,7 @@ bool Salida::interactuar(const int posX, const int posY, const INTERACCIONES int
             controlador->borrarConexiones(entrada);
         return true;
 
-        case MoverAbajo: //TODO: QUE SE USEN TODAS LAS SIGUIENTES (antigua funcion click())
+        case MoverAbajo:
             mover = true;
             raton->setMoviendoImg(&img);
             return true;

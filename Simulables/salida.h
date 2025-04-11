@@ -31,7 +31,7 @@ class Salida final : public Simulable
 
     static unsigned int idGenerator()
     {
-        static unsigned int id = 1 + 1<<29;
+        static unsigned int id = 1 + get_offset(ID_TIPOS::Salida);
         return id++;
     }
 

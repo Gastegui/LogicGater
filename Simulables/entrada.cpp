@@ -25,7 +25,7 @@ bool Entrada::interactuar(const int posX, const int posY, const INTERACCIONES in
             controlador->borrarConexiones(&salida);
             return true;
 
-        case MoverAbajo: //TODO: QUE SE USEN TODAS LAS SIGUIENTES (antigua funcion click())
+        case MoverAbajo:
             mover = true;
             raton->setMoviendoImg(&img);
             return true;

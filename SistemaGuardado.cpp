@@ -55,10 +55,10 @@ bool SistemaGuardado::guardar(const Controlador* controlador, const Window* wind
     while(listaLineas != nullptr)
     {
         outf << "Conexion: ";
-        outf << "io_x: " << listaLineas->simulable_destino->getLinea(listaLineas->io_destino)->first;
-        outf << "io_y: " << listaLineas->simulable_destino->getLinea(listaLineas->io_destino)->second;
-        outf << " simulable_origen: " << listaLineas->simulable_origen->getId();
-        outf << " simulable_destino: " << listaLineas->simulable_destino->getId();
+        outf << "io_x: " << listaLineas->destino->getLinea(listaLineas->io)->first;
+        outf << "io_y: " << listaLineas->destino->getLinea(listaLineas->io)->second;
+        outf << " simulable_origen: " << listaLineas->origen->getId();
+        outf << " sibulable_destino: " << listaLineas->destino->getId();
 
         outf << "\n";
         listaLineas = listaLineas->siguiente;
@@ -192,7 +192,7 @@ int SistemaGuardado::cargar(Controlador* controlador, Window* window, Valores* v
                 controlador->marcarOrigen(controlador->getSimulable(simulable_origen)->getIOSalida());
                 controlador->getSimulable(simulable_destino)->interactuar(io_x, io_y, INTERACCIONES::ConexionArriba);
                 controlador->desmarcarOrigen();
-                controlador->añadirConexion(controlador->getSimulable(simulable_destino), controlador->getSimulable(simulable_origen)->getIOSalida());
+                controlador->añadirConexion(controlador->getSimulable(simulable_destino));
             }
         }
         else if(tmp == "Coordenadas:"s)

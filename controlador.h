@@ -89,7 +89,7 @@ public:
         delete simulable;
     }
 
-    void añadirConexion(Simulable* simulable_destino, IO* destino) { listaLineas.añadir(origen->getSimulable(), simulable_destino, origen, destino); }
+    void añadirConexion(Simulable* simulable_destino) { listaLineas.añadir(origen->getSimulable(), simulable_destino, origen); }
     void borrarConexiones(const IO* io) { listaLineas.borrar(io); }
     void borrarConexiones(const Simulable* simulable) { listaLineas.borrar(simulable); }
 

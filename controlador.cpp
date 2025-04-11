@@ -57,15 +57,15 @@ void Controlador::crear(int x, int y, const unsigned int id)
 void Controlador::simular() const
 {
     for (const auto& value : std::views::values(simulables))
-        if(dynamic_cast<Puerta*>(value) != nullptr)
+        if(value->getTipo() == TIPOS_SIMULABLES::Puerta)
             value->simular();
 
     for (const auto& value : simulables | std::views::values)
-        if(dynamic_cast<Puerta*>(value) != nullptr)
+        if(value->getTipo() == TIPOS_SIMULABLES::Puerta)
             value->actualizar();
 
     for (const auto& value : simulables | std::views::values)
-        if(dynamic_cast<Salida*>(value) != nullptr)
+        if(value->getTipo() == TIPOS_SIMULABLES::Salida)
             value->simular();
 
 }
@@ -73,11 +73,11 @@ void Controlador::simular() const
 void Controlador::simularInstantaneo() const
 {
     for (const auto& value : simulables | std::views::values)
-        if(dynamic_cast<Salida*>(value) != nullptr)
+        if(value->getTipo() == TIPOS_SIMULABLES::Salida)
             dynamic_cast<Salida*>(value)->simularAntiguo();
 
     for (const auto& value : simulables | std::views::values)
-        if(dynamic_cast<Puerta*>(value) != nullptr)
+        if(value->getTipo() == TIPOS_SIMULABLES::Puerta)
             dynamic_cast<Puerta*>(value)->simulacionAntiguaTermindada();
 }
 

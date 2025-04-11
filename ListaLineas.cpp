@@ -6,9 +6,9 @@
 
 #include "io.h"
 
-void ListaLineas::añadir(Simulable* origen, Simulable* destino, IO* io_origen, IO* io_destino)
+void ListaLineas::añadir(Simulable* origen, Simulable* destino, IO* io)
 {
-    if(origen == nullptr || destino == nullptr || io_origen == nullptr || io_destino == nullptr)
+    if(origen == nullptr || destino == nullptr || io == nullptr)
         return;
 
     Lista* tmp{lista};
@@ -25,21 +25,20 @@ void ListaLineas::añadir(Simulable* origen, Simulable* destino, IO* io_origen, 
         tmp->siguiente = new Lista();
         tmp = tmp->siguiente;
     }
-    tmp->simulable_origen = origen;
-    tmp->simulable_destino = destino;
-    tmp->io_origen = io_origen;
-    tmp->io_destino = io_destino;
+    tmp->origen = origen;
+    tmp->destino = destino;
+    tmp->io = io;
     tmp->siguiente = nullptr;
 }
 
-void ListaLineas::borrar(const Simulable* origen, const Simulable* destino, const IO* io_origen, const IO* io_destino)
+void ListaLineas::borrar(const Simulable* origen, const Simulable* destino, const IO* io)
 {
-    if(lista == nullptr || origen == nullptr || destino == nullptr || io_origen == nullptr || io_destino == nullptr)
+    if(lista == nullptr || origen == nullptr || destino == nullptr || io == nullptr)
         return;
 
     const Lista* tmp{lista};
 
-    if(lista->simulable_origen == origen && lista->simulable_destino == destino && lista->io_origen == io_origen && lista->io_destino == io_destino)
+    if(lista->origen == origen && lista->destino == destino && lista->io == io)
     {
         lista = lista->siguiente;
         delete tmp;
@@ -51,7 +50,7 @@ void ListaLineas::borrar(const Simulable* origen, const Simulable* destino, cons
 
     while(tmp != nullptr)
     {
-        if(tmp->simulable_origen == origen && tmp->simulable_destino == destino && tmp->io_origen == io_origen && tmp->io_destino == io_destino)
+        if(tmp->origen == origen && tmp->destino == destino && tmp->io == io)
         {
             anterior->siguiente = tmp->siguiente;
             delete tmp;
@@ -69,12 +68,12 @@ void ListaLineas::borrar(const IO* involucrado)
 
     const Lista* tmp{nullptr};
 
-    while(lista != nullptr && (lista->io_origen == involucrado || lista->io_destino == involucrado))
+    while(lista != nullptr && lista->io == involucrado)
     {
         tmp = lista;
         lista = lista->siguiente;
-        tmp->io_origen->desconectado();
-        tmp->simulable_destino->setIONull(tmp->io_destino);
+        tmp->io->desconectado();
+        tmp->destino->setIONull(tmp->io);
         delete tmp;
     }
 
@@ -86,7 +85,7 @@ void ListaLineas::borrar(const IO* involucrado)
 
     while(tmp != nullptr)
     {
-        if(tmp->io_origen == involucrado || tmp->io_destino == involucrado)
+        if(tmp->io == involucrado)
         {
             anterior->siguiente = tmp->siguiente;
             delete tmp;
@@ -107,7 +106,7 @@ void ListaLineas::borrar(const Simulable* involucrado)
 
     const Lista* tmp{nullptr};
 
-    while(lista != nullptr && (lista->simulable_origen == involucrado || lista->simulable_destino == involucrado))
+    while(lista != nullptr && (lista->origen == involucrado || lista->destino == involucrado))
     {
         tmp = lista;
         lista = lista->siguiente;
@@ -122,7 +121,7 @@ void ListaLineas::borrar(const Simulable* involucrado)
 
     while(tmp != nullptr)
     {
-        if(tmp->simulable_origen == involucrado || tmp->simulable_destino == involucrado)
+        if(tmp->origen == involucrado || tmp->destino == involucrado)
         {
             anterior->siguiente = tmp->siguiente;
             delete tmp;

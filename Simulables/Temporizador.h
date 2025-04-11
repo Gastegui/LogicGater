@@ -32,7 +32,7 @@ class Temporizador final : public Simulable
 
     static unsigned int idGenerator()
     {
-        static unsigned int id = 1 + 1<<31;
+        static unsigned int id = 1 + get_offset(ID_TIPOS::Temporizador);
         return id++;
     }
 

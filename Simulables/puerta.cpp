@@ -13,22 +13,11 @@ void Puerta::simular()
     bool b{false};
     bool ret{false};
 
-    if(arriba != nullptr)
-    {
-        if(arriba->getTipoSimulable() == TIPOS_SIMULABLES::Entrada)
-            a = dynamic_cast<Entrada*>(arriba->getSimulable())->get();
-        else if(arriba->getTipoSimulable() == TIPOS_SIMULABLES::Puerta)
-            a = dynamic_cast<Puerta*>(arriba->getSimulable())->getSalida()->get();
-    }
+    if(arriba != nullptr && arriba->getSimulable()->getIOSalida() != nullptr)
+        a = arriba->getSimulable()->getIOSalida()->get();
 
-    if(abajo != nullptr)
-    {
-
-        if(abajo->getTipoSimulable() == TIPOS_SIMULABLES::Entrada)
-            b = dynamic_cast<Entrada*>(abajo->getSimulable())->get();
-        else if(abajo->getTipoSimulable() == TIPOS_SIMULABLES::Puerta)
-            b = dynamic_cast<Puerta*>(abajo->getSimulable())->getSalida()->get();
-    }
+    if(abajo != nullptr && abajo->getSimulable()->getIOSalida() != nullptr)
+        b = abajo->getSimulable()->getIOSalida()->get();
 
     if(arribaNegado)
         a = !a;
@@ -125,7 +114,7 @@ void Puerta::moverRel(const int x_, const int y_)
     y += y_;
 }
 
-bool Puerta::interactuar(const int posX, const int posY, const INTERACCIONES interaccion) //TODO: Añadir algo más?
+bool Puerta::interactuar(const int posX, const int posY, const INTERACCIONES interaccion)
 {
     using enum INTERACCIONES;
     switch (interaccion)
@@ -154,7 +143,7 @@ bool Puerta::interactuar(const int posX, const int posY, const INTERACCIONES int
 
                 origen->conectado();
 
-                controlador->añadirConexion(this, conectarArriba ? getArriba() : getAbajo());
+                controlador->añadirConexion(this);
                 controlador->desmarcarOrigen();
             }
             return true;
@@ -165,7 +154,7 @@ bool Puerta::interactuar(const int posX, const int posY, const INTERACCIONES int
                 controlador->borrarConexiones(posY <= getImg()->getRect()->h / 2 ? arriba : abajo);
             return true;
 
-        case MoverAbajo: //TODO: QUE SE USEN TODAS LAS SIGUIENTES (antigua funcion click())
+        case MoverAbajo:
             mover = true;
             raton->setMoviendoImg(&imagen);
             return true;

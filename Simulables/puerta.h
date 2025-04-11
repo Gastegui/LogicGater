@@ -39,7 +39,7 @@ class Puerta final : public Simulable
 
     static unsigned int idGenerator()
     {
-        static unsigned int id = 1 + 1<<31;
+        static unsigned int id = 1 + get_offset(ID_TIPOS::Puerta);
         return id++;
     }
 
@@ -76,7 +76,7 @@ public:
     {}
 
     Puerta(SDL_Renderer* renderer, Controlador* controlador_, const Tipo tipo_, const int x_, const int y_, const bool arribaNegado_, const bool abajoNegado_, const bool salidaNegada_, Raton* raton_, const unsigned int id_)
-        : Simulable(id_), controlador(controlador_), arribaNegado{arribaNegado_}, abajoNegado{abajoNegado_}, salidaNegada{salidaNegada_}, salida(this, 99+x_, 24+y_), x{x_}, y{y_}, raton{raton_}, tipo{tipo_},
+        : Simulable(id_), controlador(controlador_), arribaNegado{arribaNegado_}, abajoNegado{abajoNegado_}, salidaNegada{salidaNegada_}, salida(this, 100+x_, 25+y_), x{x_}, y{y_}, raton{raton_}, tipo{tipo_},
           imagen{
               renderer, x_, y_,
               arribaNegado_ ? "./img/puertas/entrada_arriba_negada.png" : "./img/puertas/entrada_arriba_normal.png",

@@ -30,7 +30,7 @@ class Entrada final : public Simulable
 
     static unsigned int idGenerator()
     {
-        static unsigned int id = 1 + 1<<30;
+        static unsigned int id = 1 + get_offset(ID_TIPOS::Entrada);
         return id++;
     }
 
