@@ -55,8 +55,8 @@ bool SistemaGuardado::guardar(const Controlador* controlador, const Window* wind
     while(listaLineas != nullptr)
     {
         outf << "Conexion: ";
-        outf << "io_x: " << listaLineas->io_origen->getLineaDestino()->first;
-        outf << "io_y: " << listaLineas->io_origen->getLineaDestino()->second;
+        outf << "io_x: " << listaLineas->simulable_destino->getLinea(listaLineas->io_destino)->first;
+        outf << "io_y: " << listaLineas->simulable_destino->getLinea(listaLineas->io_destino)->second;
         outf << " simulable_origen: " << listaLineas->simulable_origen->getId();
         outf << " simulable_destino: " << listaLineas->simulable_destino->getId();
 

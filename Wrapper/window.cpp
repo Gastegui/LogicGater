@@ -47,10 +47,12 @@ void Window::rendererDraw() const
 
 
     SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+    const SDL_Rect rect{-esquinaX, -esquinaY, width, height};
     while(lista2 != nullptr)
     {
         const std::pair<int, int>* origen = lista2->io_origen->getLineaOrigen();   //TODO: ¡¡ESTOS DOS SON LOS MISMOS!!
-        const std::pair<int, int>* destino = lista2->io_destino->getLineaDestino(); //¡¡El destino y el origen son el mismo IO!!
+        const std::pair<int, int>* destino = lista2->simulable_destino->getLinea(lista2->io_destino);
+
 
         //Comprueba si alguno de los dos puntos de la línea está dentro de la pantalla
         if((origen->first > -esquinaX && origen->first < -esquinaX + width && origen->second > -esquinaY && origen->second < -esquinaY + height) ||
@@ -59,7 +61,6 @@ void Window::rendererDraw() const
         else
         {
             //Si no esta el origen o final de la línea dentro de la pantalla, comprueba si la línea intersecciona la pantalla
-            SDL_Rect rect{-esquinaX, -esquinaY, width, height};
             int x1 = origen->first;
             int y1 = origen->second;
             int x2 = destino->first;

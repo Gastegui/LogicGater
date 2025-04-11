@@ -31,11 +31,11 @@ class Puerta final : public Simulable
     IO* arriba{nullptr};
     IO* abajo{nullptr};
     IO salida;
-    /*
+
     std::pair<int, int> lineaArriba{0, 11};
     std::pair<int, int> lineaAbajo{0, 37};
-    std::pair<int, int> lineaSalida{99, 24};
-    */
+    //std::pair<int, int> lineaSalida{99, 24};
+
 
     static unsigned int idGenerator()
     {
@@ -86,6 +86,10 @@ public:
           }
     {
         imagen.setClickable(this);
+        lineaArriba.first += x_;
+        lineaArriba.second += y_;
+        lineaAbajo.first += x_;
+        lineaAbajo.second += y_;
     }
 
     ~Puerta() override = default;
@@ -125,6 +129,16 @@ public:
     bool interactuar(int posX, int posY, INTERACCIONES interaccion) override;
     void setIONull(IO* io) override;
     [[nodiscard]] IO* getIOSalida() override { return &salida; }
+    [[nodiscard]] std::pair<int, int>* getLinea(IO* io) override
+    {
+        if(io == nullptr)
+            return nullptr;
+        if(io == arriba)
+            return &lineaArriba;
+        if(io == abajo)
+            return &lineaAbajo;
+        return nullptr;
+    }
 };
 
 #endif //GATE_H

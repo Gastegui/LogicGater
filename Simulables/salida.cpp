@@ -12,8 +12,8 @@
 void Salida::moverRel(const int x, const int y)
 {
     img.mover(img.getRect()->x + x, img.getRect()->y + y);
-    if(entrada != nullptr)
-        entrada->moverLineaDestinoRel(x, y);
+    entradaPos.first += x;
+    entradaPos.second += y;
 }
 
 void Salida::simular()
@@ -63,7 +63,6 @@ bool Salida::interactuar(const int posX, const int posY, const INTERACCIONES int
 
                 setEntrada(origen);
                 origen->conectado();
-                origen->setLineaDestino(img.getRect()->x + 25, img.getRect()->y + 25);
                 controlador->añadirConexion(this, entrada);
                 controlador->desmarcarOrigen();
                 return true;

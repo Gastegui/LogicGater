@@ -26,7 +26,6 @@ class IO
     int conexiones{0};
 
     std::pair<int, int> origen;
-    std::pair<int, int> destino;
 
     Simulable* simulable;
     TIPOS_SIMULABLES tipoSimulable;
@@ -49,10 +48,6 @@ public:
 
     [[nodiscard]] std::pair<int, int>* getLineaOrigen() { return &origen; }
     void moverLineaOrigenRel(const int x, const int y) { origen.first += x; origen.second += y; }
-
-    [[nodiscard]] std::pair<int, int>* getLineaDestino() { return &destino; }
-    void moverLineaDestinoRel(const int x, const int y) { destino.first += x; destino.second += y; }
-    void setLineaDestino(const int x, const int y) { destino.first = x; destino.second = y; }
 
     void conectado() { conexiones++; }
     void desconectado() { conexiones--; }

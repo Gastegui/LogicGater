@@ -115,10 +115,11 @@ void Puerta::moverRel(const int x_, const int y_)
 
     salida.moverLineaOrigenRel(x_, y_);
 
-    if(arriba != nullptr)
-        arriba->moverLineaDestinoRel(x_, y_);
-    if(abajo != nullptr)
-        abajo->moverLineaDestinoRel(x_, y_);
+    lineaArriba.first += x_;
+    lineaArriba.second += y_;
+
+    lineaAbajo.first += x_;
+    lineaAbajo.second += y_;
 
     x += x_;
     y += y_;
@@ -143,14 +144,12 @@ bool Puerta::interactuar(const int posX, const int posY, const INTERACCIONES int
                     if(arriba != nullptr)
                         return false;
                     arriba = origen;
-                    origen->setLineaDestino(x + 0, y + 11);
                 }
                 else
                 {
                     if(abajo != nullptr)
                         return false;
                     abajo = origen;
-                    origen->setLineaDestino(x + 0, y + 37);
                 }
 
                 origen->conectado();

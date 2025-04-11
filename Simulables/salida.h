@@ -24,7 +24,7 @@ class Salida final : public Simulable
 
     IMG img;
 
-    //std::pair<int, int> linea{25, 25};
+    std::pair<int, int> entradaPos{25, 25};
 
     bool mover{false};
     Raton* raton;
@@ -51,6 +51,8 @@ public:
         :Simulable{id_}, controlador{controlador_}, img{"./img/salida/apagado.png", renderer, x, y}, raton{raton_}
     {
         img.setClickable(this);
+        entradaPos.first += x;
+        entradaPos.second += y;
     }
 
     ~Salida() override = default;
@@ -69,6 +71,15 @@ public:
     bool interactuar(int posX, int posY, INTERACCIONES interaccion) override;
     void setIONull(IO* io) override;
     [[nodiscard]] IO* getIOSalida() override { return nullptr; }
+    [[nodiscard]] std::pair<int, int>* getLinea(IO* io) override
+    {
+        if(io == nullptr || entrada == nullptr)
+            return nullptr;
+        if(io == entrada)
+            return &entradaPos;
+
+        return nullptr;
+    }
 };
 
 #endif //SALIDA_H
