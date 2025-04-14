@@ -68,9 +68,8 @@ bool Salida::interactuar(const int posX, const int posY, const INTERACCIONES int
                 return true;
             }
         case ConexionBorrar:
-            controlador->borrarConexiones(entrada);
-        return true;
-
+            controlador->borrarConexion(entrada->getSimulable(), this, entrada);
+            return true;
         case MoverAbajo:
             mover = true;
             raton->setMoviendoImg(&img);

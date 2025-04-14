@@ -41,6 +41,9 @@ void ListaLineas::borrar(const Simulable* origen, const Simulable* destino, cons
     if(lista->origen == origen && lista->destino == destino && lista->io == io)
     {
         lista = lista->siguiente;
+        tmp->origen->setIONull(tmp->io);
+        tmp->destino->setIONull(tmp->io);
+        tmp->io->desconectado();
         delete tmp;
         return;
     }
@@ -53,6 +56,9 @@ void ListaLineas::borrar(const Simulable* origen, const Simulable* destino, cons
         if(tmp->origen == origen && tmp->destino == destino && tmp->io == io)
         {
             anterior->siguiente = tmp->siguiente;
+            tmp->origen->setIONull(tmp->io);
+            tmp->destino->setIONull(tmp->io);
+            tmp->io->desconectado();
             delete tmp;
             return;
         }
@@ -88,12 +94,14 @@ void ListaLineas::borrar(const IO* involucrado)
         if(tmp->io == involucrado)
         {
             anterior->siguiente = tmp->siguiente;
+            tmp->io->desconectado();
+            tmp->destino->setIONull(tmp->io);
             delete tmp;
             tmp = anterior->siguiente;
         }
         else
         {
-            anterior->siguiente = anterior->siguiente;
+            anterior = anterior->siguiente;
             tmp = tmp->siguiente;
         }
     }
@@ -110,6 +118,11 @@ void ListaLineas::borrar(const Simulable* involucrado)
     {
         tmp = lista;
         lista = lista->siguiente;
+        if(tmp->origen == involucrado)
+            tmp->destino->setIONull(tmp->io);
+        else
+            tmp->origen->setIONull(tmp->io);
+        tmp->io->desconectado();
         delete tmp;
     }
 
@@ -124,12 +137,17 @@ void ListaLineas::borrar(const Simulable* involucrado)
         if(tmp->origen == involucrado || tmp->destino == involucrado)
         {
             anterior->siguiente = tmp->siguiente;
+            if(tmp->origen == involucrado)
+                tmp->destino->setIONull(tmp->io);
+            else
+                tmp->origen->setIONull(tmp->io);
+            tmp->io->desconectado();
             delete tmp;
             tmp = anterior->siguiente;
         }
         else
         {
-            anterior->siguiente = anterior->siguiente;
+            anterior = anterior->siguiente;
             tmp = tmp->siguiente;
         }
     }

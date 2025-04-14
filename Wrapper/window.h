@@ -96,7 +96,12 @@ public:
     //No borra las imagenes. Eso es trabajo de la clase IMG
     bool borrar(const IMG* img, const ListaIMG::Altura altura)
     {
-        return listaIMG.quitar(img, altura);
+        if(listaIMG.quitar(img, altura))
+        {
+            raton.setImgAnteriorNull();
+            return true;
+        }
+        return false;
     }
 
     void moverRel(int x, int y);

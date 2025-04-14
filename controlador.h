@@ -72,19 +72,11 @@ public:
     void borrar(Simulable* simulable)
     {
         if (!simulables.contains(simulable->getId()))
-        {
-            std::cout << "No se ha podido borrar el " << toString(simulable->getTipo()) << " con id " << simulable->getId() << std::endl;
             return;
-        }
-
-        if(simulables.erase(simulable->getId()) == 0)
-        {
-            std::cout << "No se ha podido borrar el " << toString(simulable->getTipo()) << " con id " << simulable->getId() << std::endl;
-            return;
-        }
-
         borrarConexiones(simulable);
+
         window->borrar(simulable->getImg(), ListaIMG::MEDIO);
+        simulables.erase(simulable->getId());
 
         delete simulable;
     }
@@ -92,6 +84,7 @@ public:
     void añadirConexion(Simulable* simulable_destino) { listaLineas.añadir(origen->getSimulable(), simulable_destino, origen); }
     void borrarConexiones(const IO* io) { listaLineas.borrar(io); }
     void borrarConexiones(const Simulable* simulable) { listaLineas.borrar(simulable); }
+    void borrarConexion(const Simulable* origen, const Simulable* destino, const IO* io) { listaLineas.borrar(origen, destino, io); }
 
     //Crea un temporizador
     void crear(int x, int y, int duracion, unsigned int id = 0);

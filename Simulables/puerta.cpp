@@ -123,12 +123,12 @@ bool Puerta::interactuar(const int posX, const int posY, const INTERACCIONES int
             controlador->marcarOrigen(getSalida());
             return true;
         case ConexionArriba:
-            if(controlador->getOrigen() == nullptr)
-                return false;
             {
-                const bool conectarArriba = posY <= getImg()->getRect()->h / 2;
                 IO* origen = controlador->getOrigen();
-                if(conectarArriba)
+                if(origen == nullptr)
+                    return false;
+
+                if(posY <= getImg()->getRect()->h / 2)
                 {
                     if(arriba != nullptr)
                         return false;
@@ -151,7 +151,10 @@ bool Puerta::interactuar(const int posX, const int posY, const INTERACCIONES int
             if(posX > getImg()->getRect()->w / 2)
                 controlador->borrarConexiones(&salida);
             else
-                controlador->borrarConexiones(posY <= getImg()->getRect()->h / 2 ? arriba : abajo);
+            {
+                const IO* borrar = (posY <= getImg()->getRect()->h / 2)  ? arriba : abajo;
+                controlador->borrarConexion(borrar->getSimulable(), this, borrar);
+            }
             return true;
 
         case MoverAbajo:
@@ -199,7 +202,7 @@ bool Puerta::interactuar(const int posX, const int posY, const INTERACCIONES int
 
 void Puerta::setIONull(IO* io)
 {
-    if(arriba != io)
+    if(arriba == io)
         arriba = nullptr;
     else if(abajo == io)
         abajo = nullptr;

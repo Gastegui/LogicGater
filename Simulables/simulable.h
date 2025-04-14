@@ -22,6 +22,7 @@ public:
     virtual void setIONull(IO* io) = 0;
     [[nodiscard]] virtual IO* getIOSalida() = 0;
     [[nodiscard]] virtual std::pair<int, int>* getLinea(IO* io) = 0;
+    [[nodiscard]] virtual bool getDesconectado() const = 0;
 
     [[nodiscard]] virtual TIPOS_SIMULABLES getTipo() const
     {

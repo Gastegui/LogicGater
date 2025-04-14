@@ -99,7 +99,7 @@ public:
     [[nodiscard]] IO* getSalida() { return &salida; }
     [[nodiscard]] IO* getArriba() const { return arriba; }
     [[nodiscard]] IO* getAbajo() const { return abajo; }
-    [[nodiscard]] bool getDesconectado() const { return arriba == nullptr && abajo == nullptr && salida.getConexiones() == 0; }
+    [[nodiscard]] bool getDesconectado() const override { return arriba == nullptr && abajo == nullptr && salida.getConexiones() == 0; }
     [[nodiscard]] IMG* getImg() override { return &imagen; }
 
     bool cambiar(const int arribaNegado_, const int abajoNegado_, const Tipo tipo_, const int salidaNegada_)

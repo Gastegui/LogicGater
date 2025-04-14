@@ -37,6 +37,7 @@ public:
 
     void setBorrando(bool borrando_);
     [[nodiscard]] bool getBorrando() const { return borrando; }
+    void setImgAnteriorNull() { imgAnterior = nullptr; }
 
     void manejarRaton();
     void setMoviendoImg(IMG* img) { moviendoImg = img; }

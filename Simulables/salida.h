@@ -61,7 +61,7 @@ public:
     [[nodiscard]] IO* getEntrada() const { return entrada; }
     [[nodiscard]] IMG* getImg() override { return &img; }
     [[nodiscard]] bool get() const { return entrada->get(); }
-    [[nodiscard]] bool getDesconectado() const { return entrada == nullptr; }
+    [[nodiscard]] bool getDesconectado() const override { return entrada == nullptr; }
 
     void simular() override;
     void actualizar() override {}

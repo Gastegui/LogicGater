@@ -85,52 +85,26 @@ void Controlador::simularInstantaneo() const
 int Controlador::limpiar()
 {
     int limpiados = 0;
-    Puerta* borrarPuerta{nullptr};
-    Salida* borrarSalida{nullptr};
-    Entrada* borrarEntrada{nullptr};
-
+    Simulable* simulable{nullptr};
     for (const auto& value : simulables | std::views::values)
     {
-        if(borrarPuerta != nullptr)
+        if(simulable != nullptr)
         {
-            borrar(borrarPuerta);
-            borrarPuerta = nullptr;
-            limpiados++;
-        }
-        if(borrarSalida != nullptr)
-        {
-            borrar(borrarSalida);
-            borrarSalida = nullptr;
+            borrar(simulable);
+            simulable = nullptr;
             limpiados++;
         }
 
-        if(borrarEntrada != nullptr)
-        {
-            borrar(borrarEntrada);
-            borrarEntrada = nullptr;
-            limpiados++;
-        }
-
-        if(dynamic_cast<Puerta*>(value) != nullptr)
-        {
-            borrarPuerta = dynamic_cast<Puerta*>(value); //Se usa como tmp
-            if(!borrarPuerta->getDesconectado())
-                borrarPuerta = nullptr;
-        }
-
-        if(dynamic_cast<Salida*>(value) != nullptr)
-        {
-            borrarSalida = dynamic_cast<Salida*>(value); //Se usa como tmp
-            if(!borrarSalida->getDesconectado())
-                borrarSalida = nullptr;
-        }
-        if(dynamic_cast<Entrada*>(value) != nullptr)
-        {
-            borrarEntrada = dynamic_cast<Entrada*>(value); //Se usa como tmp
-            if(!borrarEntrada->getDesconectado())
-                borrarEntrada = nullptr;
-        }
+        if(value->getDesconectado())
+            simulable = value;
     }
+
+    if(simulable != nullptr)
+    {
+        borrar(simulable);
+        limpiados++;
+    }
+
     return limpiados;
 }
 
