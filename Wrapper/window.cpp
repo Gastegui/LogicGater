@@ -51,7 +51,7 @@ void Window::rendererDraw() const
     while(lista2 != nullptr)
     {
         const std::pair<int, int>* origen = lista2->io->getLineaOrigen();
-        const std::pair<int, int>* destino = lista2->destino->getLinea(lista2->io);
+        const std::pair<int, int>* destino = lista2->destino->getLinea(lista2->conexion);
 
 
         //Comprueba si alguno de los dos puntos de la línea está dentro de la pantalla

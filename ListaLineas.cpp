@@ -6,7 +6,7 @@
 
 #include "io.h"
 
-void ListaLineas::añadir(Simulable* origen, Simulable* destino, IO* io)
+void ListaLineas::añadir(Simulable* origen, Simulable* destino, IO* io, const int conexion)
 {
     if(origen == nullptr || destino == nullptr || io == nullptr)
         return;
@@ -28,17 +28,18 @@ void ListaLineas::añadir(Simulable* origen, Simulable* destino, IO* io)
     tmp->origen = origen;
     tmp->destino = destino;
     tmp->io = io;
+    tmp->conexion = conexion;
     tmp->siguiente = nullptr;
 }
 
-void ListaLineas::borrar(const Simulable* origen, const Simulable* destino, const IO* io)
+void ListaLineas::borrar(const Simulable* origen, const Simulable* destino, const IO* io, const int conexion)
 {
     if(lista == nullptr || origen == nullptr || destino == nullptr || io == nullptr)
         return;
 
     const Lista* tmp{lista};
 
-    if(lista->origen == origen && lista->destino == destino && lista->io == io)
+    if(lista->origen == origen && lista->destino == destino && lista->io == io && lista->conexion == conexion)
     {
         lista = lista->siguiente;
         tmp->origen->setIONull(tmp->io);
@@ -53,7 +54,7 @@ void ListaLineas::borrar(const Simulable* origen, const Simulable* destino, cons
 
     while(tmp != nullptr)
     {
-        if(tmp->origen == origen && tmp->destino == destino && tmp->io == io)
+        if(tmp->origen == origen && tmp->destino == destino && tmp->io == io && tmp->conexion == conexion)
         {
             anterior->siguiente = tmp->siguiente;
             tmp->origen->setIONull(tmp->io);

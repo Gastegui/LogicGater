@@ -17,6 +17,7 @@ public:
         Simulable* origen;
         Simulable* destino;
         IO* io;
+        int conexion;
         Lista* siguiente;
     };
 
@@ -41,9 +42,9 @@ public:
 
     [[nodiscard]] Lista* getLista() const { return lista; }
 
-    void añadir(Simulable* origen, Simulable* destino, IO* io);
+    void añadir(Simulable* origen, Simulable* destino, IO* io, int conexion);
 
-    void borrar(const Simulable* origen, const Simulable* destino, const IO* io);
+    void borrar(const Simulable* origen, const Simulable* destino, const IO* io, int conexion);
     void borrar(const IO* involucrado);
     void borrar(const Simulable* involucrado);
 };

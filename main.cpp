@@ -12,10 +12,8 @@
 int main(int argc, char* argv[])
 {
 
-    std::cout << "Algunos botones afectan a cosas de otros sitios?";
-    std::cout << std::endl << "Parece que las lineas se borran bien" << std::endl;
-    std::cout << std::endl << "No se pueden crear dos lineas al mismo simulable desde el mismo origen, aunque sean entradas distintas (puerta)" << std::endl;
-    std::cout << "La tecla L parece funcionar bien" << std::endl;
+    std::cout << "Algunos botones afectan a cosas de otros sitios?" << std::endl;
+    std::cout << "No se pueden negar los IOs de las puertas" << std::endl;
     std::cout << "El sistema de guardado está roto" << std::endl;
 
     if (SDL_Init(SDL_INIT_VIDEO) != 0)

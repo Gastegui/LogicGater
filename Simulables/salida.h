@@ -71,11 +71,11 @@ public:
     bool interactuar(int posX, int posY, INTERACCIONES interaccion) override;
     void setIONull(IO* io) override;
     [[nodiscard]] IO* getIOSalida() override { return nullptr; }
-    [[nodiscard]] std::pair<int, int>* getLinea(IO* io) override
+    [[nodiscard]] std::pair<int, int>* getLinea(const int conexion) override
     {
-        if(io == nullptr || entrada == nullptr)
+        if(entrada == nullptr)
             return nullptr;
-        if(io == entrada)
+        if(conexion == 1)
             return &entradaPos;
 
         return nullptr;

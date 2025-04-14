@@ -127,23 +127,25 @@ bool Puerta::interactuar(const int posX, const int posY, const INTERACCIONES int
                 IO* origen = controlador->getOrigen();
                 if(origen == nullptr)
                     return false;
-
+                int conexion;
                 if(posY <= getImg()->getRect()->h / 2)
                 {
                     if(arriba != nullptr)
                         return false;
                     arriba = origen;
+                    conexion = 1;
                 }
                 else
                 {
                     if(abajo != nullptr)
                         return false;
                     abajo = origen;
+                    conexion = 2;
                 }
 
                 origen->conectado();
 
-                controlador->añadirConexion(this);
+                controlador->añadirConexion(this, conexion);
                 controlador->desmarcarOrigen();
             }
             return true;
@@ -152,8 +154,9 @@ bool Puerta::interactuar(const int posX, const int posY, const INTERACCIONES int
                 controlador->borrarConexiones(&salida);
             else
             {
-                const IO* borrar = (posY <= getImg()->getRect()->h / 2)  ? arriba : abajo;
-                controlador->borrarConexion(borrar->getSimulable(), this, borrar);
+                const IO* borrar = (posY <= getImg()->getRect()->h / 2) ? arriba : abajo;
+                const int conexion = (posY <= getImg()->getRect()->h / 2) ? 1 : 2;
+                controlador->borrarConexion(borrar->getSimulable(), this, borrar, conexion);
             }
             return true;
 
