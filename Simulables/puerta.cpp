@@ -174,17 +174,17 @@ bool Puerta::interactuar(const int posX, const int posY, const INTERACCIONES int
             return true;
 
         case InteractuarArriba:
-            if(x >= 0 && x <= 23 && y >= 0 && y <= 23)
+            if(posX >= 0 && posX <= 23 && posY >= 0 && posY <= 23)
             {
                 arribaNegado = !arribaNegado;
                 cambiar();
             }
-            else if(x >= 0 && x <= 23 && y >= 26 && y <= 49)
+            else if(posX >= 0 && posX <= 23 && posY >= 26 && posY <= 49)
             {
                 abajoNegado = !abajoNegado;
                 cambiar();
             }
-            else if(x >= 76 && x <= 99 && y >= 13 && y <= 36)
+            else if(posX >= 76 && posX <= 99 && posY >= 13 && posY <= 36)
             {
                 salidaNegada = !salidaNegada;
                 cambiar();
