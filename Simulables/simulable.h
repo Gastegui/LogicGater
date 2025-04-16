@@ -23,6 +23,7 @@ public:
     [[nodiscard]] virtual IO* getIOSalida() = 0;
     [[nodiscard]] virtual std::pair<int, int>* getLinea(int conexion) = 0;
     [[nodiscard]] virtual bool getDesconectado() const = 0;
+    [[nodiscard]] virtual int getConexion(IO* io) const = 0;
 
     [[nodiscard]] virtual TIPOS_SIMULABLES getTipo() const
     {

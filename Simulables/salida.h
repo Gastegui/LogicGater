@@ -73,12 +73,17 @@ public:
     [[nodiscard]] IO* getIOSalida() override { return nullptr; }
     [[nodiscard]] std::pair<int, int>* getLinea(const int conexion) override
     {
-        if(entrada == nullptr)
-            return nullptr;
         if(conexion == 1)
             return &entradaPos;
 
         return nullptr;
+    }
+
+    [[nodiscard]] int getConexion(IO* io) const override
+    {
+        if(entrada != nullptr && entrada == io)
+            return 1;
+        return 0;
     }
 };
 

@@ -68,7 +68,7 @@ bool Salida::interactuar(const int posX, const int posY, const INTERACCIONES int
                 return true;
             }
         case ConexionBorrar:
-            controlador->borrarConexion(entrada->getSimulable(), this, entrada, 1);
+            controlador->borrarConexion(this, entrada, 1);
             return true;
         case MoverAbajo:
             mover = true;

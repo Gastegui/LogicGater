@@ -156,7 +156,9 @@ bool Puerta::interactuar(const int posX, const int posY, const INTERACCIONES int
             {
                 const IO* borrar = (posY <= getImg()->getRect()->h / 2) ? arriba : abajo;
                 const int conexion = (posY <= getImg()->getRect()->h / 2) ? 1 : 2;
-                controlador->borrarConexion(borrar->getSimulable(), this, borrar, conexion);
+                if(borrar == nullptr)
+                    return false;
+                controlador->borrarConexion(this, borrar, conexion);
             }
             return true;
 

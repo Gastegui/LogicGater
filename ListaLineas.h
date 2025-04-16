@@ -14,7 +14,6 @@ class ListaLineas
 public:
     struct Lista
     {
-        Simulable* origen;
         Simulable* destino;
         IO* io;
         int conexion;
@@ -42,9 +41,9 @@ public:
 
     [[nodiscard]] Lista* getLista() const { return lista; }
 
-    void añadir(Simulable* origen, Simulable* destino, IO* io, int conexion);
+    void añadir(Simulable* destino, IO* io, int conexion);
 
-    void borrar(const Simulable* origen, const Simulable* destino, const IO* io, int conexion);
+    void borrar(const Simulable* destino, const IO* io, int conexion);
     void borrar(const IO* involucrado);
     void borrar(const Simulable* involucrado);
 };

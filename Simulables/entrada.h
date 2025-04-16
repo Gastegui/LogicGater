@@ -75,6 +75,7 @@ public:
     void setIONull(IO* io) override {}
     [[nodiscard]] IO* getIOSalida() override { return &salida; }
     [[nodiscard]] std::pair<int, int>* getLinea(int conexion) override { return nullptr; }
+    [[nodiscard]] int getConexion(IO* io) const override { return 0; }
 };
 
 

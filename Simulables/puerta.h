@@ -137,6 +137,16 @@ public:
             return &lineaAbajo;
         return nullptr;
     }
+
+    [[nodiscard]] int getConexion(IO* io) const override
+    {
+        if(arriba != nullptr && arriba == io)
+            return 1;
+        if(abajo != nullptr && abajo == io)
+            return 2;
+
+        return 0;
+    }
 };
 
 #endif //GATE_H

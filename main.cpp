@@ -12,9 +12,6 @@
 int main(int argc, char* argv[])
 {
 
-    std::cout << "Algunos botones afectan a cosas de otros sitios?" << std::endl;
-    std::cout << "No se pueden negar los IOs de las puertas" << std::endl;
-    std::cout << "El sistema de guardado está roto" << std::endl;
 
     if (SDL_Init(SDL_INIT_VIDEO) != 0)
         {

@@ -6,9 +6,9 @@
 
 #include "io.h"
 
-void ListaLineas::añadir(Simulable* origen, Simulable* destino, IO* io, const int conexion)
+void ListaLineas::añadir(Simulable* destino, IO* io, const int conexion)
 {
-    if(origen == nullptr || destino == nullptr || io == nullptr)
+    if(destino == nullptr || io == nullptr)
         return;
 
     Lista* tmp{lista};
@@ -25,24 +25,23 @@ void ListaLineas::añadir(Simulable* origen, Simulable* destino, IO* io, const i
         tmp->siguiente = new Lista();
         tmp = tmp->siguiente;
     }
-    tmp->origen = origen;
     tmp->destino = destino;
     tmp->io = io;
     tmp->conexion = conexion;
     tmp->siguiente = nullptr;
 }
 
-void ListaLineas::borrar(const Simulable* origen, const Simulable* destino, const IO* io, const int conexion)
+void ListaLineas::borrar(const Simulable* destino, const IO* io, const int conexion)
 {
-    if(lista == nullptr || origen == nullptr || destino == nullptr || io == nullptr)
+    if(lista == nullptr || destino == nullptr || io == nullptr)
         return;
 
     const Lista* tmp{lista};
 
-    if(lista->origen == origen && lista->destino == destino && lista->io == io && lista->conexion == conexion)
+    if(lista->destino == destino && lista->io == io && lista->conexion == conexion)
     {
         lista = lista->siguiente;
-        tmp->origen->setIONull(tmp->io);
+        tmp->io->getSimulable()->setIONull(tmp->io);
         tmp->destino->setIONull(tmp->io);
         tmp->io->desconectado();
         delete tmp;
@@ -54,10 +53,10 @@ void ListaLineas::borrar(const Simulable* origen, const Simulable* destino, cons
 
     while(tmp != nullptr)
     {
-        if(tmp->origen == origen && tmp->destino == destino && tmp->io == io && tmp->conexion == conexion)
+        if(tmp->destino == destino && tmp->io == io && tmp->conexion == conexion)
         {
             anterior->siguiente = tmp->siguiente;
-            tmp->origen->setIONull(tmp->io);
+            tmp->io->getSimulable()->setIONull(tmp->io);
             tmp->destino->setIONull(tmp->io);
             tmp->io->desconectado();
             delete tmp;
@@ -115,14 +114,14 @@ void ListaLineas::borrar(const Simulable* involucrado)
 
     const Lista* tmp{nullptr};
 
-    while(lista != nullptr && (lista->origen == involucrado || lista->destino == involucrado))
+    while(lista != nullptr && (lista->io->getSimulable() == involucrado || lista->destino == involucrado))
     {
         tmp = lista;
         lista = lista->siguiente;
-        if(tmp->origen == involucrado)
+        if(tmp->io->getSimulable() == involucrado)
             tmp->destino->setIONull(tmp->io);
         else
-            tmp->origen->setIONull(tmp->io);
+            tmp->io->getSimulable()->setIONull(tmp->io);
         tmp->io->desconectado();
         delete tmp;
     }
@@ -135,13 +134,13 @@ void ListaLineas::borrar(const Simulable* involucrado)
 
     while(tmp != nullptr)
     {
-        if(tmp->origen == involucrado || tmp->destino == involucrado)
+        if(tmp->io->getSimulable() == involucrado || tmp->destino == involucrado)
         {
             anterior->siguiente = tmp->siguiente;
-            if(tmp->origen == involucrado)
+            if(tmp->io->getSimulable() == involucrado)
                 tmp->destino->setIONull(tmp->io);
             else
-                tmp->origen->setIONull(tmp->io);
+                tmp->io->getSimulable()->setIONull(tmp->io);
             tmp->io->desconectado();
             delete tmp;
             tmp = anterior->siguiente;

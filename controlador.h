@@ -81,10 +81,10 @@ public:
         delete simulable;
     }
 
-    void añadirConexion(Simulable* simulable_destino, int conexion) { listaLineas.añadir(origen->getSimulable(), simulable_destino, origen, conexion); }
+    void añadirConexion(Simulable* simulable_destino, const int conexion) { listaLineas.añadir(simulable_destino, origen, conexion); }
     void borrarConexiones(const IO* io) { listaLineas.borrar(io); }
     void borrarConexiones(const Simulable* simulable) { listaLineas.borrar(simulable); }
-    void borrarConexion(const Simulable* origen, const Simulable* destino, const IO* io, const int conexion) { listaLineas.borrar(origen, destino, io, conexion); }
+    void borrarConexion(const Simulable* destino, const IO* io, const int conexion) { listaLineas.borrar(destino, io, conexion); }
 
     //Crea un temporizador
     void crear(int x, int y, int duracion, unsigned int id = 0);
