@@ -10,10 +10,7 @@
 #include "../io.h"
 #include "simulable.h"
 
-class IMG;
 class Window;
-class Raton;
-class IO;
 class SistemaGuardado;
 class Controlador;
 
@@ -34,7 +31,6 @@ class Puerta final : public Simulable
 
     std::pair<int, int> lineaArriba{0, 11};
     std::pair<int, int> lineaAbajo{0, 37};
-    //std::pair<int, int> lineaSalida{99, 24};
 
 
     static unsigned int idGenerator()
@@ -67,10 +63,6 @@ private:
 
 public:
 
-    Puerta(SDL_Renderer* renderer, Controlador* controlador_, const Tipo tipo_, const int x_, const int y_, Raton* raton)
-        : Puerta(renderer, controlador_, tipo_, x_, y_, false, false, false, raton)
-    {}
-
     Puerta(SDL_Renderer* renderer, Controlador* controlador_, const Tipo tipo_, const int x_, const int y_, const bool arribaNegado_, const bool abajoNegado_, const bool salidaNegada_, Raton* raton_)
         :Puerta(renderer, controlador_, tipo_, x_, y_, arribaNegado_, abajoNegado_, salidaNegada_, raton_, idGenerator())
     {}
@@ -94,23 +86,9 @@ public:
 
     ~Puerta() override = default;
 
-    void setArriba(IO* arriba_) { arriba = arriba_; }
-    void setAbajo(IO* abajo_) { abajo = abajo_; }
     [[nodiscard]] IO* getSalida() { return &salida; }
-    [[nodiscard]] IO* getArriba() const { return arriba; }
-    [[nodiscard]] IO* getAbajo() const { return abajo; }
     [[nodiscard]] bool getDesconectado() const override { return arriba == nullptr && abajo == nullptr && salida.getConexiones() == 0; }
     [[nodiscard]] IMG* getImg() override { return &imagen; }
-
-    bool cambiar(const int arribaNegado_, const int abajoNegado_, const Tipo tipo_, const int salidaNegada_)
-    {
-        arribaNegado = arribaNegado_;
-        abajoNegado = abajoNegado_;
-        tipo = tipo_;
-        salidaNegada = salidaNegada_;
-
-        return cambiar();
-    }
 
     bool cambiar()
     {

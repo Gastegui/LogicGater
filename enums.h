@@ -24,6 +24,7 @@
         CrearInterruptor,   /*I */ \
         CrearBoton,         /*B */ \
         CrearSalida,        /*S */ \
+        CrearTemporizador,  /*T */ \
         SimularPaso,        /*Enter */ \
         SimularEmpezar,     /*Q */ \
         SimularParar,       /*W */ \

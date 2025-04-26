@@ -40,8 +40,8 @@ add_executable(LogicGater main.cpp
         SistemaGuardado.cpp
         SistemaGuardado.h
         Simulables/simulable.h
-        #Simulables/Temporizador.cpp
-        #Simulables/Temporizador.h
-        enums.h)
+        enums.h
+        Simulables/temporizador.cpp
+        Simulables/temporizador.h)
 
 target_link_libraries(LogicGater ${SDL2_LIBRARIES} SDL2_ttf SDL2_mixer SDL2_image)

@@ -14,6 +14,7 @@
 #include "Simulables/puerta.h"
 #include "Simulables/entrada.h"
 #include "Simulables/salida.h"
+#include "Simulables/temporizador.h"
 
 bool SistemaGuardado::guardar(const Controlador* controlador, const Window* window, const Valores* valores, const std::string& archivo)
 {
@@ -33,20 +34,17 @@ bool SistemaGuardado::guardar(const Controlador* controlador, const Window* wind
     const Puerta* puerta;
     const Salida* salida;
     const Entrada* entrada;
+    const Temporizador* temp;
     for (const auto& value : controlador->simulables | std::views::values)
     {
         if((puerta = dynamic_cast<Puerta*>(value)) != nullptr)
-        {
             outf << "Puerta: id: " <<puerta->getId() << " tipo: " <<puerta->tipo << " arribaNegado: " <<puerta->arribaNegado << " abajoNegado: " <<puerta->abajoNegado << " salidaNegada: " <<puerta->salidaNegada << " x: " <<puerta->x << " y: " <<puerta->y << "\n";
-        }
         else if((salida = dynamic_cast<Salida*>(value)) != nullptr)
-        {
             outf << "Salida: id: " << salida->getId() << " x: " << salida->img.m_rect.x << " y: " << salida->img.m_rect.y << "\n";
-        }
         else if((entrada = dynamic_cast<Entrada*>(value)) != nullptr)
-        {
             outf << "Entrada: id: " << entrada->getId() << " mantener: " << entrada->mantener << " x: " << entrada->img.m_rect.x << " y: " << entrada->img.m_rect.y << "\n";
-        }
+        else if((temp = dynamic_cast<Temporizador*>(value)) != nullptr)
+            outf << "Temporizador: id: " << temp->getId() << " x: " << temp->imagen.m_rect.x << " y: " << temp->imagen.m_rect.y << " entradaNegada: " << temp->entradaNegada << " salidaNegada: " << temp->salidaNegada << " ciclosTotales: " << temp->ciclosTotales << "\n";
     }
 
     outf << "-Conexiones\n";
@@ -86,7 +84,7 @@ int SistemaGuardado::cargar(Controlador* controlador, Window* window, Valores* v
     std::string tmp{};
 
     //Puertas
-    unsigned int puertaId{0};
+    unsigned int puertaId{get_offset(ID_TIPOS::Puerta)};
     int puertaTipo{0};
     bool puertaArribaNegado{false};
     bool puertaAbajoNegado{false};
@@ -95,15 +93,23 @@ int SistemaGuardado::cargar(Controlador* controlador, Window* window, Valores* v
     int puertaY{0};
 
     //Entradas
-    unsigned int entradaId{0};
+    unsigned int entradaId{get_offset(ID_TIPOS::Entrada)};
     bool entradaMantener{false};
     int entradaX{0};
     int entradaY{0};
 
     //Salidas
-    unsigned int salidaId{0};
+    unsigned int salidaId{get_offset(ID_TIPOS::Salida)};
     int salidaX{false};
     int salidaY{false};
+
+    //Temporizadores
+    unsigned int tempId{get_offset(ID_TIPOS::Temporizador)};
+    int tempX{0};
+    int tempY{0};
+    bool tempEntradaNegada{false};
+    bool tempSalidaNegada{false};
+    int tempCiclos{0};
 
     //Conexiones
     unsigned int simulable_origen{0};
@@ -161,6 +167,23 @@ int SistemaGuardado::cargar(Controlador* controlador, Window* window, Valores* v
             iss >> salidaY;
             controlador->crear(salidaX, salidaY, salidaId);
         }
+        else if(tmp == "Temporizador:"s)
+        {
+            iss >> tmp; //id:
+            iss >> tempId;
+            iss >> tmp; //x:
+            iss >> tempX;
+            iss >> tmp; //y:
+            iss >> tempY;
+            iss >> tmp; //entradaNegada:
+            iss >> tempEntradaNegada;
+            iss >> tmp; //salidaNegada:
+            iss >> tempSalidaNegada;
+            iss >> tmp; //ciclosTotales:
+            iss >> tempCiclos;
+            std::cout << tempId << " " << tempX << " " << tempY << " " << tempEntradaNegada << " " << tempSalidaNegada << " " << tempCiclos << std::endl;
+            controlador->crear(tempX, tempY, tempCiclos, tempEntradaNegada, tempSalidaNegada, tempId);
+        }
         else if(tmp == "Conexion:"s)
         {
             iss >> tmp; //origen:
@@ -191,6 +214,7 @@ int SistemaGuardado::cargar(Controlador* controlador, Window* window, Valores* v
     Puerta::gastarIds(puertaId ^ get_offset(ID_TIPOS::Puerta)); //Esto sirve para desactivar el bit identificador
     Entrada::gastarIds(entradaId ^ get_offset(ID_TIPOS::Entrada));
     Salida::gastarIds(salidaId ^ get_offset(ID_TIPOS::Salida));
+    Temporizador::gastarIds(tempId ^ get_offset(ID_TIPOS::Temporizador));
 
     return 0;
 }

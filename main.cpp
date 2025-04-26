@@ -29,7 +29,15 @@ int main(int argc, char* argv[])
     std::atexit(TTF_Quit);
 
     Window window{"/home/julen/Descargas/windows_xp_bliss-wide.png"};
-    Controlador controlador{&window};
+
+    TXT txt {"ttf/8bitOperatorPlusSC-Regular.ttf", 20, SDL_Color{255, 255, 255, 255}, window.getRenderer()};
+    if(!txt)
+    {
+        std::cerr << "Error al inicializar el texto. Error " << SDL_GetError() << std::endl;
+        return 1;
+    }
+
+    Controlador controlador{&window, &txt};
     window.setControlador(&controlador);
 
     if(!window)
@@ -38,12 +46,6 @@ int main(int argc, char* argv[])
         return 1;
     }
 
-    TXT txt {"ttf/8bitOperatorPlusSC-Regular.ttf", 20, SDL_Color{255, 255, 255, 255}, window.getRenderer()};
-    if(!txt)
-    {
-        std::cerr << "Error al inicializar el texto. Error " << SDL_GetError() << std::endl;
-        return 1;
-    }
 
     window.render();
 
@@ -93,6 +95,9 @@ int main(int argc, char* argv[])
                     break;
                 case ACCION::CrearSalida:
                     controlador.crear(-1, -1);
+                    break;
+                case ACCION::CrearTemporizador:
+                    controlador.crear(-1, -1, 10);
                     break;
                 case ACCION::AlternarBorrando:
                     window.getRaton()->setBorrando(!window.getRaton()->getBorrando());
@@ -223,12 +228,12 @@ int main(int argc, char* argv[])
         if(mostrarControles)
         {
             txt.setPos(0, 180);
-            txt << "Creación:" << "    A: puerta AND" << "    O: puerta OR" << "    X: puerta XOR" << "    I: interruptor" << "    B: botón" << "    S: salida";
+            txt << "Creación:" << "    A: puerta AND" << "    O: puerta OR" << "    X: puerta XOR" << "    I: interruptor" << "    B: botón" << "    S: salida" << "    T: temporizador";
             txt << "Modificadores:" << "    Espacio: crear conexión" << "    Retroceso: modo borrar";
             if(!window.getRaton()->getBorrando())
-                txt << "Ratón:" << "    Izquierda: interactuar" << "    Medio: crear conexión" << "    Derecha: Mover";
+                txt << "Ratón:" << "    Izquierda: interactuar" << "    Medio: crear conexión" << "    Derecha: Mover" << "    Arriba: temporizador +" << "    Abajo: temporizador -";
             else
-                txt << "Ratón:" << "    Izquierda: borrar elemento" << "    Medio: borrar conexión";
+                txt << "Ratón:" << "    Izquierda: borrar elemento" << "    Medio: borrar conexión" << "    Arriba: temporizador +" << "    Abajo: temporizador -";
             txt << "Simulación:" << "    Entrar: simular una vez" << "    Q: empezar simulación" << "    W: parar simulación" << "    -: acelerar simulación" << "    +: decelerar simulación";
             txt << "Cuadrícula:" << "    E: alternar" << "    R: aumentar" << "    F: disminuir";
             txt << "Otros:" << "    L: borrar elementos desconectados" << "    M: ocultar controles" << "    G: guardar" << "    C: cargar" << "    Escape: cerrar";

@@ -11,6 +11,7 @@
 #include "../enums.h"
 #include "../Simulables/simulable.h"
 
+class TXT;
 class Puerta;
 class Entrada;
 class Salida;
@@ -24,10 +25,10 @@ class IMG
     SDL_Texture* m_texture{nullptr};
     SDL_Rect     m_rect{};
     unsigned int id;
-    bool esPuerta{false};
     bool esClickable{false};
     Simulable* simulable{nullptr};
     TIPOS_SIMULABLES tipoSimulable{TIPOS_SIMULABLES::Nada};
+    TXT* txt{nullptr};
 
     static unsigned int idGenerator()
     {
@@ -36,6 +37,7 @@ class IMG
     }
 
     bool crearPuerta(const char* entradaArriba, const char* entradaAbajo, const char* cuerpo, const char* salida);
+    bool crearTemporizador(const char* entrada, const char* cuerpo, const char* salida, const char* relleno, int ciclosActuales, int ciclosTotales);
 public:
     IMG(const char* path, SDL_Renderer* renderer)
         :IMG{path, renderer, 0, 0}
@@ -56,11 +58,10 @@ public:
         }
     }
 
-    //Crea la image de una puerta
+    //Crea la imagen de una puerta
     IMG(SDL_Renderer* renderer, const int x, const int y, const char* entradaArriba, const char* entradaAbajo, const char* cuerpo, const char* salida)
         :m_renderer{renderer}, id{idGenerator()}
     {
-        esPuerta = true;
         if(crearPuerta(entradaArriba, entradaAbajo, cuerpo, salida))
         {
             SDL_QueryTexture(m_texture, nullptr, nullptr, &m_rect.w, &m_rect.h);
@@ -69,6 +70,20 @@ public:
         }
         else
             std::cerr << "No se ha podido crear la imagen de la puerta lógica. Error " << SDL_GetError() << std::endl;
+    }
+
+    //Crea la imagen de un temporizador
+    IMG(SDL_Renderer* renderer, const int x, const int y, const char* entrada, const char* cuerpo, const char* salida, const char* relleno, const int ciclos, TXT* txt_)
+        :m_renderer{renderer}, id{idGenerator()}, txt{txt_}
+    {
+        if(crearTemporizador(entrada, cuerpo, salida, relleno, 0, ciclos))
+        {
+            SDL_QueryTexture(m_texture, nullptr, nullptr, &m_rect.w, &m_rect.h);
+            m_rect.x = x;
+            m_rect.y = y;
+        }
+        else
+            std::cerr << "No se ha podido crear la imagen del temporizador. Error " << SDL_GetError() << std::endl;
     }
 
     ~IMG()
@@ -118,12 +133,22 @@ public:
 
     bool cambiarPuerta(const char* entradaArriba, const char* entradaAbajo, const char* cuerpo, const char* salida)
     {
-        if(!esPuerta)
+        if(tipoSimulable != TIPOS_SIMULABLES::Puerta)
             return false;
 
         SDL_DestroyTexture(m_texture);
 
         return crearPuerta(entradaArriba, entradaAbajo, cuerpo, salida);
+    }
+
+    bool cambiarTemporizador(const char* entrada, const char* cuerpo, const char* salida, const char* relleno, const int ciclosActuales, const int ciclosTotales)
+    {
+        if(tipoSimulable != TIPOS_SIMULABLES::Temporizador)
+            return false;
+
+        SDL_DestroyTexture(m_texture);
+
+        return crearTemporizador(entrada, cuerpo, salida, relleno, ciclosActuales, ciclosTotales);
     }
 
     void interactuar(const int x, const int y, const INTERACCIONES interaccion) const { simulable->interactuar(x, y, interaccion); }

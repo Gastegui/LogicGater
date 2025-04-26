@@ -27,6 +27,7 @@ class Controlador
 
     Window* window{nullptr};
     SDL_Renderer* renderer{nullptr};
+    TXT* txt;
 
     IO* origen{nullptr};
 
@@ -38,8 +39,8 @@ class Controlador
     ListaLineas listaLineas{};
 
 public:
-    explicit Controlador(Window* window_)
-        :window{window_}, renderer{window_->getRenderer()}
+    explicit Controlador(Window* window_, TXT* txt_)
+        :window{window_}, renderer{window_->getRenderer()}, txt{txt_}
     {}
 
     ~Controlador()
@@ -68,6 +69,9 @@ public:
     //Crea una salida
     void crear(int x, int y, unsigned int id = 0);
 
+    //Crea un temporizador
+    void crear(int x, int y, int tiempo, int entradaNegada = false, int salidaNegada = false, unsigned int id = 0);
+
 
     void borrar(Simulable* simulable)
     {
@@ -85,9 +89,6 @@ public:
     void borrarConexiones(const IO* io) { listaLineas.borrar(io); }
     void borrarConexiones(const Simulable* simulable) { listaLineas.borrar(simulable); }
     void borrarConexion(const Simulable* destino, const IO* io, const int conexion) { listaLineas.borrar(destino, io, conexion); }
-
-    //Crea un temporizador
-    void crear(int x, int y, int duracion, unsigned int id = 0);
 
     void marcarOrigen(IO* origen_) { origen = origen_; }
     [[nodiscard]] IO* getOrigen() const { return origen; }

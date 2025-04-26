@@ -44,6 +44,7 @@ public:
         acciones.insert(std::make_pair("si", ACCION::CrearInterruptor));
         acciones.insert(std::make_pair("sb", ACCION::CrearBoton));
         acciones.insert(std::make_pair("ss", ACCION::CrearSalida));
+        acciones.insert(std::make_pair("st", ACCION::CrearTemporizador));
         acciones.insert(std::make_pair("sR", ACCION::SimularPaso));
         acciones.insert(std::make_pair("sq", ACCION::SimularEmpezar));
         acciones.insert(std::make_pair("sw", ACCION::SimularParar));

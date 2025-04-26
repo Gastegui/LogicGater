@@ -5,7 +5,7 @@
 #include "controlador.h"
 #include "Simulables/salida.h"
 #include "Simulables/entrada.h"
-//#include "Simulables/Temporizador.h"
+#include "Simulables/temporizador.h"
 
 void Controlador::crear(const Puerta::Tipo tipo, int x, int y, const bool arribaNegado, const bool abajoNegado, const bool salidaNegada, const unsigned int id)
 {
@@ -53,15 +53,30 @@ void Controlador::crear(int x, int y, const unsigned int id)
 
 }
 
+void Controlador::crear(int x, int y, const int tiempo, const int entradaNegada, const int salidaNegada, const unsigned int id)
+{
+    if(x == -1 && y == -1)
+        SDL_GetMouseState(&x, &y);
+
+    Temporizador* temporizador;
+    if(id == 0)
+        temporizador = new Temporizador(renderer, this, window->getRaton(), tiempo, -window->getEsquinaX() + x, -window->getEsquinaY() + y, entradaNegada, salidaNegada, txt);
+    else
+        temporizador = new Temporizador(renderer, this, window->getRaton(), tiempo, -window->getEsquinaX() + x, -window->getEsquinaY() + y, entradaNegada, salidaNegada, txt, id);
+    window->añadir(temporizador->getImg(), ListaIMG::MEDIO);
+
+    simulables.insert(std::make_pair(temporizador->getId(), temporizador));
+}
+
 
 void Controlador::simular() const
 {
     for (const auto& value : std::views::values(simulables))
-        if(value->getTipo() == TIPOS_SIMULABLES::Puerta)
+        if(value->getTipo() == TIPOS_SIMULABLES::Puerta || value->getTipo() == TIPOS_SIMULABLES::Temporizador)
             value->simular();
 
     for (const auto& value : simulables | std::views::values)
-        if(value->getTipo() == TIPOS_SIMULABLES::Puerta)
+        if(value->getTipo() == TIPOS_SIMULABLES::Puerta || value->getTipo() == TIPOS_SIMULABLES::Temporizador)
             value->actualizar();
 
     for (const auto& value : simulables | std::views::values)
