@@ -25,39 +25,53 @@ void Window::renderLine(SDL_Renderer* renderer, const int x1, const int y1, cons
 
 void Window::rendererDraw() const
 {
-    const ListaIMG::Lista* lista{listaIMG.getLista(ListaIMG::FONDO)};
-    const ListaLineas::Lista* lista2{controlador->getListaLineas()->getLista()};
-    while(lista != nullptr)
+    const ListaIMG::Lista* imagenes{listaIMG.getLista(ListaIMG::FONDO)};
+    const ListaLineas::Lista* lineas{controlador->getListaLineas()->getLista()};
+    mapaMinX = -esquinaX;
+    mapaMaxX = -esquinaX + width;
+    mapaMinY = -esquinaY;
+    mapaMaxY = -esquinaY + height;
+
+    while(imagenes != nullptr)
     {
-        SDL_RenderCopy(renderer, lista->img->getTexture(), nullptr, lista->img->getRect());
-        lista = lista->siguiente;
+        SDL_RenderCopy(renderer, imagenes->img->getTexture(), nullptr, imagenes->img->getRect());
+        imagenes = imagenes->siguiente;
     }
-    lista = listaIMG.getLista(ListaIMG::MEDIO);
-    while(lista != nullptr)
+    imagenes = listaIMG.getLista(ListaIMG::MEDIO);
+    while(imagenes != nullptr)
     {
-        SDL_Rect rect{*lista->img->getRect()};
+        SDL_Rect rect{*imagenes->img->getRect()};
+
+        if(rect.x < mapaMinX)
+            mapaMinX = rect.x;
+        else if(rect.x + rect.w > mapaMaxX)
+            mapaMaxX = rect.x + rect.w;
+        if(rect.y < mapaMinY)
+            mapaMinY = rect.y;
+        else if(rect.y + rect.h > mapaMaxY)
+            mapaMaxY = rect.y + rect.h;
+
         if(rect.x < -esquinaX + width && rect.x + rect.w > -esquinaX && rect.y < -esquinaY + height && rect.y + rect.h > -esquinaY)
         {
             rect.x += esquinaX;
             rect.y += esquinaY;
-            SDL_RenderCopy(renderer, lista->img->getTexture(), nullptr, &rect);
+            SDL_RenderCopy(renderer, imagenes->img->getTexture(), nullptr, &rect);
         }
-        lista = lista->siguiente;
+        imagenes = imagenes->siguiente;
     }
 
-
     SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
-    const SDL_Rect rect{-esquinaX, -esquinaY, width, height};
-    while(lista2 != nullptr)
+    SDL_Rect rect{-esquinaX, -esquinaY, width, height};
+    while(lineas != nullptr)
     {
-        const std::pair<int, int>* origen = lista2->io->getLineaOrigen();
-        const std::pair<int, int>* destino = lista2->destino->getLinea(lista2->conexion);
+        const std::pair<int, int>* origen = lineas->io->getLineaOrigen();
+        const std::pair<int, int>* destino = lineas->destino->getLinea(lineas->conexion);
 
 
         //Comprueba si alguno de los dos puntos de la línea está dentro de la pantalla
         if((origen->first > -esquinaX && origen->first < -esquinaX + width && origen->second > -esquinaY && origen->second < -esquinaY + height) ||
                 (destino->first > -esquinaX && destino->first < -esquinaX + width && destino->second > -esquinaY && destino->second < -esquinaY + height))
-            renderLine(renderer, origen->first + esquinaX, origen->second + esquinaY, destino->first + esquinaX, destino->second + esquinaY, lista2);
+            renderLine(renderer, origen->first + esquinaX, origen->second + esquinaY, destino->first + esquinaX, destino->second + esquinaY, lineas);
         else
         {
             //Si no esta el origen o final de la línea dentro de la pantalla, comprueba si la línea intersecciona la pantalla
@@ -66,18 +80,41 @@ void Window::rendererDraw() const
             int x2 = destino->first;
             int y2 = destino->second;
             if(SDL_IntersectRectAndLine(&rect, &x1, &y1, &x2, &y2))
-                renderLine(renderer, origen->first + esquinaX, origen->second + esquinaY, destino->first + esquinaX, destino->second + esquinaY, lista2);
+                renderLine(renderer, origen->first + esquinaX, origen->second + esquinaY, destino->first + esquinaX, destino->second + esquinaY, lineas);
         }
-        lista2 = lista2->siguiente;
+        lineas = lineas->siguiente;
     }
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
 
-    lista = listaIMG.getLista(ListaIMG::FRENTE);
-    while(lista != nullptr)
+    imagenes = listaIMG.getLista(ListaIMG::FRENTE);
+    while(imagenes != nullptr)
     {
-        SDL_RenderCopy(renderer, lista->img->getTexture(), nullptr, lista->img->getRect());
-        lista = lista->siguiente;
+        SDL_RenderCopy(renderer, imagenes->img->getTexture(), nullptr, imagenes->img->getRect());
+        imagenes = imagenes->siguiente;
     }
+
+    //Minimapa
+    const double factorX = static_cast<double>(minimapaTamañoObjetivoX) / (mapaMaxX - mapaMinX);
+    const double factorY = static_cast<double>(minimapaTamañoObjetivoY) / (mapaMaxY - mapaMinY);
+    imagenes = listaIMG.getLista(ListaIMG::MEDIO);
+    while(imagenes != nullptr)
+    {
+        rect = *imagenes->img->getRect();
+        rect.x = static_cast<int>((rect.x - mapaMinX) * factorX + (width - minimapaTamañoObjetivoX));
+        rect.y = static_cast<int>((rect.y - mapaMinY) * factorY + (height - minimapaTamañoObjetivoY));
+        rect.w = static_cast<int>(rect.w * factorX);
+        rect.h = static_cast<int>(rect.h * factorY);
+        SDL_RenderCopy(renderer, imagenes->img->getTexture(), nullptr, &rect);
+        imagenes = imagenes->siguiente;
+    }
+
+    rect.x = static_cast<int>((-esquinaX - mapaMinX) * factorX + (width - minimapaTamañoObjetivoX));
+    rect.y = static_cast<int>((-esquinaY - mapaMinY) * factorY + (height - minimapaTamañoObjetivoY));
+    rect.w = static_cast<int>(width * factorX);
+    rect.h = static_cast<int>(height * factorY);
+    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+    SDL_RenderDrawRect(renderer, &rect);
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
 }
 
 void Window::rendererPresent() const
@@ -85,13 +122,10 @@ void Window::rendererPresent() const
     SDL_RenderPresent(renderer);
 }
 
-
-
 void Window::limpiar() const
 {
     rendererClear();
 }
-
 
 void Window::render() const
 {

@@ -7,11 +7,11 @@
 
 #include <SDL2/SDL_image.h>
 
+#include "image.h"
 #include "../raton.h"
 #include "../ListaLineas.h"
 
 class IO;
-class IMG;
 class Raton;
 class Controlador;
 class Puerta;
@@ -34,17 +34,23 @@ class Window
     Controlador* controlador{nullptr};
     ListaIMG listaIMG{};
 
+    int minimapaTamañoObjetivoX;
+    int minimapaTamañoObjetivoY;
+    IMG minimapaFondo;
+    mutable int mapaMinX{0};//Mutable es para que rendererDraw siga siendo const y que se puedan cambiar sus valores
+    mutable int mapaMaxX{0};
+    mutable int mapaMinY{0};
+    mutable int mapaMaxY{0};
 
     void rendererClear() const;
     void rendererDraw() const;
     void rendererPresent() const;
 
     static void renderLine(SDL_Renderer* renderer, int x1, int y1, int x2, int y2, const ListaLineas::Lista* linea);
-
 public:
 
     explicit Window(const char* img)
-        :width(1920), height(1080), window{SDL_CreateWindow("LogicGater", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, SDL_WINDOW_FULLSCREEN)}, renderer{SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC)}
+        :width{1920}, height{1080}, window{SDL_CreateWindow("LogicGater", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, SDL_WINDOW_FULLSCREEN)}, renderer{SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC)}, minimapaTamañoObjetivoX{static_cast<int>(width*0.2)}, minimapaTamañoObjetivoY{static_cast<int>(height*0.2)}, minimapaFondo{"./img/minimapa.png", renderer, width-minimapaTamañoObjetivoX, height-minimapaTamañoObjetivoY}
     {
         // ReSharper disable once CppDFAConstantConditions
         if(window != nullptr)
@@ -54,6 +60,8 @@ public:
                 SDL_SetWindowIcon(window, windowIcon);
             SDL_SetRenderTarget(renderer, nullptr);
         }
+        minimapaFondo.setClickable();
+        listaIMG.añadir(&minimapaFondo, ListaIMG::FRENTE);
     }
 
     ~Window()
@@ -108,6 +116,14 @@ public:
     void mover(int x, int y);
     [[nodiscard]] int getEsquinaX() const { return esquinaX; }
     [[nodiscard]] int getEsquinaY() const { return esquinaY; }
+
+    [[nodiscard]] IMG* getIMGMinimapa() { return &minimapaFondo; }
+    [[nodiscard]] int getMapaMinX() const { return mapaMinX; }
+    [[nodiscard]] int getMapaMaxX() const { return mapaMaxX; }
+    [[nodiscard]] int getMapaMinY() const { return mapaMinY; }
+    [[nodiscard]] int getMapaMaxY() const { return mapaMaxY; }
+    [[nodiscard]] int getMinimapaTamañoX() const { return minimapaTamañoObjetivoX; }
+    [[nodiscard]] int getMinimapaTamañoY() const { return minimapaTamañoObjetivoY; }
 };
 
 #endif //WINDOW_H

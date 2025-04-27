@@ -7,6 +7,9 @@
 #include "../controles.h"
 #include "../enums.h"
 
+class IMG;
+class IO;
+
 class Simulable
 {
     unsigned int id{0};

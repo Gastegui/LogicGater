@@ -29,7 +29,11 @@ class Raton
 
     void interactuar(IMG* actual);
     bool interactuarConexion(IMG* actual);
-    IMG* buscarLista(const ListaIMG::Lista* lista, int posX, int posY) const;
+    IMG* buscarLista(const ListaIMG::Lista* lista, int posX, int posY, bool absoluto = false) const;
+    [[nodiscard]] static int interpolacionLinear(const double x, const double a, const double b, const double c, const double d)
+    {
+        return static_cast<int>(c + (x - a) / (b - a) * (d - c));
+    }
 
 public:
 

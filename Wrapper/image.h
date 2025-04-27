@@ -103,6 +103,10 @@ public:
         tipoSimulable = simulable_->getTipo();
         esClickable = true;
     }
+    void setClickable()
+    {
+        esClickable = true;
+    }
     [[nodiscard]] Simulable* getSimulable() const { return simulable; }
 
     bool operator==(const IMG& a) const

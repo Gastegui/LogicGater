@@ -9,6 +9,8 @@
 #include "../io.h"
 #include "../Wrapper/image.h"
 
+class Controlador;
+class Raton;
 
 class Temporizador final : public Simulable
 {

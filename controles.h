@@ -9,7 +9,8 @@
 #include <string>
 
 #include "enums.h"
-#include "Wrapper/window.h"
+
+class Window;
 
 
 class Controles

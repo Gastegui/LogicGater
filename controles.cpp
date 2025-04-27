@@ -3,6 +3,7 @@
 //
 
 #include "controles.h"
+#include "Wrapper/window.h"
 
 #include <iostream>
 

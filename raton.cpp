@@ -9,7 +9,7 @@
 #include "Simulables/entrada.h"
 #include "Wrapper/window.h"
 
-IMG* Raton::buscarLista(const ListaIMG::Lista* lista, const int posX, const int posY) const
+IMG* Raton::buscarLista(const ListaIMG::Lista* lista, const int posX, const int posY, const bool absoluto) const
 {
 
     while(lista != nullptr)
@@ -17,8 +17,16 @@ IMG* Raton::buscarLista(const ListaIMG::Lista* lista, const int posX, const int 
         if(lista->img->getClickable())
         {
             const SDL_Rect* rect = lista->img->getRect();
-            if(rect->x <= -window->getEsquinaX() + posX && rect->x + rect->w >= -window->getEsquinaX() + posX && rect->y <= -window->getEsquinaY() + posY && rect->y + rect->h >= -window->getEsquinaY() + posY)
-                return lista->img;
+            if(absoluto)
+            {
+                if(rect->x <= posX && rect->x + rect->w >= posX && rect->y <= posY && rect->y + rect->h >= posY)
+                    return lista->img;
+            }
+            else
+            {
+                if(rect->x <= -window->getEsquinaX() + posX && rect->x + rect->w >= -window->getEsquinaX() + posX && rect->y <= -window->getEsquinaY() + posY && rect->y + rect->h >= -window->getEsquinaY() + posY)
+                    return lista->img;
+            }
         }
 
         lista = lista->siguiente;
@@ -172,10 +180,15 @@ void Raton::manejarRaton()
     }
 
     const ListaIMG::Lista* lista{controlador->getListaIMG(ListaIMG::FRENTE)};
-    IMG* actual = buscarLista(lista, posX, posY);
+    IMG* actual = buscarLista(lista, posX, posY, true);
     if(actual != nullptr)
     {
-        interactuar(actual);
+        if(window->getIMGMinimapa() == actual && Controles::getUltimaAccion() == ACCION::InteractuarArriba)
+        {
+            window->mover(-interpolacionLinear(posX - actual->getRect()->x, 0, window->getMinimapaTamañoX(), window->getMapaMinX(), window->getMapaMaxX()),
+                          -interpolacionLinear(posY - actual->getRect()->y, 0, window->getMinimapaTamañoY(), window->getMapaMinY(), window->getMapaMaxY()));
+        }
+
         return;
     }
 
