@@ -8,37 +8,38 @@
 
 #define ACCIONES \
         Nada = 0,           \
-        TextInput,          /*SDL_TEXTINPUT*/ \
-        InteractuarArriba,  /*Soltar clic izquierdo    (sirve para encender/apagar, invertir polaridad, borrar) */ \
-        InteractuarAbajo,   /*Pulsar click izquierdo */ \
-        MovimientoRaton,    /*SDL_MOUSEMOTION */ \
-        MoverAbajo,         /*Pulsar clic derecho */ \
-        MoverArriba,        /*Soltar clic derecho */ \
-        ConexionAbajo,      /*Pulsar clic central o espacio */ \
-        ConexionArriba,     /*Soltar clic central o espacio */ \
-        AlternarBorrando,   /*Backspace */ \
-        BorrarSueltos,      /*L */ \
-        CrearAnd,           /*A */ \
-        CrearOr,            /*O */ \
-        CrearXor,           /*X */ \
-        CrearInterruptor,   /*I */ \
-        CrearBoton,         /*B */ \
-        CrearSalida,        /*S */ \
-        CrearTemporizador,  /*T */ \
-        SimularPaso,        /*Enter */ \
-        SimularEmpezar,     /*Q */ \
-        SimularParar,       /*W */ \
-        SimularAcelerar,    /*- */ \
-        SimularDecelerar,   /*+ */ \
-        Cerrar,             /*Escape */ \
-        Guardar,            /*G */ \
-        Cargar,             /*C */ \
-        Cuadricula,         /*E */ \
-        CuadriculaAgrandar, /*R */ \
-        CuadriculaDisminuir,/*F */ \
-        MostrarControles,   /*M */ \
-        TemporizadorSubir,  /*Rueda arriba */ \
-        TemporizadorBajar,  /*/Rueda abajo */
+        TextInput,          /* SDL_TEXTINPUT*/ \
+        InteractuarArriba,  /* Soltar clic izquierdo (sirve para encender/apagar, invertir polaridad, borrar) */ \
+        InteractuarAbajo,   /* Pulsar click izquierdo */ \
+        MovimientoRaton,    /* SDL_MOUSEMOTION */ \
+        MoverAbajo,         /* Pulsar clic derecho */ \
+        MoverArriba,        /* Soltar clic derecho */ \
+        ConexionAbajo,      /* Pulsar clic central o espacio */ \
+        ConexionArriba,     /* Soltar clic central o espacio */ \
+        AlternarBorrando,   /* Backspace */ \
+        BorrarSueltos,      /* L */ \
+        CrearAnd,           /* A */ \
+        CrearOr,            /* O */ \
+        CrearXor,           /* X */ \
+        CrearInterruptor,   /* I */ \
+        CrearBoton,         /* B */ \
+        CrearSalida,        /* S */ \
+        CrearTemporizador,  /* T */ \
+        SimularPaso,        /* Enter */ \
+        SimularEmpezar,     /* Q */ \
+        SimularParar,       /* W */ \
+        SimularAcelerar,    /* - */ \
+        SimularDecelerar,   /* + */ \
+        Cerrar,             /* Escape */ \
+        Guardar,            /* G */ \
+        Cargar,             /* C */ \
+        Cuadricula,         /* E */ \
+        CuadriculaAgrandar, /* R */ \
+        CuadriculaDisminuir,/* F */ \
+        MostrarControles,   /* M */ \
+        TemporizadorSubir,  /* Rueda arriba */ \
+        TemporizadorBajar,  /* Rueda abajo */ \
+        CamaraCentrar,      /* B */
 
 enum class ACCION
 {

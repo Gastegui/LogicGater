@@ -146,6 +146,9 @@ int main(int argc, char* argv[])
                 case ACCION::CuadriculaDisminuir:
                     valores.cuadriculaTamaño = controlador.cambiarCuadriculaRel(-5);
                     break;
+                case ACCION::CamaraCentrar:
+                    window.centrar();
+                    break;
                 case ACCION::TextInput:
                     {
                         const SDL_Event* evento = Controles::getEvent();
@@ -227,16 +230,16 @@ int main(int argc, char* argv[])
         window.limpiar();
         if(mostrarControles)
         {
-            txt.setPos(0, 180);
+            txt.setPos(0, 60);
             txt << "Creación:" << "    A: puerta AND" << "    O: puerta OR" << "    X: puerta XOR" << "    I: interruptor" << "    B: botón" << "    S: salida" << "    T: temporizador";
             txt << "Modificadores:" << "    Espacio: crear conexión" << "    Retroceso: modo borrar";
             if(!window.getRaton()->getBorrando())
-                txt << "Ratón:" << "    Izquierda: interactuar" << "    Medio: crear conexión" << "    Derecha: Mover" << "    Arriba: temporizador +" << "    Abajo: temporizador -";
+                txt << "Ratón:" << "    Izquierda: interactuar" << "    Medio: crear conexión" << "    Derecha: mover" << "    Arriba: temporizador +" << "    Abajo: temporizador -";
             else
                 txt << "Ratón:" << "    Izquierda: borrar elemento" << "    Medio: borrar conexión" << "    Arriba: temporizador +" << "    Abajo: temporizador -";
             txt << "Simulación:" << "    Entrar: simular una vez" << "    Q: empezar simulación" << "    W: parar simulación" << "    -: acelerar simulación" << "    +: decelerar simulación";
             txt << "Cuadrícula:" << "    E: alternar" << "    R: aumentar" << "    F: disminuir";
-            txt << "Otros:" << "    L: borrar elementos desconectados" << "    M: ocultar controles" << "    G: guardar" << "    C: cargar" << "    Escape: cerrar";
+            txt << "Otros:" << "    L: borrar elementos desconectados" << "    H: centrar cámara" << "    G: guardar" << "    C: cargar" << "    Escape: cerrar" << "    M: ocultar controles";
         }
         else
         {
@@ -248,12 +251,12 @@ int main(int argc, char* argv[])
         {
             if(valores.velocidadSimulacion >= 0)
             {
-                txt.setPos(1700, 1050);
+                txt.setPos(1700, 10);
                 snprintf(strTMP, 50, "SIMULANDO (%d ms)", valores.velocidadSimulacion);
             }
             else
             {
-                txt.setPos(1640, 1050);
+                txt.setPos(1640, 10);
                 snprintf(strTMP, 50, "SIMULANDO (instantáneo)");
             }
             txt << strTMP;

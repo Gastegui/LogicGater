@@ -114,6 +114,8 @@ public:
 
     void moverRel(int x, int y);
     void mover(int x, int y);
+    void centrar();
+
     [[nodiscard]] int getEsquinaX() const { return esquinaX; }
     [[nodiscard]] int getEsquinaY() const { return esquinaY; }
 

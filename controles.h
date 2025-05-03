@@ -60,6 +60,7 @@ public:
         acciones.insert(std::make_pair("sm", ACCION::MostrarControles));
         acciones.insert(std::make_pair(".U", ACCION::TemporizadorSubir));
         acciones.insert(std::make_pair(".J", ACCION::TemporizadorBajar));
+        acciones.insert(std::make_pair("sh", ACCION::CamaraCentrar));
     }
     static ACCION getNuevaAccion(const SDL_Event* evento);
     [[nodiscard]] static ACCION getUltimaAccion() { return accionAnterior; }

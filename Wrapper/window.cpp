@@ -144,3 +144,44 @@ void Window::mover(const int x, const int y)
     esquinaX = x;
     esquinaY = y;
 }
+
+void Window::centrar()
+{
+    int minX = std::numeric_limits<int>::max();
+    int maxX = std::numeric_limits<int>::min();
+    int minY = std::numeric_limits<int>::max();
+    int maxY = std::numeric_limits<int>::min();
+
+    const ListaIMG::Lista* imagenes = listaIMG.getLista(ListaIMG::MEDIO);
+
+    if(imagenes == nullptr)
+    {
+        mover(0, 0);
+        return;
+    }
+
+    while(imagenes != nullptr)
+    {
+        const SDL_Rect* rect{imagenes->img->getRect()};
+
+        if(rect->x < minX)
+            minX = rect->x;
+        if(rect->x + rect->w > maxX)
+            maxX = rect->x + rect->w;
+        if(rect->y < minY)
+            minY = rect->y;
+        if(rect->y + rect->h > maxY)
+            maxY = rect->y + rect->h;
+
+        imagenes = imagenes->siguiente;
+    }
+
+
+    int x = (maxX + minX) / 2;
+    int y = (maxY + minY) / 2;
+
+    x -= width/2;
+    y -= height/2;
+
+    mover(-x, -y);
+}
