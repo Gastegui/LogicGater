@@ -32,6 +32,20 @@ void Window::rendererDraw() const
     mapaMinY = -esquinaY;
     mapaMaxY = -esquinaY + height;
 
+    if(controlador->getCuadriculaActiva())
+    {
+        SDL_SetRenderDrawColor(renderer, 50, 50, 50, 255);
+        for(int i = -esquinaX; i < -esquinaX + width; i++)
+            if(i % controlador->getCuadriculaTamaño() == 0)
+                SDL_RenderDrawLine(renderer, esquinaX + i, 0, esquinaX + i, esquinaX + i + height);
+
+        for(int i = -esquinaY; i < -esquinaY + height; i++)
+            if(i % controlador->getCuadriculaTamaño() == 0)
+                SDL_RenderDrawLine(renderer, 0, esquinaY + i, esquinaY + i + width, esquinaY + i);
+
+        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+    }
+
     while(imagenes != nullptr)
     {
         SDL_RenderCopy(renderer, imagenes->img->getTexture(), nullptr, imagenes->img->getRect());
