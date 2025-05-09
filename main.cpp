@@ -179,6 +179,13 @@ int main(int argc, char* argv[])
                                 break;
                         }
                     }
+                break;
+                case ACCION::CerrarTextInput:
+                    Controles::unsetTextInput();
+                    escribiendo = false;
+                    guardar = false;
+                    cargar = false;
+                    break;
                 case ACCION::Nada:
                 default:
                     break;

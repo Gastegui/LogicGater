@@ -9,6 +9,7 @@
 #define ACCIONES \
         Nada = 0,           \
         TextInput,          /* SDL_TEXTINPUT*/ \
+        CerrarTextInput,    /* Igual que cerrar */ \
         InteractuarArriba,  /* Soltar clic izquierdo (sirve para encender/apagar, invertir polaridad, borrar) */ \
         InteractuarAbajo,   /* Pulsar click izquierdo */ \
         MovimientoRaton,    /* SDL_MOUSEMOTION */ \

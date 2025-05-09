@@ -17,12 +17,6 @@ bool Controles::escribiendo = false;
 
 ACCION Controles::getNuevaAccion(const SDL_Event* evento)
 {
-    if(escribiendo)
-    {
-        accionAnterior = TextInput;
-        return accionAnterior;
-    }
-
     accionAnterior = Nada;
     std::string str = "..";
     if(evento->type == SDL_KEYDOWN || evento->type == SDL_MOUSEBUTTONDOWN)
@@ -103,6 +97,16 @@ ACCION Controles::getNuevaAccion(const SDL_Event* evento)
     }
     if(str != ".." && acciones.contains(str))
         accionAnterior = acciones[str];
+
+    if(escribiendo)
+    {
+        if(accionAnterior == Cerrar)
+            accionAnterior = CerrarTextInput;
+        else
+            accionAnterior = TextInput;
+        return accionAnterior;
+    }
+
     if(window != nullptr && window->getRaton()->getBorrando() && !(accionAnterior == InteractuarArriba || accionAnterior == InteractuarAbajo ||
                                                                     accionAnterior == ConexionArriba || accionAnterior == ConexionAbajo ||
                                                                     accionAnterior == MovimientoRaton))
