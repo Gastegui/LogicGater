@@ -175,7 +175,13 @@ bool Puerta::interactuar(const int posX, const int posY, const INTERACCIONES int
                 moverRel(posX, posY);
             return true;
 
+        case InteractuarAbajo:
+            interactuarAbajo = true;
+            return true;
         case InteractuarArriba:
+            if(!interactuarAbajo)
+                return true;
+
             if(posX >= 0 && posX <= 23 && posY >= 0 && posY <= 23)
             {
                 arribaNegado = !arribaNegado;
@@ -198,6 +204,7 @@ bool Puerta::interactuar(const int posX, const int posY, const INTERACCIONES int
             }
             return true;
         case RatonSalir:
+            interactuarAbajo = false;
             mover = false;
             return true;
         default:

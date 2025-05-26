@@ -32,6 +32,7 @@ class Puerta final : public Simulable
     std::pair<int, int> lineaArriba{0, 11};
     std::pair<int, int> lineaAbajo{0, 37};
 
+    bool interactuarAbajo{false};
 
     static unsigned int idGenerator()
     {

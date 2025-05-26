@@ -34,6 +34,8 @@ class Temporizador final : public Simulable
     int ciclosTotales;
     int ciclosActuales{0};
 
+    bool interactuarAbajo{false};
+
     IMG imagen;
 
     static unsigned int idGenerator()

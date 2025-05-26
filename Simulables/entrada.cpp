@@ -41,8 +41,11 @@ bool Entrada::interactuar(const int posX, const int posY, const INTERACCIONES in
         case InteractuarAbajo:
             if(mantener)
                 set(true);
+            interactuarAbajo = true;
             return true;
         case InteractuarArriba:
+            if(!interactuarAbajo)
+                return true;
             if(mantener)
                 set(false);
             else
@@ -50,6 +53,7 @@ bool Entrada::interactuar(const int posX, const int posY, const INTERACCIONES in
             return true;
         case RatonSalir:
             mover = false;
+            interactuarAbajo = false;
             if(mantener)
                 set(false);
             return true;

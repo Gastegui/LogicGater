@@ -117,7 +117,12 @@ bool Temporizador::interactuar(const int posX, const int posY, const INTERACCION
                 y += posY;
             }
             return true;
+        case InteractuarAbajo:
+            interactuarAbajo = true;
+            return true;
         case InteractuarArriba:
+            if(!interactuarAbajo)
+                return true;
             if(posX <= 50)
                 entradaNegada = !entradaNegada;
             else
@@ -125,6 +130,7 @@ bool Temporizador::interactuar(const int posX, const int posY, const INTERACCION
             cambiar();
             return true;
         case RatonSalir:
+            interactuarAbajo = false;
             mover = false;
             return true;
         default:

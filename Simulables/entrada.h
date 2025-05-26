@@ -24,6 +24,7 @@ class Entrada final : public Simulable
     bool mantener;
     IMG img;
     bool mover{false};
+    bool interactuarAbajo{false};
 
     //std::pair<int, int> linea{25, 25};
     Raton* raton;
