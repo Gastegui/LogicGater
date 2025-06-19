@@ -29,7 +29,7 @@ class Entrada final : public Simulable
     //std::pair<int, int> linea{25, 25};
     Raton* raton;
 
-    static unsigned int idGenerator()
+    static auto idGenerator() -> unsigned int
     {
         static unsigned int id = 1 + get_offset(ID_TIPOS::Entrada);
         return id++;
@@ -55,13 +55,13 @@ public:
 
     ~Entrada() override = default;
 
-    [[nodiscard]] IO* getSalida() { return &salida; }
-    [[nodiscard]] IMG* getImg() override { return &img; }
-    [[nodiscard]] bool getDesconectado() const override { return salida.getConexiones() == 0; }
-    [[nodiscard]] bool getMantener() const { return mantener; }
+    [[nodiscard]] auto getSalida() -> IO* { return &salida; }
+    [[nodiscard]] auto getImg() -> IMG* override { return &img; }
+    [[nodiscard]] auto getDesconectado() const -> bool override { return salida.getConexiones() == 0; }
+    [[nodiscard]] auto getMantener() const -> bool { return mantener; }
     void setMantener(const bool mantener_) { mantener = mantener_; }
 
-    [[nodiscard]] bool get() const { return salida.get(); }
+    [[nodiscard]] auto get() const -> bool { return salida.get(); }
     void set(const bool valor)
     {
         img.cambiarImagen(valor ? "./img/entrada/encendido.png" : "./img/entrada/apagado.png");
@@ -72,11 +72,11 @@ public:
 
     void simular() override {}
     void actualizar() override {}
-    bool interactuar(int posX, int posY, INTERACCIONES interaccion) override;
+    auto interactuar(int posX, int posY, INTERACCIONES interaccion) -> bool override;
     void setIONull(IO* io) override {}
-    [[nodiscard]] IO* getIOSalida() override { return &salida; }
-    [[nodiscard]] std::pair<int, int>* getLinea(int conexion) override { return nullptr; }
-    [[nodiscard]] int getConexion(IO* io) const override { return 0; }
+    [[nodiscard]] auto getIOSalida() -> IO* override { return &salida; }
+    [[nodiscard]] auto getLinea( [[maybe_unused]] int conexion) -> std::pair<int, int>* override { return nullptr; }
+    [[nodiscard]] auto getConexion( [[maybe_unused]] IO* io) const -> int override { return 0; }
 };
 
 

@@ -5,9 +5,15 @@
 #include "text.h"
 
 
-TXT& operator<< (TXT& anterior, const char* str)
+auto operator<< (TXT& anterior, const char* str) -> TXT&
 {
     anterior.write(str);
+    return anterior;
+}
+
+auto operator<< (TXT& anterior, const std::string* str) -> TXT&
+{
+    anterior.write(str->c_str());
     return anterior;
 }
 
@@ -15,10 +21,9 @@ void TXT::write(const char* text)
 {
     if(m_font == nullptr)
     {
-        std::cerr << "Se ha intentado escribir pero no se ha cargado el texto" << std::endl;
+        std::println(std::cerr, "Se ha intentado escribir pero no se ha cargado el texto");
         return;
     }
-
     SDL_Rect rect;
     SDL_Surface* surface = TTF_RenderUTF8_Blended(m_font, text, m_color);
     SDL_Texture* texture = SDL_CreateTextureFromSurface(m_renderer, surface);

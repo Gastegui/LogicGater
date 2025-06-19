@@ -4,6 +4,7 @@
 
 #ifndef LISTAIMG_H
 #define LISTAIMG_H
+#include <cstdint>
 
 class IMG;
 
@@ -21,7 +22,7 @@ private:
     Lista* fondo{nullptr};
 
 public:
-    enum Altura
+    enum Altura : uint8_t
     {
         INVALIDO,
         FRENTE,
@@ -53,11 +54,11 @@ public:
         }
     }
 
-    [[nodiscard]] Lista* getLista(Altura altura) const;
+    [[nodiscard]] auto getLista(Altura altura) const -> Lista*;
 
-    bool añadir(IMG* img, Altura altura);
-    bool quitar(const IMG* img, Altura altura);
-    bool quitar(unsigned int id, Altura altura);
+    auto añadir(IMG* img, Altura altura) -> bool;
+    auto quitar(const IMG* img, Altura altura) -> bool;
+    auto quitar(unsigned int id, Altura altura) -> bool;
 };
 
 

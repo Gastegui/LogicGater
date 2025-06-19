@@ -36,7 +36,7 @@ class Controlador
 
     std::map<unsigned int, Simulable*> simulables;
 
-    ListaLineas listaLineas{};
+    ListaLineas listaLineas;
 
 public:
     explicit Controlador(Window* window_, TXT* txt_)
@@ -51,14 +51,14 @@ public:
         simulables.clear();
     }
 
-    [[nodiscard]] ListaIMG::Lista* getListaIMG(const ListaIMG::Altura altura) const
+    [[nodiscard]] auto getListaIMG(const ListaIMG::Altura altura) const -> ListaIMG::Lista*
     {
         return window->getListaIMG(altura);
     }
-    [[nodiscard]] Window* getWindow() const { return window; }
+    [[nodiscard]] auto getWindow() const -> Window* { return window; }
 
-    [[nodiscard]] std::map<unsigned int, Simulable*> getSimulables() const { return simulables; }
-    [[nodiscard]] const ListaLineas* getListaLineas() const { return &listaLineas; }
+    [[nodiscard]] auto getSimulables() const -> std::map<unsigned int, Simulable*> { return simulables; }
+    [[nodiscard]] auto getListaLineas() const -> const ListaLineas* { return &listaLineas; }
 
     //Crea una puerta
     void crear(Puerta::Tipo tipo, int x, int y, bool arribaNegado = false, bool abajoNegado = false, bool salidaNegada = false, unsigned int id = 0);
@@ -70,7 +70,7 @@ public:
     void crear(int x, int y, unsigned int id = 0);
 
     //Crea un temporizador
-    void crear(int x, int y, int tiempo, int entradaNegada = false, int salidaNegada = false, unsigned int id = 0);
+    void crear(int x, int y, int tiempo, bool entradaNegada = false, bool salidaNegada = false, unsigned int id = 0);
 
 
     void borrar(Simulable* simulable)
@@ -91,24 +91,24 @@ public:
     void borrarConexion(const Simulable* destino, const IO* io, const int conexion) { listaLineas.borrar(destino, io, conexion); }
 
     void marcarOrigen(IO* origen_) { origen = origen_; }
-    [[nodiscard]] IO* getOrigen() const { return origen; }
+    [[nodiscard]] auto getOrigen() const -> IO* { return origen; }
 
     void desmarcarOrigen() { origen = nullptr; }
-    [[nodiscard]] bool getConectando() const { return origen != nullptr; }
+    [[nodiscard]] auto getConectando() const -> bool { return origen != nullptr; }
 
 
-    int limpiar();
+    auto limpiar() -> int;
 
     void simular() const;
     void simularInstantaneo() const;
 
-    [[nodiscard]] Simulable* getSimulable(unsigned int id) const;
+    [[nodiscard]] auto getSimulable(unsigned int id) const -> Simulable*;
 
     void alternarCuadricula() { cuadricula = !cuadricula; }
-    int cambiarCuadriculaRel(const int cambio) { if(cuadriculaTamaño + cambio > 0) cuadriculaTamaño += cambio; return cuadriculaTamaño; }
-    [[nodiscard]] int getCuadriculaActiva() const { return cuadricula; }
-    [[nodiscard]] int getCuadriculaTamaño() const { return cuadriculaTamaño; }
-    [[nodiscard]] unsigned long getSimulablesLenght() const {return simulables.size(); }
+    auto cambiarCuadriculaRel(const int cambio) -> int { if(cuadriculaTamaño + cambio > 0) cuadriculaTamaño += cambio; return cuadriculaTamaño; }
+    [[nodiscard]] auto getCuadriculaActiva() const -> bool { return cuadricula; }
+    [[nodiscard]] auto getCuadriculaTamaño() const -> int { return cuadriculaTamaño; }
+    [[nodiscard]] auto getSimulablesLenght() const -> unsigned long {return simulables.size(); }
 };
 
 #endif //CONTROLADOR_H

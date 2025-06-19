@@ -13,7 +13,7 @@ void Entrada::moverRel(const int x, const int y)
     salida.moverLineaOrigenRel(x, y);
 }
 
-bool Entrada::interactuar(const int posX, const int posY, const INTERACCIONES interaccion)
+auto Entrada::interactuar(const int posX, const int posY, const INTERACCIONES interaccion) -> bool
 {
     using enum INTERACCIONES;
     switch (interaccion)

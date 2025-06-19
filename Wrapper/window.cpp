@@ -178,14 +178,10 @@ void Window::centrar()
     {
         const SDL_Rect* rect{imagenes->img->getRect()};
 
-        if(rect->x < minX)
-            minX = rect->x;
-        if(rect->x + rect->w > maxX)
-            maxX = rect->x + rect->w;
-        if(rect->y < minY)
-            minY = rect->y;
-        if(rect->y + rect->h > maxY)
-            maxY = rect->y + rect->h;
+        minX = std::min(rect->x, minX);
+        maxX = std::max(rect->x + rect->w, maxX);
+        minY = std::min(rect->y, minY);
+        maxY = std::max(rect->y + rect->h, maxY);
 
         imagenes = imagenes->siguiente;
     }

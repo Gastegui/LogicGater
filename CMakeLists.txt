@@ -12,16 +12,15 @@ include_directories(${SDL2_INCLUDE_DIRS} ${SDL2_TTF_INCLUDE_DIRS} ${SDL2_MIXER_I
 
 add_executable(LogicGater main.cpp
         Wrapper/window.h
-        Wrapper/sound.cpp
-        Wrapper/sound.h
+        Wrapper/window.cpp
         Wrapper/text.h
+        Wrapper/text.cpp
         Wrapper/image.h
+        Wrapper/image.cpp
         ListaLineas.cpp
         ListaLineas.h
         Simulables/puerta.cpp
         Simulables/puerta.h
-        Wrapper/image.cpp
-        Wrapper/window.cpp
         raton.cpp
         raton.h
         controlador.cpp
@@ -34,7 +33,6 @@ add_executable(LogicGater main.cpp
         Simulables/salida.h
         controles.cpp
         controles.h
-        Wrapper/text.cpp
         ListaIMG.cpp
         ListaIMG.h
         SistemaGuardado.cpp

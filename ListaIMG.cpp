@@ -5,7 +5,7 @@
 #include "ListaIMG.h"
 #include "Wrapper/image.h"
 
-ListaIMG::Lista* ListaIMG::getLista(const Altura altura) const
+auto ListaIMG::getLista(const Altura altura) const -> Lista*
 {
     switch (altura)
     {
@@ -21,7 +21,7 @@ ListaIMG::Lista* ListaIMG::getLista(const Altura altura) const
     }
 }
 
-bool ListaIMG::añadir(IMG* img, const Altura altura)
+auto ListaIMG::añadir(IMG* img, const Altura altura) -> bool
 {
     if(img == nullptr)
         return false;
@@ -63,9 +63,9 @@ bool ListaIMG::añadir(IMG* img, const Altura altura)
     return true;
 }
 
-bool ListaIMG::quitar(const unsigned int id, const Altura altura)
+auto ListaIMG::quitar(const unsigned int id, const Altura altura) -> bool
 {
-    Lista** lista;
+    Lista** lista{};
 
     switch (altura)
     {
@@ -111,7 +111,7 @@ bool ListaIMG::quitar(const unsigned int id, const Altura altura)
 }
 
 
-bool ListaIMG::quitar(const IMG* img, const Altura altura)
+auto ListaIMG::quitar(const IMG* img, const Altura altura) -> bool
 {
     return quitar(img->getId(), altura);
 }

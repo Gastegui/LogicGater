@@ -15,7 +15,7 @@ std::map<std::string, ACCION> Controles::acciones;
 Window* Controles::window = nullptr;
 bool Controles::escribiendo = false;
 
-ACCION Controles::getNuevaAccion(const SDL_Event* evento)
+auto Controles::getNuevaAccion(const SDL_Event* evento) -> ACCION
 {
     accionAnterior = Nada;
     std::string str = "..";
@@ -107,9 +107,9 @@ ACCION Controles::getNuevaAccion(const SDL_Event* evento)
         return accionAnterior;
     }
 
-    if(window != nullptr && window->getRaton()->getBorrando() && !(accionAnterior == InteractuarArriba || accionAnterior == InteractuarAbajo ||
-                                                                    accionAnterior == ConexionArriba || accionAnterior == ConexionAbajo ||
-                                                                    accionAnterior == MovimientoRaton))
+    if(window != nullptr && window->getRaton()->getBorrando() && accionAnterior != InteractuarArriba && accionAnterior != InteractuarAbajo &&
+                                                                    accionAnterior != ConexionArriba && accionAnterior != ConexionAbajo &&
+                                                                    accionAnterior != MovimientoRaton)
         window->getRaton()->setBorrando(false);
     return accionAnterior;
 }

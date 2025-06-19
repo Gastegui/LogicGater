@@ -16,13 +16,13 @@
 #include "Simulables/salida.h"
 #include "Simulables/temporizador.h"
 
-bool SistemaGuardado::guardar(const Controlador* controlador, const Window* window, const Valores* valores, const std::string& archivo)
+auto SistemaGuardado::guardar(const Controlador* controlador, const Window* window, const Valores* valores, const std::string& archivo) -> bool
 {
     std::ofstream outf{archivo.c_str()};
 
     if(!outf)
     {
-        printf("No se ha podido crear el file stream de guardado\n");
+        std::println(std::cout, "No se ha podido crear el file stream de guardado");
         return false;
     }
 
@@ -31,19 +31,19 @@ bool SistemaGuardado::guardar(const Controlador* controlador, const Window* wind
     const ListaLineas::Lista* listaLineas{controlador->getListaLineas()->getLista()};
 
     outf << "-Elementos\n";
-    const Puerta* puerta;
-    const Salida* salida;
-    const Entrada* entrada;
-    const Temporizador* temp;
+    const Puerta* puerta{};
+    const Salida* salida{};
+    const Entrada* entrada{};
+    const Temporizador* temp{};
     for (const auto& value : controlador->simulables | std::views::values)
     {
-        if((puerta = dynamic_cast<Puerta*>(value)) != nullptr)
+        if((puerta = dynamic_cast<Puerta*>(value)) != nullptr) // NOLINT(*-assignment-in-if-condition)
             outf << "Puerta: id: " <<puerta->getId() << " tipo: " <<puerta->tipo << " arribaNegado: " <<puerta->arribaNegado << " abajoNegado: " <<puerta->abajoNegado << " salidaNegada: " <<puerta->salidaNegada << " x: " <<puerta->x << " y: " <<puerta->y << "\n";
-        else if((salida = dynamic_cast<Salida*>(value)) != nullptr)
+        else if((salida = dynamic_cast<Salida*>(value)) != nullptr) // NOLINT(*-assignment-in-if-condition)
             outf << "Salida: id: " << salida->getId() << " x: " << salida->img.m_rect.x << " y: " << salida->img.m_rect.y << "\n";
-        else if((entrada = dynamic_cast<Entrada*>(value)) != nullptr)
+        else if((entrada = dynamic_cast<Entrada*>(value)) != nullptr) // NOLINT(*-assignment-in-if-condition)
             outf << "Entrada: id: " << entrada->getId() << " mantener: " << entrada->mantener << " x: " << entrada->img.m_rect.x << " y: " << entrada->img.m_rect.y << "\n";
-        else if((temp = dynamic_cast<Temporizador*>(value)) != nullptr)
+        else if((temp = dynamic_cast<Temporizador*>(value)) != nullptr) // NOLINT(*-assignment-in-if-condition)
             outf << "Temporizador: id: " << temp->getId() << " x: " << temp->imagen.m_rect.x << " y: " << temp->imagen.m_rect.y << " entradaNegada: " << temp->entradaNegada << " salidaNegada: " << temp->salidaNegada << " ciclosTotales: " << temp->ciclosTotales << "\n";
     }
 
@@ -64,13 +64,13 @@ bool SistemaGuardado::guardar(const Controlador* controlador, const Window* wind
 }
 
 
-int SistemaGuardado::cargar(Controlador* controlador, Window* window, Valores* valores, const std::string& archivo)
+auto SistemaGuardado::cargar(Controlador* controlador, Window* window, Valores* valores, const std::string& archivo) -> int
 {
     std::ifstream inf{ archivo.c_str() };
 
     if(!inf)
     {
-        printf("No se ha podido crear el file stream de cargado\n");
+        std::println(std::cout, "No se ha podido crear el file stream de cargado");
         return -1;
     }
 
@@ -100,8 +100,8 @@ int SistemaGuardado::cargar(Controlador* controlador, Window* window, Valores* v
 
     //Salidas
     unsigned int salidaId{get_offset(ID_TIPOS::Salida)};
-    int salidaX{false};
-    int salidaY{false};
+    int salidaX{0};
+    int salidaY{0};
 
     //Temporizadores
     unsigned int tempId{get_offset(ID_TIPOS::Temporizador)};
@@ -181,7 +181,6 @@ int SistemaGuardado::cargar(Controlador* controlador, Window* window, Valores* v
             iss >> tempSalidaNegada;
             iss >> tmp; //ciclosTotales:
             iss >> tempCiclos;
-            std::cout << tempId << " " << tempX << " " << tempY << " " << tempEntradaNegada << " " << tempSalidaNegada << " " << tempCiclos << std::endl;
             controlador->crear(tempX, tempY, tempCiclos, tempEntradaNegada, tempSalidaNegada, tempId);
         }
         else if(tmp == "Conexion:"s)

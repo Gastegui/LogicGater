@@ -38,7 +38,7 @@ class Temporizador final : public Simulable
 
     IMG imagen;
 
-    static unsigned int idGenerator()
+    static auto idGenerator() -> unsigned int
     {
         static unsigned int id = 1 + get_offset(ID_TIPOS::Temporizador);
         return id++;
@@ -50,7 +50,7 @@ class Temporizador final : public Simulable
             idGenerator();
     }
 
-    bool cambiar();
+    auto cambiar() -> bool;
 
 public:
 
@@ -75,22 +75,22 @@ public:
 
     void simular() override;
     void actualizar() override;
-    bool interactuar(int posX, int posY, INTERACCIONES interaccion) override;
-    IMG* getImg() override { return &imagen; }
+    auto interactuar(int posX, int posY, INTERACCIONES interaccion) -> bool override;
+    auto getImg() -> IMG* override { return &imagen; }
     void setIONull(IO* io) override
     {
         if(entrada != nullptr && entrada == io)
             entrada = nullptr;
     }
-    [[nodiscard]] IO* getIOSalida() override { return &salida; }
-    [[nodiscard]] bool getDesconectado() const override { return entrada == nullptr && salida.getConexiones() == 0; }
-    [[nodiscard]] std::pair<int, int>* getLinea(const int conexion) override
+    [[nodiscard]] auto getIOSalida() -> IO* override { return &salida; }
+    [[nodiscard]] auto getDesconectado() const -> bool override { return entrada == nullptr && salida.getConexiones() == 0; }
+    [[nodiscard]] auto getLinea(const int conexion) -> std::pair<int, int>* override
     {
         if(conexion == 1)
             return &linea;
         return nullptr;
     }
-    [[nodiscard]] int getConexion(IO* io) const override
+    [[nodiscard]] auto getConexion(IO* io) const -> int override
     {
         if(entrada != nullptr && entrada == io)
             return 1;

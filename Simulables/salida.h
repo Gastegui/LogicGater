@@ -29,7 +29,7 @@ class Salida final : public Simulable
     bool mover{false};
     Raton* raton;
 
-    static unsigned int idGenerator()
+    static auto idGenerator() -> unsigned int
     {
         static unsigned int id = 1 + get_offset(ID_TIPOS::Salida);
         return id++;
@@ -58,20 +58,20 @@ public:
     ~Salida() override = default;
 
     void setEntrada(IO* entrada_) { entrada = entrada_; }
-    [[nodiscard]] IO* getEntrada() const { return entrada; }
-    [[nodiscard]] IMG* getImg() override { return &img; }
-    [[nodiscard]] bool get() const { return entrada->get(); }
-    [[nodiscard]] bool getDesconectado() const override { return entrada == nullptr; }
+    [[nodiscard]] auto getEntrada() const -> IO* { return entrada; }
+    [[nodiscard]] auto getImg() -> IMG* override { return &img; }
+    [[nodiscard]] auto get() const -> bool { return entrada->get(); }
+    [[nodiscard]] auto getDesconectado() const -> bool override { return entrada == nullptr; }
 
     void simular() override;
     void actualizar() override {}
     void simularAntiguo();
 
     void moverRel(int x, int y);
-    bool interactuar(int posX, int posY, INTERACCIONES interaccion) override;
+    auto interactuar(int posX, int posY, INTERACCIONES interaccion) -> bool override;
     void setIONull(IO* io) override;
-    [[nodiscard]] IO* getIOSalida() override { return nullptr; }
-    [[nodiscard]] std::pair<int, int>* getLinea(const int conexion) override
+    [[nodiscard]] auto getIOSalida() -> IO* override { return nullptr; }
+    [[nodiscard]] auto getLinea(const int conexion) -> std::pair<int, int>* override
     {
         if(conexion == 1)
             return &entradaPos;
@@ -79,7 +79,7 @@ public:
         return nullptr;
     }
 
-    [[nodiscard]] int getConexion(IO* io) const override
+    [[nodiscard]] auto getConexion(IO* io) const -> int override
     {
         if(entrada != nullptr && entrada == io)
             return 1;

@@ -21,12 +21,10 @@ public:
     };
 
 private:
-    Lista* lista;
+    Lista* lista{};
 
 public:
-    ListaLineas()
-        :lista{}
-    {}
+    ListaLineas() = default;
 
     ~ListaLineas()
     {
@@ -39,7 +37,7 @@ public:
         }
     }
 
-    [[nodiscard]] Lista* getLista() const { return lista; }
+    [[nodiscard]] auto getLista() const -> Lista* { return lista; }
 
     void añadir(Simulable* destino, IO* io, int conexion);
 

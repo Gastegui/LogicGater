@@ -11,7 +11,8 @@ void Controlador::crear(const Puerta::Tipo tipo, int x, int y, const bool arriba
 {
     if(x == -1 && y == -1)
         SDL_GetMouseState(&x, &y);
-    Puerta* puerta{nullptr};
+
+    Puerta* puerta{}; //TODO: QUITAR PUNTEROS DE AQUÍ, METERLOS DIRECTAMENTE AL MAPA? QUITAR PUNTEROS EN GENERAL (LAS LINKED LISTS QUE QUEDAN HAY QUE SUSTITUIRLAS POR VECTORES)
     if(id == 0)
         puerta = new Puerta{renderer, this, tipo, -window->getEsquinaX() + x, -window->getEsquinaY() + y, arribaNegado, abajoNegado, salidaNegada, window->getRaton()};
     else
@@ -26,7 +27,7 @@ void Controlador::crear(const bool mantener, int x, int y, const unsigned int id
     if(x == -1 && y == -1)
         SDL_GetMouseState(&x, &y);
 
-    Entrada* entrada;
+    Entrada* entrada{};
     if(id == 0)
         entrada = new Entrada{renderer, this, -window->getEsquinaX() + x, -window->getEsquinaY() + y, window->getRaton(), mantener};
     else
@@ -42,7 +43,7 @@ void Controlador::crear(int x, int y, const unsigned int id)
     if(x == -1 && y == -1)
         SDL_GetMouseState(&x, &y);
 
-    Salida* salida;
+    Salida* salida{};
     if(id == 0)
         salida = new Salida{renderer, this, -window->getEsquinaX() + x, -window->getEsquinaY() + y, window->getRaton()};
     else
@@ -53,12 +54,12 @@ void Controlador::crear(int x, int y, const unsigned int id)
 
 }
 
-void Controlador::crear(int x, int y, const int tiempo, const int entradaNegada, const int salidaNegada, const unsigned int id)
+void Controlador::crear(int x, int y, const int tiempo, const bool entradaNegada, const bool salidaNegada, const unsigned int id)
 {
     if(x == -1 && y == -1)
         SDL_GetMouseState(&x, &y);
 
-    Temporizador* temporizador;
+    Temporizador* temporizador{};
     if(id == 0)
         temporizador = new Temporizador(renderer, this, window->getRaton(), tiempo, -window->getEsquinaX() + x, -window->getEsquinaY() + y, entradaNegada, salidaNegada, txt);
     else
@@ -97,7 +98,7 @@ void Controlador::simularInstantaneo() const
 }
 
 
-int Controlador::limpiar()
+auto Controlador::limpiar() -> int
 {
     int limpiados = 0;
     Simulable* simulable{nullptr};
@@ -124,7 +125,7 @@ int Controlador::limpiar()
 }
 
 
-Simulable* Controlador::getSimulable(const unsigned int id) const
+auto Controlador::getSimulable(const unsigned int id) const -> Simulable*
 {
     const auto it = simulables.find(id);
     return it != simulables.end() ? it->second : nullptr;

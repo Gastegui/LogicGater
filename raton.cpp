@@ -9,7 +9,7 @@
 #include "Simulables/entrada.h"
 #include "Wrapper/window.h"
 
-IMG* Raton::buscarLista(const ListaIMG::Lista* lista, const int posX, const int posY, const bool absoluto) const
+auto Raton::buscarLista(const ListaIMG::Lista* lista, const int posX, const int posY, const bool absoluto) const -> IMG*
 {
 
     while(lista != nullptr)
@@ -74,7 +74,7 @@ void Raton::interactuar(IMG* actual)
     }
 }
 
-bool Raton::interactuarConexion(IMG* actual)
+auto Raton::interactuarConexion(IMG* actual) -> bool
 {
     if(borrando)
     {
@@ -114,7 +114,7 @@ void Raton::setControlador(Controlador* controlador_)
 }
 
 
-void Raton::manejarRaton()
+auto Raton::manejarRaton() -> void
 {
     SDL_GetMouseState(&posX, &posY);
 

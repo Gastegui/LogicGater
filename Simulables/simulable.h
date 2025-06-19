@@ -4,7 +4,6 @@
 
 #ifndef SIMULABLE_H
 #define SIMULABLE_H
-#include "../controles.h"
 #include "../enums.h"
 
 class IMG;
@@ -20,15 +19,15 @@ public:
     virtual ~Simulable() = default;
     virtual void simular() = 0;
     virtual void actualizar() = 0;
-    virtual bool interactuar(int posX, int posY, INTERACCIONES accion) = 0;
-    virtual IMG* getImg() = 0;
+    virtual auto interactuar(int posX, int posY, INTERACCIONES accion) -> bool = 0;
+    virtual auto getImg() -> IMG* = 0;
     virtual void setIONull(IO* io) = 0;
-    [[nodiscard]] virtual IO* getIOSalida() = 0;
-    [[nodiscard]] virtual std::pair<int, int>* getLinea(int conexion) = 0;
-    [[nodiscard]] virtual bool getDesconectado() const = 0;
-    [[nodiscard]] virtual int getConexion(IO* io) const = 0;
+    [[nodiscard]] virtual auto getIOSalida() -> IO* = 0;
+    [[nodiscard]] virtual auto getLinea(int conexion) -> std::pair<int, int>* = 0;
+    [[nodiscard]] virtual auto getDesconectado() const -> bool = 0;
+    [[nodiscard]] virtual auto getConexion(IO* io) const -> int = 0;
 
-    [[nodiscard]] virtual TIPOS_SIMULABLES getTipo() const
+    [[nodiscard]] virtual auto getTipo() const -> TIPOS_SIMULABLES
     {
         if(id & 1 << 31)
             return TIPOS_SIMULABLES::Puerta;
@@ -43,7 +42,7 @@ public:
     }
 
 
-    [[nodiscard]] virtual unsigned int getId() const { return id; }
+    [[nodiscard]] virtual auto getId() const -> unsigned int { return id; }
 };
 
 #endif //SIMULABLE_H

@@ -19,9 +19,9 @@ public:
         int cuadriculaTamaño = 50;
     };
 
-    static bool guardar(const Controlador* controlador, const Window* window, const Valores* valores, const std::string& archivo);
+    static auto guardar(const Controlador* controlador, const Window* window, const Valores* valores, const std::string& archivo) -> bool;
 
-    static int cargar(Controlador* controlador, Window* window, Valores* valores, const std::string& archivo);
+    static auto cargar(Controlador* controlador, Window* window, Valores* valores, const std::string& archivo) -> int;
 };
 
 

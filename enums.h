@@ -4,6 +4,7 @@
 
 #ifndef ENUMS_H
 #define ENUMS_H
+#include <cstdint>
 #include <string>
 
 #define ACCIONES \
@@ -42,12 +43,12 @@
         TemporizadorBajar,  /* Rueda abajo */ \
         CamaraCentrar,      /* B */
 
-enum class ACCION
+enum class ACCION : uint8_t
 {
     ACCIONES
 };
 
-enum class INTERACCIONES
+enum class INTERACCIONES : uint8_t
 {
     ACCIONES
     ConexionBorrar,
@@ -55,7 +56,7 @@ enum class INTERACCIONES
     RatonSalir,
 };
 
-enum class TIPOS
+enum class TIPOS : uint8_t
 {
     Nada,
     Puerta,
@@ -66,7 +67,7 @@ enum class TIPOS
     Temporizador
 };
 
-constexpr static std::string toString(const TIPOS tipo)
+constexpr static auto toString(const TIPOS tipo) -> std::string
 {
     switch (tipo)
     {
@@ -100,7 +101,7 @@ enum class ID_TIPOS : unsigned int
     Temporizador = static_cast<unsigned int>(1 << 26)
 };
 
-constexpr static unsigned int get_offset(const ID_TIPOS tipo)
+constexpr static auto get_offset(const ID_TIPOS tipo) -> unsigned int
 {
     switch (tipo)
     {
@@ -124,7 +125,7 @@ constexpr static unsigned int get_offset(const ID_TIPOS tipo)
 }
 
 
-enum class TIPOS_SIMULABLES
+enum class TIPOS_SIMULABLES : uint8_t
 {
     Nada,
     Puerta,
@@ -133,7 +134,7 @@ enum class TIPOS_SIMULABLES
     Temporizador
 };
 
-constexpr static std::string toString(const TIPOS_SIMULABLES tipo)
+constexpr static auto toString(const TIPOS_SIMULABLES tipo) -> std::string
 {
     switch (tipo) {
         case TIPOS_SIMULABLES::Nada:

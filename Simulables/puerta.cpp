@@ -38,7 +38,7 @@ void Puerta::simular()
     siguiente = ret;
 }
 
-bool Puerta::simularAntiguo() // NOLINT(*-no-recursion)
+auto Puerta::simularAntiguo() -> bool
 {
     bool a{false};
     bool b{false};
@@ -114,7 +114,7 @@ void Puerta::moverRel(const int x_, const int y_)
     y += y_;
 }
 
-bool Puerta::interactuar(const int posX, const int posY, const INTERACCIONES interaccion)
+auto Puerta::interactuar(const int posX, const int posY, const INTERACCIONES interaccion) -> bool
 {
     using enum INTERACCIONES;
     switch (interaccion)
@@ -127,7 +127,7 @@ bool Puerta::interactuar(const int posX, const int posY, const INTERACCIONES int
                 IO* origen = controlador->getOrigen();
                 if(origen == nullptr)
                     return false;
-                int conexion;
+                int conexion{};
                 if(posY <= getImg()->getRect()->h / 2)
                 {
                     if(arriba != nullptr)
@@ -154,8 +154,8 @@ bool Puerta::interactuar(const int posX, const int posY, const INTERACCIONES int
                 controlador->borrarConexiones(&salida);
             else
             {
-                const IO* borrar = (posY <= getImg()->getRect()->h / 2) ? arriba : abajo;
-                const int conexion = (posY <= getImg()->getRect()->h / 2) ? 1 : 2;
+                const IO* borrar = posY <= getImg()->getRect()->h / 2 ? arriba : abajo;
+                const int conexion = posY <= getImg()->getRect()->h / 2 ? 1 : 2;
                 if(borrar == nullptr)
                     return false;
                 controlador->borrarConexion(this, borrar, conexion);

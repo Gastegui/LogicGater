@@ -24,8 +24,8 @@ class Window
 
     int esquinaX = 0;
     int esquinaY = 0;
-    const int width;
-    const int height;
+    const int width; // NOLINT(*-avoid-const-or-ref-data-members)
+    const int height; // NOLINT(*-avoid-const-or-ref-data-members)
 
     SDL_Window* window {nullptr};
     SDL_Renderer* renderer {nullptr};
@@ -49,8 +49,8 @@ class Window
     static void renderLine(SDL_Renderer* renderer, int x1, int y1, int x2, int y2, const ListaLineas::Lista* linea);
 public:
 
-    explicit Window(const char* img)
-        :width{1920}, height{1080}, window{SDL_CreateWindow("LogicGater", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, SDL_WINDOW_FULLSCREEN)}, renderer{SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC)}, minimapaTamañoObjetivoX{static_cast<int>(width*0.2)}, minimapaTamañoObjetivoY{static_cast<int>(height*0.2)}, minimapaFondo{"./img/minimapa.png", renderer, width-minimapaTamañoObjetivoX, height-minimapaTamañoObjetivoY}
+    explicit Window(const int witdh_, const int height_, const char* img)
+        :width{witdh_}, height{height_}, window{SDL_CreateWindow("LogicGater", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, SDL_WINDOW_FULLSCREEN)}, renderer{SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC)}, minimapaTamañoObjetivoX{static_cast<int>(width*0.2)}, minimapaTamañoObjetivoY{static_cast<int>(height*0.2)}, minimapaFondo{"./img/minimapa.png", renderer, width-minimapaTamañoObjetivoX, height-minimapaTamañoObjetivoY}
     {
         // ReSharper disable once CppDFAConstantConditions
         if(window != nullptr)
@@ -74,16 +74,16 @@ public:
             SDL_FreeSurface(windowIcon);
     }
 
-    [[nodiscard]] SDL_Renderer* getRenderer() const { return renderer; }
-    [[nodiscard]] SDL_Window* getWindow() const { return window; }
-    [[nodiscard]] Raton* getRaton() {return &raton; }
+    [[nodiscard]] auto getRenderer() const -> SDL_Renderer* { return renderer; }
+    [[nodiscard]] auto getWindow() const -> SDL_Window* { return window; }
+    [[nodiscard]] auto getRaton() -> Raton* {return &raton; }
     void setControlador(Controlador* controlador_)
     {
         controlador = controlador_;
         raton.setControlador(controlador_);
     }
 
-    bool operator!() const
+    auto operator!() const -> bool
     {
         return window == nullptr;
     }
@@ -91,18 +91,18 @@ public:
     void limpiar() const;
     void render() const;
 
-    [[nodiscard]] ListaIMG::Lista* getListaIMG(const ListaIMG::Altura altura) const
+    [[nodiscard]] auto getListaIMG(const ListaIMG::Altura altura) const -> ListaIMG::Lista*
     {
         return listaIMG.getLista(altura);
     }
 
     //No borra la imagen. Eso es trabajo de la clase IMG
-    bool añadir(IMG* img, const ListaIMG::Altura altura)
+    auto añadir(IMG* img, const ListaIMG::Altura altura) -> bool
     {
         return listaIMG.añadir(img, altura);
     }
     //No borra las imagenes. Eso es trabajo de la clase IMG
-    bool borrar(const IMG* img, const ListaIMG::Altura altura)
+    auto borrar(const IMG* img, const ListaIMG::Altura altura) -> bool
     {
         if(listaIMG.quitar(img, altura))
         {
@@ -116,16 +116,16 @@ public:
     void mover(int x, int y);
     void centrar();
 
-    [[nodiscard]] int getEsquinaX() const { return esquinaX; }
-    [[nodiscard]] int getEsquinaY() const { return esquinaY; }
+    [[nodiscard]] auto getEsquinaX() const -> int { return esquinaX; }
+    [[nodiscard]] auto getEsquinaY() const -> int { return esquinaY; }
 
-    [[nodiscard]] IMG* getIMGMinimapa() { return &minimapaFondo; }
-    [[nodiscard]] int getMapaMinX() const { return mapaMinX; }
-    [[nodiscard]] int getMapaMaxX() const { return mapaMaxX; }
-    [[nodiscard]] int getMapaMinY() const { return mapaMinY; }
-    [[nodiscard]] int getMapaMaxY() const { return mapaMaxY; }
-    [[nodiscard]] int getMinimapaTamañoX() const { return minimapaTamañoObjetivoX; }
-    [[nodiscard]] int getMinimapaTamañoY() const { return minimapaTamañoObjetivoY; }
+    [[nodiscard]] auto getIMGMinimapa() -> IMG* { return &minimapaFondo; }
+    [[nodiscard]] auto getMapaMinX() const -> int { return mapaMinX; }
+    [[nodiscard]] auto getMapaMaxX() const -> int { return mapaMaxX; }
+    [[nodiscard]] auto getMapaMinY() const -> int { return mapaMinY; }
+    [[nodiscard]] auto getMapaMaxY() const -> int { return mapaMaxY; }
+    [[nodiscard]] auto getMinimapaTamañoX() const -> int { return minimapaTamañoObjetivoX; }
+    [[nodiscard]] auto getMinimapaTamañoY() const -> int { return minimapaTamañoObjetivoY; }
 };
 
 #endif //WINDOW_H

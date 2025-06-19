@@ -49,7 +49,7 @@ void Salida::simularAntiguo()
         img.cambiarImagen("./img/salida/apagado.png");
 }
 
-bool Salida::interactuar(const int posX, const int posY, const INTERACCIONES interaccion)
+auto Salida::interactuar(const int posX, const int posY, const INTERACCIONES interaccion) -> bool
 {
     using enum INTERACCIONES;
 

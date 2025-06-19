@@ -62,9 +62,9 @@ public:
         acciones.insert(std::make_pair(".J", ACCION::TemporizadorBajar));
         acciones.insert(std::make_pair("sh", ACCION::CamaraCentrar));
     }
-    static ACCION getNuevaAccion(const SDL_Event* evento);
-    [[nodiscard]] static ACCION getUltimaAccion() { return accionAnterior; }
-    [[nodiscard]] static SDL_Event* getEvent() { return evento; }
+    static auto getNuevaAccion(const SDL_Event* evento) -> ACCION;
+    [[nodiscard]] static auto getUltimaAccion() -> ACCION { return accionAnterior; }
+    [[nodiscard]] static auto getEvent() -> SDL_Event* { return evento; }
     static void setTextInput() { escribiendo = true; SDL_StartTextInput(); }
     static void unsetTextInput() { escribiendo = false; SDL_StopTextInput(); }
 };

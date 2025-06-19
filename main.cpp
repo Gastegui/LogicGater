@@ -9,13 +9,15 @@
 #include "controles.h"
 #include "SistemaGuardado.h"
 
-int main(int argc, char* argv[])
+#include <print>
+
+auto main() -> int
 {
 
 
     if (SDL_Init(SDL_INIT_VIDEO) != 0)
-        {
-        std::cerr << "Error initializing SDL: " << SDL_GetError() << std::endl;
+    {
+        std::println(std::cerr, "Error initializing SDL: {}", SDL_GetError());
         return 1;
     }
 
@@ -23,17 +25,17 @@ int main(int argc, char* argv[])
 
     if (TTF_Init() != 0)
     {
-        std::cerr << "Error initializing SDL_ttf: " << TTF_GetError() << std::endl;
+        std::println(std::cerr, "Error initializing SDL_ttf: {}", TTF_GetError());
         return 1;
     }
     std::atexit(TTF_Quit);
 
-    Window window{"/home/julen/Descargas/windows_xp_bliss-wide.png"};
+    Window window{1920, 1080, "/home/julen/Descargas/windows_xp_bliss-wide.png"};
 
     TXT txt {"ttf/8bitOperatorPlusSC-Regular.ttf", 20, SDL_Color{255, 255, 255, 255}, window.getRenderer()};
     if(!txt)
     {
-        std::cerr << "Error al inicializar el texto. Error " << SDL_GetError() << std::endl;
+        std::println(std::cerr, "Error al inicializar el texto. Error {}", SDL_GetError());
         return 1;
     }
 
@@ -42,7 +44,7 @@ int main(int argc, char* argv[])
 
     if(!window)
     {
-        std::cerr << "Error al inicializar la ventana. Error: " << SDL_GetError() << std::endl;
+        std::println(std::cerr, "Error al inicializar la ventana. Error {}", SDL_GetError());
         return 1;
     }
 
@@ -57,26 +59,26 @@ int main(int argc, char* argv[])
     bool guardar = false;
     bool cargar = false;
 
-    char strTMP[50] = {" "};
+    std::string strTMP;
 
     Uint64 ultimaSimulacion = SDL_GetTicks64();
     SistemaGuardado::Valores valores;
 
-    std::string inputStr = {" "};
+    std::string inputStr;
     bool escribiendo = false;
 
-    char mensajeStr[40] = {" "};
+    std::string mensaje;
     constexpr int mensajeDuracion = 5000;
-    Uint64 mensajeTiempo = SDL_GetTicks64() + mensajeDuracion + 1;
+    Uint64 mensajeTiempo = -mensajeDuracion;
 
     while (enMarcha)
     {
-        while (SDL_PollEvent(&event))
+        while (SDL_PollEvent(&event) != 0)
         {
             switch (Controles::getNuevaAccion(&event))
             {
                 case ACCION::BorrarSueltos:
-                    printf("Se han borrado %d elementos\n", controlador.limpiar());
+                    std::println("Se han borrado {} elementos", controlador.limpiar());
                     break;
                 case ACCION::CrearAnd:
                     controlador.crear(Puerta::AND, -1, -1);
@@ -173,7 +175,7 @@ int main(int argc, char* argv[])
                                 enMarcha = false;
                                 break;
                             case SDL_TEXTINPUT:
-                                inputStr += evento->text.text;
+                                inputStr += evento->text.text; // NOLINT(*-pro-bounds-array-to-pointer-decay)
                                 break;
                             default:
                                 break;
@@ -197,9 +199,9 @@ int main(int argc, char* argv[])
         if(guardar && !escribiendo)
         {
             if(SistemaGuardado::guardar(&controlador, &window, &valores, inputStr))
-                snprintf(mensajeStr, 40, "Se ha guardado");
+                mensaje = "Se ha guardado";
             else
-                snprintf(mensajeStr, 40, "No se ha podido guardar");
+                mensaje = "No se ha podido guardar";
             mensajeTiempo = SDL_GetTicks64();
             guardar = false;
         }
@@ -210,14 +212,13 @@ int main(int argc, char* argv[])
             txt.setPos(500, 500);
             txt << "Cargando...";
             window.render();
-            printf("%s\n", inputStr.c_str());
             const int ret = SistemaGuardado::cargar(&controlador, &window, &valores, inputStr);
             if(ret == -1)
-                snprintf(mensajeStr, 40, "No se ha podido cargar");
+                mensaje = "No se ha podido guardar";
             else if(ret == -2)
-                snprintf(mensajeStr, 40, "No se puede cargar si se ha creado algo");
+                mensaje = "No se puede cargar si se ha creado algo";
             else
-                snprintf(mensajeStr, 40, "Se ha cargado");
+                mensaje = "Se ha cargado";
 
             mensajeTiempo = SDL_GetTicks64();
             cargar = false;
@@ -259,30 +260,30 @@ int main(int argc, char* argv[])
             if(valores.velocidadSimulacion >= 0)
             {
                 txt.setPos(1700, 10);
-                snprintf(strTMP, 50, "SIMULANDO (%d ms)", valores.velocidadSimulacion);
+                strTMP = std::format("SIMULANDO ({} ms)", valores.velocidadSimulacion);
             }
             else
             {
                 txt.setPos(1640, 10);
-                snprintf(strTMP, 50, "SIMULANDO (instantáneo)");
+                strTMP = std::format("SIMULANDO (instantáneo");
             }
-            txt << strTMP;
+            txt << &strTMP;
         }
 
         txt.setPos(10, 10);
-        snprintf(strTMP, 50, "X: %d Y: %d", -window.getEsquinaX(), -window.getEsquinaY());
-        txt << strTMP;
+        strTMP = std::format("X: {} Y: {}", -window.getEsquinaX(), -window.getEsquinaY());
+        txt << &strTMP;
 
         if(controlador.getCuadriculaActiva())
         {
-            snprintf(strTMP, 50, "Cuadrícula activa. Tamaño: %d", controlador.getCuadriculaTamaño());
-            txt << strTMP;
+            strTMP = std::format("Cuadríacula activa. Tamaño: {}", controlador.getCuadriculaTamaño());
+            txt << &strTMP;
         }
 
         if(mensajeTiempo + mensajeDuracion > SDL_GetTicks64())
         {
             txt.setPos(900, 1050);
-            txt << mensajeStr;
+            txt << mensaje.c_str();
         }
 
         if(cargar && escribiendo)

@@ -30,14 +30,14 @@ class IMG
     TIPOS_SIMULABLES tipoSimulable{TIPOS_SIMULABLES::Nada};
     TXT* txt{nullptr};
 
-    static unsigned int idGenerator()
+    static auto idGenerator() -> unsigned int
     {
         static unsigned int id = 1 + get_offset(ID_TIPOS::IMG);
         return id++;
     }
 
-    bool crearPuerta(const char* entradaArriba, const char* entradaAbajo, const char* cuerpo, const char* salida);
-    bool crearTemporizador(const char* entrada, const char* cuerpo, const char* salida, const char* relleno, int ciclosActuales, int ciclosTotales);
+    auto crearPuerta(const char* entradaArriba, const char* entradaAbajo, const char* cuerpo, const char* salida) -> bool;
+    auto crearTemporizador(const char* entrada, const char* cuerpo, const char* salida, const char* relleno, int ciclosActuales, int ciclosTotales) -> bool;
 public:
     IMG(const char* path, SDL_Renderer* renderer)
         :IMG{path, renderer, 0, 0}
@@ -49,7 +49,7 @@ public:
         // ReSharper disable once CppDFAConstantConditions
         if(m_texture == nullptr)
         // ReSharper disable once CppDFAUnreachableCode
-            std::cerr << "No se ha podido cargar la imagen: " << path << " Error: " << SDL_GetError() << std::endl;
+            std::println(std::cerr, "No se ha podido cargar la imagen: {} Error: {}", path, SDL_GetError());
         else
         {
             SDL_QueryTexture(m_texture, nullptr, nullptr, &m_rect.w, &m_rect.h);
@@ -69,7 +69,7 @@ public:
             m_rect.y = y;
         }
         else
-            std::cerr << "No se ha podido crear la imagen de la puerta lógica. Error " << SDL_GetError() << std::endl;
+            std::println(std::cerr, "No se ha podido crear la imagen de la puerta lógica. Error: {}", SDL_GetError());
     }
 
     //Crea la imagen de un temporizador
@@ -83,7 +83,7 @@ public:
             m_rect.y = y;
         }
         else
-            std::cerr << "No se ha podido crear la imagen del temporizador. Error " << SDL_GetError() << std::endl;
+            std::println(std::cerr, "No se ha podido crear la imagen del temporizador. Error: {}", SDL_GetError());
     }
 
     ~IMG()
@@ -92,10 +92,10 @@ public:
             SDL_DestroyTexture(m_texture);
     }
 
-    [[nodiscard]] unsigned long getId() const { return id; }
-    [[nodiscard]] SDL_Texture* getTexture() const { return m_texture; }
-    [[nodiscard]] SDL_Rect* getRect() { return &m_rect; }
-    [[nodiscard]] bool getClickable() const { return esClickable; }
+    [[nodiscard]] auto getId() const -> unsigned long { return id; }
+    [[nodiscard]] auto getTexture() const -> SDL_Texture* { return m_texture; }
+    [[nodiscard]] auto getRect() -> SDL_Rect* { return &m_rect; }
+    [[nodiscard]] auto getClickable() const -> bool { return esClickable; }
 
     void setClickable(Simulable* simulable_)
     {
@@ -107,14 +107,14 @@ public:
     {
         esClickable = true;
     }
-    [[nodiscard]] Simulable* getSimulable() const { return simulable; }
+    [[nodiscard]] auto getSimulable() const -> Simulable* { return simulable; }
 
-    bool operator==(const IMG& a) const
+    auto operator==(const IMG& a) const -> bool
     {
         return this->getId() == a.getId();
     }
 
-    bool operator!() const
+    auto operator!() const -> bool
     {
         return m_texture == nullptr;
     }
@@ -132,10 +132,10 @@ public:
         m_texture = IMG_LoadTexture(m_renderer, path);
 
         if(m_texture == nullptr)
-                std::cerr << "No se ha podido cargar la imagen: " << path << " Error: " << SDL_GetError() << std::endl;
+            std::println(std::cerr, "No se h podido cargar la imagen: {} Error: {}", path, SDL_GetError());
     }
 
-    bool cambiarPuerta(const char* entradaArriba, const char* entradaAbajo, const char* cuerpo, const char* salida)
+    auto cambiarPuerta(const char* entradaArriba, const char* entradaAbajo, const char* cuerpo, const char* salida) -> bool
     {
         if(tipoSimulable != TIPOS_SIMULABLES::Puerta)
             return false;
@@ -145,7 +145,7 @@ public:
         return crearPuerta(entradaArriba, entradaAbajo, cuerpo, salida);
     }
 
-    bool cambiarTemporizador(const char* entrada, const char* cuerpo, const char* salida, const char* relleno, const int ciclosActuales, const int ciclosTotales)
+    auto cambiarTemporizador(const char* entrada, const char* cuerpo, const char* salida, const char* relleno, const int ciclosActuales, const int ciclosTotales) -> bool
     {
         if(tipoSimulable != TIPOS_SIMULABLES::Temporizador)
             return false;

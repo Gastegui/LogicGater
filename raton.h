@@ -28,9 +28,9 @@ class Raton
     int cuadriculaY{0};
 
     void interactuar(IMG* actual);
-    bool interactuarConexion(IMG* actual);
-    IMG* buscarLista(const ListaIMG::Lista* lista, int posX, int posY, bool absoluto = false) const;
-    [[nodiscard]] static int interpolacionLinear(const double x, const double a, const double b, const double c, const double d)
+    auto interactuarConexion(IMG* actual) -> bool;
+    auto buscarLista(const ListaIMG::Lista* lista, int posX, int posY, bool absoluto = false) const -> IMG*;
+    [[nodiscard]] static auto interpolacionLinear(const double x, const double a, const double b, const double c, const double d) -> int
     {
         return static_cast<int>(c + (x - a) / (b - a) * (d - c));
     }
@@ -40,7 +40,7 @@ public:
     void setControlador(Controlador* controlador_);
 
     void setBorrando(bool borrando_);
-    [[nodiscard]] bool getBorrando() const { return borrando; }
+    [[nodiscard]] auto getBorrando() const -> bool { return borrando; }
     void setImgAnteriorNull() { imgAnterior = nullptr; }
 
     void manejarRaton();

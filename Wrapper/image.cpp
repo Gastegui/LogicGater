@@ -6,7 +6,7 @@
 #include "text.h"
 #include "window.h"
 
-bool IMG::crearPuerta(const char* entradaArriba, const char* entradaAbajo, const char* cuerpo, const char* salida)
+auto IMG::crearPuerta(const char* entradaArriba, const char* entradaAbajo, const char* cuerpo, const char* salida) -> bool
 {
     m_texture = SDL_CreateTexture(m_renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, 100, 50);
 
@@ -40,7 +40,7 @@ bool IMG::crearPuerta(const char* entradaArriba, const char* entradaAbajo, const
     return true;
 }
 
-bool IMG::crearTemporizador(const char* entrada, const char* cuerpo, const char* salida, const char* relleno, const int ciclosActuales, const int ciclosTotales)
+auto IMG::crearTemporizador(const char* entrada, const char* cuerpo, const char* salida, const char* relleno, const int ciclosActuales, const int ciclosTotales) -> bool
 {
     m_texture = SDL_CreateTexture(m_renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, 100, 50);
 

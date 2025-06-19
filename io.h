@@ -14,7 +14,7 @@ class Temporizador;
 
 class IO
 {
-    static unsigned int idGenerator()
+    static auto idGenerator() -> unsigned int
     {
         static unsigned int id = 1 + get_offset(ID_TIPOS::IO);
         return id++;
@@ -39,32 +39,32 @@ public:
     {}
 
     void set(const bool b) { valor = b; }
-    [[nodiscard]] bool get() const { return valor; }
-    [[nodiscard]] unsigned int getId() const { return id; }
+    [[nodiscard]] auto get() const -> bool { return valor; }
+    [[nodiscard]] auto getId() const -> unsigned int { return id; }
 
-    [[nodiscard]] TIPOS_SIMULABLES getTipoSimulable() const { return tipoSimulable; }
-    [[nodiscard]] Simulable* getSimulable() const { return simulable; }
-    [[nodiscard]] unsigned int getIdSimulable() const { return idSimulable; }
+    [[nodiscard]] auto getTipoSimulable() const -> TIPOS_SIMULABLES { return tipoSimulable; }
+    [[nodiscard]] auto getSimulable() const -> Simulable* { return simulable; }
+    [[nodiscard]] auto getIdSimulable() const -> unsigned int { return idSimulable; }
 
-    [[nodiscard]] std::pair<int, int>* getLineaOrigen() { return &origen; }
+    [[nodiscard]] auto getLineaOrigen() -> std::pair<int, int>* { return &origen; }
     void moverLineaOrigenRel(const int x, const int y) { origen.first += x; origen.second += y; }
 
     void conectado() { conexiones++; }
     void desconectado() { conexiones--; }
-    [[nodiscard]] int getConexiones() const { return conexiones; }
+    [[nodiscard]] auto getConexiones() const -> int { return conexiones; }
 
     explicit operator bool() const
     {
         return valor;
     }
 
-    IO& operator=(const bool a)
+    auto operator=(const bool a) -> IO&
     {
         valor = a;
         return *this;
     }
 
-    bool operator==(const IO& a) const
+    auto operator==(const IO& a) const -> bool
     {
         return this->getId() == a.getId();
     }

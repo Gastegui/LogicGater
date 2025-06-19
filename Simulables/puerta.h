@@ -34,7 +34,7 @@ class Puerta final : public Simulable
 
     bool interactuarAbajo{false};
 
-    static unsigned int idGenerator()
+    static auto idGenerator() -> unsigned int
     {
         static unsigned int id = 1 + get_offset(ID_TIPOS::Puerta);
         return id++;
@@ -52,7 +52,7 @@ class Puerta final : public Simulable
 
     Raton* raton;
 public:
-    enum Tipo
+    enum Tipo : uint8_t
     {
         AND,
         OR,
@@ -87,11 +87,11 @@ public:
 
     ~Puerta() override = default;
 
-    [[nodiscard]] IO* getSalida() { return &salida; }
-    [[nodiscard]] bool getDesconectado() const override { return arriba == nullptr && abajo == nullptr && salida.getConexiones() == 0; }
-    [[nodiscard]] IMG* getImg() override { return &imagen; }
+    [[nodiscard]] auto getSalida() -> IO* { return &salida; }
+    [[nodiscard]] auto getDesconectado() const -> bool override { return arriba == nullptr && abajo == nullptr && salida.getConexiones() == 0; }
+    [[nodiscard]] auto getImg() -> IMG* override { return &imagen; }
 
-    bool cambiar()
+    auto cambiar() -> bool
     {
         return imagen.cambiarPuerta(arribaNegado ? "./img/puertas/entrada_arriba_negada.png" : "./img/puertas/entrada_arriba_normal.png",
                              abajoNegado ? "./img/puertas/entrada_abajo_negada.png" : "./img/puertas/entrada_abajo_normal.png",
@@ -102,13 +102,13 @@ public:
 
     void simular() override;
     void actualizar() override;
-    bool simularAntiguo();
+    auto simularAntiguo() -> bool;
     void simulacionAntiguaTermindada();
     void moverRel(int x_, int y_);
-    bool interactuar(int posX, int posY, INTERACCIONES interaccion) override;
+    auto interactuar(int posX, int posY, INTERACCIONES interaccion) -> bool override;
     void setIONull(IO* io) override;
-    [[nodiscard]] IO* getIOSalida() override { return &salida; }
-    [[nodiscard]] std::pair<int, int>* getLinea(const int conexion) override
+    [[nodiscard]] auto getIOSalida() -> IO* override { return &salida; }
+    [[nodiscard]] auto getLinea(const int conexion) -> std::pair<int, int>* override
     {
         if(conexion == 1)
             return &lineaArriba;
@@ -117,7 +117,7 @@ public:
         return nullptr;
     }
 
-    [[nodiscard]] int getConexion(IO* io) const override
+    [[nodiscard]] auto getConexion(IO* io) const -> int override
     {
         if(arriba != nullptr && arriba == io)
             return 1;

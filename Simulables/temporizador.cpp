@@ -5,7 +5,7 @@
 #include "temporizador.h"
 #include "../controlador.h"
 
-bool Temporizador::cambiar()
+auto Temporizador::cambiar() -> bool
 {
     std::string relleno = "./img/temporizador/" + std::to_string(ciclosActuales == 0 ? 0 : static_cast<int>(static_cast<float>(ciclosActuales) / ciclosTotales * 10)); // NOLINT(*-narrowing-conversions)
     relleno.append(".png");
@@ -55,7 +55,7 @@ void Temporizador::actualizar()
     cambiar();
 }
 
-bool Temporizador::interactuar(const int posX, const int posY, const INTERACCIONES interaccion)
+auto Temporizador::interactuar(const int posX, const int posY, const INTERACCIONES interaccion) -> bool
 {
     using enum INTERACCIONES;
     switch (interaccion)
