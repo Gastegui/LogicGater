@@ -5,16 +5,16 @@
 #include "ListaIMG.h"
 #include "Wrapper/image.h"
 
-auto ListaIMG::getLista(const Altura altura) const -> Lista*
+auto ListaIMG::getLista(const Altura altura) const -> const std::vector<IMG*>*
 {
     switch(altura)
     {
         case FRENTE:
-            return frente;
+            return &frente;
         case MEDIO:
-            return medio;
+            return &medio;
         case FONDO:
-            return fondo;
+            return &fondo;
         case INVALIDO:
         default:
             return nullptr;
@@ -26,7 +26,7 @@ auto ListaIMG::añadir(IMG* img, const Altura altura) -> bool
     if(img == nullptr)
         return false;
 
-    Lista** lista = nullptr;
+    std::vector<IMG*>* lista = nullptr;
 
     switch(altura)
     {
@@ -44,28 +44,14 @@ auto ListaIMG::añadir(IMG* img, const Altura altura) -> bool
             return false;
     }
 
-    if(*lista == nullptr) //La lista está vacía
-    {
-        *lista = new Lista();
-        (*lista)->img = img;
-        (*lista)->siguiente = nullptr;
-    }
-    else //La lista no está vacía
-    {
-        Lista* tmp = *lista;
-        while(tmp->siguiente != nullptr)
-            tmp = tmp->siguiente;
-        tmp->siguiente = new Lista();
-        tmp->siguiente->img = img;
-        tmp->siguiente->siguiente = nullptr;
-    }
+    lista->push_back(img);
 
     return true;
 }
 
 auto ListaIMG::quitar(const unsigned int id, const Altura altura) -> bool
 {
-    Lista** lista{};
+    std::vector<IMG*>* lista{};
 
     switch(altura)
     {
@@ -83,29 +69,13 @@ auto ListaIMG::quitar(const unsigned int id, const Altura altura) -> bool
             return false;
     }
 
-    if(!*lista)
-        return false;
+    auto it = lista->begin();
+    for(; it != lista->end(); ++it)
+        if((*it)->getId() == id)
+            break;
 
-    if((*lista)->img->getId() == id) //Es el primer elemento de la lista
-    {
-        const Lista* tmp = *lista;
-        *lista = (*lista)->siguiente;
-        delete tmp;
-    }
-    else
-    {
-        Lista* tmp = *lista;
-
-        while(tmp->siguiente != nullptr && tmp->siguiente->img->getId() != id)
-            tmp = tmp->siguiente;
-
-        if(tmp->siguiente == nullptr)
-            return false;
-
-        const Lista* borrar = tmp->siguiente;
-        tmp->siguiente = borrar->siguiente;
-        delete borrar;
-    }
+    if(it != lista->end())
+        lista->erase(it);
 
     return true;
 }

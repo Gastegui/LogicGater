@@ -11,26 +11,24 @@
 #include "Simulables/entrada.h"
 #include "Wrapper/window.h"
 
-auto Raton::buscarLista(const ListaIMG::Lista* lista, const int posX, const int posY, const bool absoluto) const -> IMG*
+auto Raton::buscarLista(const std::vector<IMG*>* lista, const int posX, const int posY, const bool absoluto) const -> IMG*
 {
-    while(lista != nullptr)
+    for(IMG* img : *lista)
     {
-        if(lista->img->getClickable())
+        if(img->getClickable())
         {
-            const SDL_Rect* rect = lista->img->getRect();
+            const SDL_Rect* rect = img->getRect();
             if(absoluto)
             {
                 if(rect->x <= posX && rect->x + rect->w >= posX && rect->y <= posY && rect->y + rect->h >= posY)
-                    return lista->img;
+                    return img;
             }
             else
             {
                 if(rect->x <= -window->getEsquinaX() + posX && rect->x + rect->w >= -window->getEsquinaX() + posX && rect->y <= -window->getEsquinaY() + posY && rect->y + rect->h >= -window->getEsquinaY() + posY)
-                    return lista->img;
+                    return img;
             }
         }
-
-        lista = lista->siguiente;
     }
 
     return nullptr;
@@ -118,7 +116,7 @@ void Raton::setControlador(Controlador* controlador_)
 auto Raton::manejarRaton() -> void
 {
     SDL_GetMouseState(&posX, &posY);
-    const ListaIMG::Lista* lista{};
+    const std::vector<IMG*>* lista{};
     IMG* actual{};
 
     if(posX < 10)

@@ -16,7 +16,7 @@
 #include "Simulables/salida.h"
 #include "Simulables/temporizador.h"
 
-auto SistemaGuardado::guardar(const Controlador* controlador, const Window* window, const Valores* valores, const std::string& archivo) -> bool
+auto SistemaGuardado::guardar(Controlador* controlador, const Window* window, const Valores* valores, const std::string& archivo) -> bool
 {
     std::ofstream outf{archivo.c_str()};
 
@@ -28,7 +28,7 @@ auto SistemaGuardado::guardar(const Controlador* controlador, const Window* wind
 
     const int esquinaX{window->getEsquinaX()};
     const int esquinaY{window->getEsquinaY()};
-    const ListaLineas::Lista* listaLineas{controlador->getListaLineas()->getLista()};
+    const std::vector<ListaLineas::Linea>*  listaLineas{controlador->getListaLineas()->getLista()};
 
     outf << "-Elementos\n";
     const Puerta* puerta{};
@@ -49,11 +49,8 @@ auto SistemaGuardado::guardar(const Controlador* controlador, const Window* wind
 
     outf << "-Conexiones\n";
 
-    while(listaLineas != nullptr)
-    {
-        outf << "Conexion: " << "origen: " << listaLineas->io->getSimulable()->getId() << " destino: " << listaLineas->destino->getId() << " destino_conexion: " << listaLineas->destino->getConexion(listaLineas->io) << "\n";
-        listaLineas = listaLineas->siguiente;
-    }
+    for(ListaLineas::Linea const linea : *listaLineas)
+        outf << "Conexion: " << "origen: " << linea.io->getSimulable()->getId() << " destino: " << linea.destino->getId() << " destino_conexion: " << linea.destino->getConexion(linea.io) << "\n";
 
     outf << "-Otros\n";
     outf << "Coordenadas: x: " << esquinaX << " y: " << esquinaY << "\n";

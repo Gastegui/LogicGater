@@ -47,7 +47,7 @@ class Window
     void rendererDraw() const;
     void rendererPresent() const;
 
-    static void renderLine(SDL_Renderer* renderer, int x1, int y1, int x2, int y2, const ListaLineas::Lista* linea);
+    static void renderLine(SDL_Renderer* renderer, int x1, int y1, int x2, int y2, const ListaLineas::Linea* linea);
 
 public:
     explicit Window(const int witdh_, const int height_, const char* img)
@@ -91,9 +91,9 @@ public:
     }
 
     void limpiar() const;
-    void render() const;
+    void render();
 
-    [[nodiscard]] auto getListaIMG(const ListaIMG::Altura altura) const -> ListaIMG::Lista*
+    [[nodiscard]] auto getListaIMG(const ListaIMG::Altura altura) const -> const std::vector<IMG*>*
     {
         return listaIMG.getLista(altura);
     }

@@ -40,7 +40,7 @@ class Raton
 
     void interactuar(IMG* actual);
     auto interactuarConexion(IMG* actual) -> bool;
-    auto buscarLista(const ListaIMG::Lista* lista, int posX, int posY, bool absoluto = false) const -> IMG*;
+    auto buscarLista(const std::vector<IMG*>* lista, int posX, int posY, bool absoluto = false) const -> IMG*;
 
     [[nodiscard]] static auto interpolacionLinear(const double x, const double a, const double b, const double c, const double d) -> int
     {

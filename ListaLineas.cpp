@@ -11,144 +11,73 @@ void ListaLineas::añadir(Simulable* destino, IO* io, const int conexion)
     if(destino == nullptr || io == nullptr)
         return;
 
-    Lista* tmp{lista};
-    if(lista == nullptr)
-    {
-        lista = new Lista();
-        tmp = lista;
-    }
-    else
-    {
-        while(tmp->siguiente != nullptr)
-            tmp = tmp->siguiente;
-
-        tmp->siguiente = new Lista();
-        tmp = tmp->siguiente;
-    }
-    tmp->destino = destino;
-    tmp->io = io;
-    tmp->conexion = conexion;
-    tmp->siguiente = nullptr;
+    lista.push_back(Linea{.destino = destino, .io = io, .conexion = conexion});
 }
 
 void ListaLineas::borrar(const Simulable* destino, const IO* io, const int conexion)
 {
-    if(lista == nullptr || destino == nullptr || io == nullptr)
+    if(lista.empty() || destino == nullptr || io == nullptr)
         return;
 
-    const Lista* tmp{lista};
+    auto it = lista.begin();
+    for(; it != lista.end(); ++it)
+        if(it->destino == destino && it->io == io && it->conexion == conexion)
+            break;
 
-    if(lista->destino == destino && lista->io == io && lista->conexion == conexion)
+    if(it != lista.end())
     {
-        lista = lista->siguiente;
-        tmp->io->getSimulable()->setIONull(tmp->io);
-        tmp->destino->setIONull(tmp->io);
-        tmp->io->desconectado();
-        delete tmp;
-        return;
-    }
-
-    Lista* anterior{lista};
-    tmp = tmp->siguiente;
-
-    while(tmp != nullptr)
-    {
-        if(tmp->destino == destino && tmp->io == io && tmp->conexion == conexion)
-        {
-            anterior->siguiente = tmp->siguiente;
-            tmp->io->getSimulable()->setIONull(tmp->io);
-            tmp->destino->setIONull(tmp->io);
-            tmp->io->desconectado();
-            delete tmp;
-            return;
-        }
-        tmp = tmp->siguiente;
-        anterior = anterior->siguiente;
+        it->io->desconectado();
+        it->destino->setIONull(it->io);
+        lista.erase(it);
     }
 }
 
 void ListaLineas::borrar(const IO* involucrado)
 {
-    if(lista == nullptr || involucrado == nullptr)
+    if(lista.empty() || involucrado == nullptr)
         return;
 
-    const Lista* tmp{nullptr};
-
-    while(lista != nullptr && lista->io == involucrado)
+    bool borrado{false};
+    do // NOLINT(*-avoid-do-while)
     {
-        tmp = lista;
-        lista = lista->siguiente;
-        tmp->io->desconectado();
-        tmp->destino->setIONull(tmp->io);
-        delete tmp;
-    }
+        borrado = false;
+        auto it = lista.begin();
+        for(; it != lista.end(); ++it)
+            if((*it).io == involucrado)
+                break;
 
-    if(lista == nullptr)
-        return;
-
-    Lista* anterior{lista};
-    tmp = lista->siguiente;
-
-    while(tmp != nullptr)
-    {
-        if(tmp->io == involucrado)
+        if(it != lista.end())
         {
-            anterior->siguiente = tmp->siguiente;
-            tmp->io->desconectado();
-            tmp->destino->setIONull(tmp->io);
-            delete tmp;
-            tmp = anterior->siguiente;
+            it->io->desconectado();
+            it->destino->setIONull(it->io);
+            lista.erase(it);
+            borrado = true;
         }
-        else
-        {
-            anterior = anterior->siguiente;
-            tmp = tmp->siguiente;
-        }
-    }
+
+    }while(borrado);
 }
 
 void ListaLineas::borrar(const Simulable* involucrado)
 {
-    if(lista == nullptr || involucrado == nullptr)
+    if(lista.empty() || involucrado == nullptr)
         return;
 
-    const Lista* tmp{nullptr};
-
-    while(lista != nullptr && (lista->io->getSimulable() == involucrado || lista->destino == involucrado))
+    bool borrado{false};
+    do // NOLINT(*-avoid-do-while)
     {
-        tmp = lista;
-        lista = lista->siguiente;
-        if(tmp->io->getSimulable() == involucrado)
-            tmp->destino->setIONull(tmp->io);
-        else
-            tmp->io->getSimulable()->setIONull(tmp->io);
-        tmp->io->desconectado();
-        delete tmp;
-    }
+        borrado = false;
+        auto it = lista.begin();
+        for(; it != lista.end(); ++it)
+            if(it->destino == involucrado || it->io->getSimulable() == involucrado)
+                break;
 
-    if(lista == nullptr)
-        return;
-
-    Lista* anterior{lista};
-    tmp = lista->siguiente;
-
-    while(tmp != nullptr)
-    {
-        if(tmp->io->getSimulable() == involucrado || tmp->destino == involucrado)
+        if(it != lista.end())
         {
-            anterior->siguiente = tmp->siguiente;
-            if(tmp->io->getSimulable() == involucrado)
-                tmp->destino->setIONull(tmp->io);
-            else
-                tmp->io->getSimulable()->setIONull(tmp->io);
-            tmp->io->desconectado();
-            delete tmp;
-            tmp = anterior->siguiente;
+            it->io->desconectado();
+            it->destino->setIONull(it->io);
+            lista.erase(it);
+            borrado = true;
         }
-        else
-        {
-            anterior = anterior->siguiente;
-            tmp = tmp->siguiente;
-        }
-    }
+
+    }while(borrado);
 }

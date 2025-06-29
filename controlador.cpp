@@ -12,7 +12,7 @@ void Controlador::crear(const Puerta::Tipo tipo, int x, int y, const bool arriba
     if(x == -1 && y == -1)
         SDL_GetMouseState(&x, &y);
 
-    Puerta* puerta{}; //TODO: QUITAR PUNTEROS DE AQUÍ, METERLOS DIRECTAMENTE AL MAPA? QUITAR PUNTEROS EN GENERAL (LAS LINKED LISTS QUE QUEDAN HAY QUE SUSTITUIRLAS POR VECTORES)
+    Puerta* puerta{};
     if(id == 0)
         puerta = new Puerta{renderer, this, tipo, -window->getEsquinaX() + x, -window->getEsquinaY() + y, arribaNegado, abajoNegado, salidaNegada, window->getRaton()};
     else

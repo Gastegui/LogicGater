@@ -51,7 +51,7 @@ public:
         simulables.clear();
     }
 
-    [[nodiscard]] auto getListaIMG(const ListaIMG::Altura altura) const -> ListaIMG::Lista*
+    [[nodiscard]] auto getListaIMG(const ListaIMG::Altura altura) const -> const std::vector<IMG*>*
     {
         return window->getListaIMG(altura);
     }
@@ -59,7 +59,7 @@ public:
     [[nodiscard]] auto getWindow() const -> Window* { return window; }
 
     [[nodiscard]] auto getSimulables() const -> std::map<unsigned int, Simulable*> { return simulables; }
-    [[nodiscard]] auto getListaLineas() const -> const ListaLineas* { return &listaLineas; }
+    [[nodiscard]] auto getListaLineas() -> ListaLineas* { return &listaLineas; }
 
     //Crea una puerta
     void crear(Puerta::Tipo tipo, int x, int y, bool arribaNegado = false, bool abajoNegado = false, bool salidaNegada = false, unsigned int id = 0);

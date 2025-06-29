@@ -4,6 +4,7 @@
 
 #ifndef LISTALINEAS_H
 #define LISTALINEAS_H
+#include <vector>
 
 
 class IO;
@@ -12,32 +13,21 @@ class Simulable;
 class ListaLineas
 {
 public:
-    struct Lista
+    struct Linea
     {
         Simulable* destino;
         IO* io;
         int conexion;
-        Lista* siguiente;
     };
 
 private:
-    Lista* lista{};
+    std::vector<Linea> lista;
 
 public:
     ListaLineas() = default;
 
-    ~ListaLineas()
-    {
-        const Lista* tmp{lista};
-        while(lista != nullptr)
-        {
-            lista = lista->siguiente;
-            delete tmp;
-            tmp = lista;
-        }
-    }
 
-    [[nodiscard]] auto getLista() const -> Lista* { return lista; }
+    [[nodiscard]] auto getLista() -> std::vector<Linea>* { return &lista; }
 
     void añadir(Simulable* destino, IO* io, int conexion);
 
