@@ -47,5 +47,4 @@ public:
 };
 
 
-
 #endif //LISTALINEAS_H

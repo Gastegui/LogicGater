@@ -11,7 +11,7 @@
 void Salida::cambiar(bool estado)
 {
     img.crearImagen<IMG::Capa>(
-        IMG::Capa{.img= estado ? "./img/salida/encendido.png" : "./img/salida/apagado.png"},
+        IMG::Capa{.img = estado ? "./img/salida/encendido.png" : "./img/salida/apagado.png"},
         IMG::Capa{.img = seleccionado ? "./img/salida/seleccionado.png" : "./img/salida/no_seleccionado.png"}
     );
 }
@@ -26,7 +26,7 @@ void Salida::moverRel(const int x, const int y)
 
 void Salida::simular()
 {
-    if(entrada == nullptr )
+    if(entrada == nullptr)
     {
         if(ultimoEstado)
         {
@@ -46,7 +46,7 @@ void Salida::simular()
 
 void Salida::simularAntiguo()
 {
-    if(entrada == nullptr )
+    if(entrada == nullptr)
     {
         if(ultimoEstado)
         {
@@ -73,7 +73,7 @@ auto Salida::interactuar(const int posX, const int posY, const INTERACCIONES int
 {
     using enum INTERACCIONES;
 
-    switch (interaccion)
+    switch(interaccion)
     {
         case ConexionArriba:
             {

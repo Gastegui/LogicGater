@@ -21,9 +21,9 @@ auto Controles::getNuevaAccion(const SDL_Event* evento) -> ACCION
     std::string str = "..";
     if(evento->type == SDL_KEYDOWN || evento->type == SDL_MOUSEBUTTONDOWN)
         str[0] = 'p';
-    else if (evento->type == SDL_KEYUP || evento->type == SDL_MOUSEBUTTONUP)
+    else if(evento->type == SDL_KEYUP || evento->type == SDL_MOUSEBUTTONUP)
         str[0] = 's';
-    switch (evento->type)
+    switch(evento->type)
     {
         case SDL_MOUSEBUTTONDOWN:
         case SDL_MOUSEBUTTONUP:
@@ -107,9 +107,7 @@ auto Controles::getNuevaAccion(const SDL_Event* evento) -> ACCION
         return accionAnterior;
     }
 
-    if(window != nullptr && window->getRaton()->getBorrando() && accionAnterior != InteractuarArriba && accionAnterior != InteractuarAbajo &&
-                                                                    accionAnterior != ConexionArriba && accionAnterior != ConexionAbajo &&
-                                                                    accionAnterior != MovimientoRaton)
+    if(window != nullptr && window->getRaton()->getBorrando() && accionAnterior != InteractuarArriba && accionAnterior != InteractuarAbajo && accionAnterior != ConexionArriba && accionAnterior != ConexionAbajo && accionAnterior != MovimientoRaton)
         window->getRaton()->setBorrando(false);
     return accionAnterior;
 }

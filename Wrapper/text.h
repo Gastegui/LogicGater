@@ -39,12 +39,22 @@ public:
         return m_font == nullptr;
     }
 
-    friend auto operator<< (TXT& anterior, const char* str) -> TXT&;
+    friend auto operator<<(TXT& anterior, const char* str) -> TXT&;
 
-    friend auto operator<< (TXT& anterior, const std::string* str) -> TXT&;
+    friend auto operator<<(TXT& anterior, const std::string* str) -> TXT&;
 
-    void setPos(const int x, const int y) { m_x = x; m_y = y; }
-    void setPos(const int x, const int y, const int salto) { m_x = x; m_y = y; m_alturaSalto = salto; }
+    void setPos(const int x, const int y)
+    {
+        m_x = x;
+        m_y = y;
+    }
+
+    void setPos(const int x, const int y, const int salto)
+    {
+        m_x = x;
+        m_y = y;
+        m_alturaSalto = salto;
+    }
 
     void write(const char* text);
 

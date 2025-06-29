@@ -12,8 +12,8 @@ class IO;
 class Simulable
 {
     unsigned int id{0};
+
 public:
-    
     explicit Simulable(const unsigned int id) : id(id) {}
 
     virtual ~Simulable() = default;

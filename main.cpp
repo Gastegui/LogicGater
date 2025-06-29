@@ -13,9 +13,7 @@
 
 auto main() -> int
 {
-
-
-    if (SDL_Init(SDL_INIT_VIDEO) != 0)
+    if(SDL_Init(SDL_INIT_VIDEO) != 0)
     {
         std::println(std::cerr, "Error initializing SDL: {}", SDL_GetError());
         return 1;
@@ -23,7 +21,7 @@ auto main() -> int
 
     std::atexit(SDL_Quit);
 
-    if (TTF_Init() != 0)
+    if(TTF_Init() != 0)
     {
         std::println(std::cerr, "Error initializing SDL_ttf: {}", TTF_GetError());
         return 1;
@@ -32,7 +30,7 @@ auto main() -> int
 
     Window window{1920, 1080, "/home/julen/Descargas/windows_xp_bliss-wide.png"};
 
-    TXT txt {"ttf/8bitOperatorPlusSC-Regular.ttf", 20, SDL_Color{255, 255, 255, 255}, window.getRenderer()};
+    TXT txt{"ttf/8bitOperatorPlusSC-Regular.ttf", 20, SDL_Color{255, 255, 255, 255}, window.getRenderer()};
     if(!txt)
     {
         std::println(std::cerr, "Error al inicializar el texto. Error {}", SDL_GetError());
@@ -71,11 +69,11 @@ auto main() -> int
     constexpr int mensajeDuracion = 5000;
     Uint64 mensajeTiempo = -mensajeDuracion;
 
-    while (enMarcha)
+    while(enMarcha)
     {
-        while (SDL_PollEvent(&event) != 0)
+        while(SDL_PollEvent(&event) != 0)
         {
-            switch (Controles::getNuevaAccion(&event))
+            switch(Controles::getNuevaAccion(&event))
             {
                 case ACCION::BorrarSueltos:
                     std::println("Se han borrado {} elementos", controlador.limpiar());
@@ -154,7 +152,7 @@ auto main() -> int
                 case ACCION::TextInput:
                     {
                         const SDL_Event* evento = Controles::getEvent();
-                        switch (evento->type)
+                        switch(evento->type)
                         {
                             case SDL_KEYDOWN:
                                 switch(evento->key.keysym.sym)
@@ -164,7 +162,7 @@ auto main() -> int
                                         escribiendo = false;
                                         break;
                                     case SDLK_BACKSPACE:
-                                        if (!inputStr.empty())
+                                        if(!inputStr.empty())
                                             inputStr.pop_back();
                                         break;
                                     default:
@@ -181,7 +179,7 @@ auto main() -> int
                                 break;
                         }
                     }
-                break;
+                    break;
                 case ACCION::CerrarTextInput:
                     Controles::unsetTextInput();
                     escribiendo = false;

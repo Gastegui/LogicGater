@@ -41,13 +41,13 @@ class Raton
     void interactuar(IMG* actual);
     auto interactuarConexion(IMG* actual) -> bool;
     auto buscarLista(const ListaIMG::Lista* lista, int posX, int posY, bool absoluto = false) const -> IMG*;
+
     [[nodiscard]] static auto interpolacionLinear(const double x, const double a, const double b, const double c, const double d) -> int
     {
         return static_cast<int>(c + (x - a) / (b - a) * (d - c));
     }
 
 public:
-
     void setControlador(Controlador* controlador_);
 
     void setBorrando(bool borrando_);
@@ -57,7 +57,6 @@ public:
     void manejarRaton();
     void setMoviendoImg(IMG* img) { moviendoImg = img; }
 };
-
 
 
 #endif //RATON_H

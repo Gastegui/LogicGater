@@ -54,14 +54,11 @@ class Temporizador final : public Simulable
     auto cambiar() -> bool;
 
 public:
-
     Temporizador(SDL_Renderer* renderer, Controlador* controlador_, Raton* raton_, const int tiempo_, const int x_, const int y_, const bool entradaNegada_, const bool salidaNegada_, TXT* txt_)
-        : Temporizador(renderer, controlador_, raton_, tiempo_, x_, y_, entradaNegada_, salidaNegada_, txt_, idGenerator())
-    {}
+        : Temporizador(renderer, controlador_, raton_, tiempo_, x_, y_, entradaNegada_, salidaNegada_, txt_, idGenerator()) {}
 
     Temporizador(SDL_Renderer* renderer, Controlador* controlador_, Raton* raton_, const int tiempo_, const int x_, const int y_, const bool entradaNegada_, const bool salidaNegada_, TXT* txt_, const unsigned int id_)
-        :Simulable(id_), controlador{controlador_}, raton{raton_}, entradaNegada{entradaNegada_}, salidaNegada{salidaNegada_}, salida{this, x_ + 100, y_ + 25}, x{x_}, y{y_}, ciclosTotales{tiempo_},
-    imagen(renderer, x_, y_, 100, 50)
+        : Simulable(id_), controlador{controlador_}, raton{raton_}, entradaNegada{entradaNegada_}, salidaNegada{salidaNegada_}, salida{this, x_ + 100, y_ + 25}, x{x_}, y{y_}, ciclosTotales{tiempo_}, imagen(renderer, x_, y_, 100, 50)
 
     {
         imagen.setTXT(txt_);
@@ -77,19 +74,23 @@ public:
     void actualizar() override;
     auto interactuar(int posX, int posY, INTERACCIONES interaccion) -> bool override;
     auto getImg() -> IMG* override { return &imagen; }
+
     void setIONull(IO* io) override
     {
         if(entrada != nullptr && entrada == io)
             entrada = nullptr;
     }
+
     [[nodiscard]] auto getIOSalida() -> IO* override { return &salida; }
     [[nodiscard]] auto getDesconectado() const -> bool override { return entrada == nullptr && salida.getConexiones() == 0; }
+
     [[nodiscard]] auto getLinea(const int conexion) -> std::pair<int, int>* override
     {
         if(conexion == 1)
             return &linea;
         return nullptr;
     }
+
     [[nodiscard]] auto getConexion(IO* io) const -> int override
     {
         if(entrada != nullptr && entrada == io)
@@ -107,9 +108,7 @@ public:
         else
             seleccionado = estado;
     }
-
 };
-
 
 
 #endif //TEMPORIZADOR_H

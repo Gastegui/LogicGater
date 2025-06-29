@@ -13,7 +13,6 @@
 
 auto Raton::buscarLista(const ListaIMG::Lista* lista, const int posX, const int posY, const bool absoluto) const -> IMG*
 {
-
     while(lista != nullptr)
     {
         if(lista->img->getClickable())
@@ -88,7 +87,6 @@ auto Raton::interactuarConexion(IMG* actual) -> bool
             borrando = false;
             return true;
         }
-
     }
 
     if(controlador->getConectando())
@@ -139,38 +137,38 @@ auto Raton::manejarRaton() -> void
         switch(Controles::getUltimaAccion())
         {
             case ACCION::MovimientoRaton:
-            {
-                const int posXmapa = -window->getEsquinaX() + posX;
-                const int posYmapa = -window->getEsquinaY() + posY;
+                {
+                    const int posXmapa = -window->getEsquinaX() + posX;
+                    const int posYmapa = -window->getEsquinaY() + posY;
 
-                if(posXmapa > seleccionXOriginal)
-                {
-                    seleccion.x = seleccionXOriginal;
-                    seleccion.w = posXmapa - seleccionXOriginal;
-                }
-                else
-                {
-                    seleccion.x = posXmapa;
-                    seleccion.w = seleccionXOriginal - seleccion.x;
-                }
+                    if(posXmapa > seleccionXOriginal)
+                    {
+                        seleccion.x = seleccionXOriginal;
+                        seleccion.w = posXmapa - seleccionXOriginal;
+                    }
+                    else
+                    {
+                        seleccion.x = posXmapa;
+                        seleccion.w = seleccionXOriginal - seleccion.x;
+                    }
 
-                if(posYmapa > seleccionYOriginal)
-                {
-                    seleccion.y = seleccionYOriginal;
-                    seleccion.h = posYmapa - seleccionYOriginal;
+                    if(posYmapa > seleccionYOriginal)
+                    {
+                        seleccion.y = seleccionYOriginal;
+                        seleccion.h = posYmapa - seleccionYOriginal;
+                    }
+                    else
+                    {
+                        seleccion.y = posYmapa;
+                        seleccion.h = seleccionYOriginal - seleccion.y;
+                    }
+                    window->setSeleccion(seleccion);
+                    controlador->seleccionar(seleccion, &seleccionados);
                 }
-                else
-                {
-                    seleccion.y = posYmapa;
-                    seleccion.h = seleccionYOriginal - seleccion.y;
-                }
-                window->setSeleccion(seleccion);
-                controlador->seleccionar(seleccion, &seleccionados);
-            }
                 break;
             case ACCION::InteractuarArriba:
                 seleccionando = false;
-                seleccion = {.x=0, .y=0, .w=0, .h=0};
+                seleccion = {.x = 0, .y = 0, .w = 0, .h = 0};
                 window->setSeleccion(seleccion);
                 break;
             default:

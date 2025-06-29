@@ -45,19 +45,17 @@ class Entrada final : public Simulable
     void cambiar()
     {
         img.crearImagen<IMG::Capa>(
-            IMG::Capa{.img=salida.get() ? "./img/entrada/encendido.png" : "./img/entrada/apagado.png"},
-            IMG::Capa{.img=seleccionado ? "./img/entrada/seleccionado.png" : "./img/entrada/no_seleccionado.png"}
+            IMG::Capa{.img = salida.get() ? "./img/entrada/encendido.png" : "./img/entrada/apagado.png"},
+            IMG::Capa{.img = seleccionado ? "./img/entrada/seleccionado.png" : "./img/entrada/no_seleccionado.png"}
         );
     }
 
 public:
-
     Entrada(SDL_Renderer* renderer, Controlador* controlador_, const int x, const int y, Raton* raton_, const bool mantener_ = false)
-        :Entrada(renderer, controlador_, x, y, raton_, idGenerator(), mantener_)
-    {}
+        : Entrada(renderer, controlador_, x, y, raton_, idGenerator(), mantener_) {}
 
     Entrada(SDL_Renderer* renderer, Controlador* controlador_, const int x, const int y, Raton* raton_, const unsigned int id_, const bool mantener_ = false)
-        :Simulable{id_}, controlador{controlador_}, salida{this, x + 25, y + 25}, mantener{mantener_}, img{"./img/entrada/apagado.png", renderer, x, y}, raton{raton_}
+        : Simulable{id_}, controlador{controlador_}, salida{this, x + 25, y + 25}, mantener{mantener_}, img{"./img/entrada/apagado.png", renderer, x, y}, raton{raton_}
     {
         img.setClickable(this);
     }
@@ -71,6 +69,7 @@ public:
     void setMantener(const bool mantener_) { mantener = mantener_; }
 
     [[nodiscard]] auto get() const -> bool { return salida.get(); }
+
     void set(const bool valor)
     {
         if(salida.get() != valor)
@@ -87,8 +86,9 @@ public:
     auto interactuar(int posX, int posY, INTERACCIONES interaccion) -> bool override;
     void setIONull(IO* io) override {}
     [[nodiscard]] auto getIOSalida() -> IO* override { return &salida; }
-    [[nodiscard]] auto getLinea( [[maybe_unused]] int conexion) -> std::pair<int, int>* override { return nullptr; }
-    [[nodiscard]] auto getConexion( [[maybe_unused]] IO* io) const -> int override { return 0; }
+    [[nodiscard]] auto getLinea([[maybe_unused]] int conexion) -> std::pair<int, int>* override { return nullptr; }
+    [[nodiscard]] auto getConexion([[maybe_unused]] IO* io) const -> int override { return 0; }
+
     void seleccionar(bool estado) override
     {
         if(estado != seleccionado)
@@ -100,7 +100,6 @@ public:
             seleccionado = estado;
     }
 };
-
 
 
 #endif //BOTON_H

@@ -41,12 +41,11 @@ class Controlador
 
 public:
     explicit Controlador(Window* window_, TXT* txt_)
-        :window{window_}, renderer{window_->getRenderer()}, txt{txt_}
-    {}
+        : window{window_}, renderer{window_->getRenderer()}, txt{txt_} {}
 
     ~Controlador()
     {
-        for (const auto& value : simulables | std::views::values)
+        for(const auto& value : simulables | std::views::values)
             // ReSharper disable once CppDFADeletedPointer
             delete value;
         simulables.clear();
@@ -56,6 +55,7 @@ public:
     {
         return window->getListaIMG(altura);
     }
+
     [[nodiscard]] auto getWindow() const -> Window* { return window; }
 
     [[nodiscard]] auto getSimulables() const -> std::map<unsigned int, Simulable*> { return simulables; }
@@ -76,7 +76,7 @@ public:
 
     void borrar(Simulable* simulable)
     {
-        if (!simulables.contains(simulable->getId()))
+        if(!simulables.contains(simulable->getId()))
             return;
         borrarConexiones(simulable);
 
@@ -106,10 +106,17 @@ public:
     [[nodiscard]] auto getSimulable(unsigned int id) const -> Simulable*;
 
     void alternarCuadricula() { cuadricula = !cuadricula; }
-    auto cambiarCuadriculaRel(const int cambio) -> int { if(cuadriculaTamaño + cambio > 0) cuadriculaTamaño += cambio; return cuadriculaTamaño; }
+
+    auto cambiarCuadriculaRel(const int cambio) -> int
+    {
+        if(cuadriculaTamaño + cambio > 0)
+            cuadriculaTamaño += cambio;
+        return cuadriculaTamaño;
+    }
+
     [[nodiscard]] auto getCuadriculaActiva() const -> bool { return cuadricula; }
     [[nodiscard]] auto getCuadriculaTamaño() const -> int { return cuadriculaTamaño; }
-    [[nodiscard]] auto getSimulablesLenght() const -> unsigned long {return simulables.size(); }
+    [[nodiscard]] auto getSimulablesLenght() const -> unsigned long { return simulables.size(); }
 
     void setSeleccionados(std::vector<Simulable*>* seleccionados_) { seleccionados = seleccionados_; }
     void seleccionar(SDL_Rect region, std::vector<Simulable*>* vector) const;

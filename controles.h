@@ -20,6 +20,7 @@ class Controles
     static std::map<std::string, ACCION> acciones;
     static Window* window;
     static bool escribiendo;
+
 public:
     static void init(SDL_Event* evento_, Window* window_)
     {
@@ -62,13 +63,23 @@ public:
         acciones.insert(std::make_pair(".J", ACCION::TemporizadorBajar));
         acciones.insert(std::make_pair("sh", ACCION::CamaraCentrar));
     }
+
     static auto getNuevaAccion(const SDL_Event* evento) -> ACCION;
     [[nodiscard]] static auto getUltimaAccion() -> ACCION { return accionAnterior; }
     [[nodiscard]] static auto getEvent() -> SDL_Event* { return evento; }
-    static void setTextInput() { escribiendo = true; SDL_StartTextInput(); }
-    static void unsetTextInput() { escribiendo = false; SDL_StopTextInput(); }
-};
 
+    static void setTextInput()
+    {
+        escribiendo = true;
+        SDL_StartTextInput();
+    }
+
+    static void unsetTextInput()
+    {
+        escribiendo = false;
+        SDL_StopTextInput();
+    }
+};
 
 
 #endif //CONTROLES_H

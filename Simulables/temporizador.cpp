@@ -18,7 +18,6 @@ auto Temporizador::cambiar() -> bool
         IMG::Capa{.texto = std::to_string(ciclosActuales), .textoX = 40, .textoY = 27},
         IMG::Capa{.texto = std::to_string(ciclosTotales), .textoX = 40, .textoY = -8}
     );
-
 }
 
 
@@ -63,7 +62,7 @@ void Temporizador::actualizar()
 auto Temporizador::interactuar(const int posX, const int posY, const INTERACCIONES interaccion) -> bool
 {
     using enum INTERACCIONES;
-    switch (interaccion)
+    switch(interaccion)
     {
         case ConexionAbajo:
             controlador->marcarOrigen(&salida);
@@ -141,6 +140,5 @@ auto Temporizador::interactuar(const int posX, const int posY, const INTERACCION
         default:
             return false;
     }
-
 }
 

@@ -16,6 +16,7 @@ public:
         IMG* img;
         Lista* siguiente;
     };
+
 private:
     Lista* frente{nullptr};
     Lista* medio{nullptr};
@@ -32,21 +33,21 @@ public:
 
     ~ListaIMG()
     {
-        while (frente != nullptr)
+        while(frente != nullptr)
         {
             const Lista* aux = frente;
             frente = frente->siguiente;
             delete aux;
         }
 
-        while (medio != nullptr)
+        while(medio != nullptr)
         {
             const Lista* aux = medio;
             medio = medio->siguiente;
             delete aux;
         }
 
-        while (fondo != nullptr)
+        while(fondo != nullptr)
         {
             const Lista* aux = fondo;
             fondo = fondo->siguiente;
@@ -60,7 +61,6 @@ public:
     auto quitar(const IMG* img, Altura altura) -> bool;
     auto quitar(unsigned int id, Altura altura) -> bool;
 };
-
 
 
 #endif //LISTAIMG_H

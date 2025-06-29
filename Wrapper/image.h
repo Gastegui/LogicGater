@@ -46,11 +46,10 @@ public:
     };
 
     IMG(const char* path, SDL_Renderer* renderer)
-        :IMG{path, renderer, 0, 0}
-    {}
+        : IMG{path, renderer, 0, 0} {}
 
     IMG(const char* path, SDL_Renderer* renderer, const int x, const int y)
-        :m_renderer{renderer}, m_texture{IMG_LoadTexture(m_renderer, path)}, id{idGenerator()}
+        : m_renderer{renderer}, m_texture{IMG_LoadTexture(m_renderer, path)}, id{idGenerator()}
     {
         // ReSharper disable once CppDFAConstantConditions
         if(m_texture == nullptr)
@@ -65,7 +64,7 @@ public:
     }
 
     IMG(SDL_Renderer* renderer, const int x, const int y, const int w, const int h)
-        :m_renderer{renderer}, id{idGenerator()}
+        : m_renderer{renderer}, id{idGenerator()}
     {
         m_rect.x = x;
         m_rect.y = y;
@@ -135,7 +134,7 @@ public:
         return true;
     }
 
-    void setTXT(TXT* txt_) {txt = txt_;}
+    void setTXT(TXT* txt_) { txt = txt_; }
 
 private:
     void procesarCapa(const Capa& capa)
@@ -156,7 +155,6 @@ private:
             txt->write(capa.textoX, capa.textoY, capa.texto.c_str());
         }
     }
-
 };
 
 #endif //IMAGE_H

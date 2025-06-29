@@ -52,6 +52,7 @@ class Puerta final : public Simulable
     bool mover{false};
 
     Raton* raton;
+
 public:
     enum Tipo : uint8_t
     {
@@ -59,19 +60,17 @@ public:
         OR,
         XOR
     };
+
 private:
     Tipo tipo{};
     IMG imagen;
 
 public:
-
     Puerta(SDL_Renderer* renderer, Controlador* controlador_, const Tipo tipo_, const int x_, const int y_, const bool arribaNegado_, const bool abajoNegado_, const bool salidaNegada_, Raton* raton_)
-        :Puerta(renderer, controlador_, tipo_, x_, y_, arribaNegado_, abajoNegado_, salidaNegada_, raton_, idGenerator())
-    {}
+        : Puerta(renderer, controlador_, tipo_, x_, y_, arribaNegado_, abajoNegado_, salidaNegada_, raton_, idGenerator()) {}
 
     Puerta(SDL_Renderer* renderer, Controlador* controlador_, const Tipo tipo_, const int x_, const int y_, const bool arribaNegado_, const bool abajoNegado_, const bool salidaNegada_, Raton* raton_, const unsigned int id_)
-        : Simulable(id_), controlador(controlador_), arribaNegado{arribaNegado_}, abajoNegado{abajoNegado_}, salidaNegada{salidaNegada_}, salida(this, 100+x_, 25+y_), x{x_}, y{y_}, raton{raton_}, tipo{tipo_},
-          imagen{renderer, x_, y_, 100, 50}
+        : Simulable(id_), controlador(controlador_), arribaNegado{arribaNegado_}, abajoNegado{abajoNegado_}, salidaNegada{salidaNegada_}, salida(this, 100 + x_, 25 + y_), x{x_}, y{y_}, raton{raton_}, tipo{tipo_}, imagen{renderer, x_, y_, 100, 50}
     {
         imagen.crearImagen<IMG::Capa>(
             IMG::Capa{.img = arribaNegado_ ? "./img/puertas/entrada_arriba_negada.png" : "./img/puertas/entrada_arriba_normal.png"},
@@ -97,7 +96,7 @@ public:
     {
         return imagen.crearImagen<IMG::Capa>(
             IMG::Capa{.img = arribaNegado ? "./img/puertas/entrada_arriba_negada.png" : "./img/puertas/entrada_arriba_normal.png"},
-            IMG::Capa{ .img = abajoNegado ? "./img/puertas/entrada_abajo_negada.png" : "./img/puertas/entrada_abajo_normal.png"},
+            IMG::Capa{.img = abajoNegado ? "./img/puertas/entrada_abajo_negada.png" : "./img/puertas/entrada_abajo_normal.png"},
             IMG::Capa{.img = tipo == AND ? "./img/puertas/and.png" : tipo == OR ? "./img/puertas/or.png" : "./img/puertas/xor.png"},
             IMG::Capa{.img = salidaNegada ? "./img/puertas/salida_negada.png" : "./img/puertas/salida_normal.png"},
             IMG::Capa{.img = seleccionado ? "./img/puertas/seleccionado.png" : "./img/puertas/no_seleccionado.png"}
@@ -113,6 +112,7 @@ public:
     auto interactuar(int posX, int posY, INTERACCIONES interaccion) -> bool override;
     void setIONull(IO* io) override;
     [[nodiscard]] auto getIOSalida() -> IO* override { return &salida; }
+
     [[nodiscard]] auto getLinea(const int conexion) -> std::pair<int, int>* override
     {
         if(conexion == 1)

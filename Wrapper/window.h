@@ -21,14 +21,13 @@ class Temporizador;
 
 class Window
 {
-
     int esquinaX = 0;
     int esquinaY = 0;
     const int width; // NOLINT(*-avoid-const-or-ref-data-members)
     const int height; // NOLINT(*-avoid-const-or-ref-data-members)
 
-    SDL_Window* window {nullptr};
-    SDL_Renderer* renderer {nullptr};
+    SDL_Window* window{nullptr};
+    SDL_Renderer* renderer{nullptr};
     Raton raton{};
     SDL_Surface* windowIcon{nullptr};
     Controlador* controlador{nullptr};
@@ -37,7 +36,7 @@ class Window
     int minimapaTamañoObjetivoX;
     int minimapaTamañoObjetivoY;
     IMG minimapaFondo;
-    mutable int mapaMinX{0};//Mutable es para que rendererDraw siga siendo const y que se puedan cambiar sus valores
+    mutable int mapaMinX{0}; //Mutable es para que rendererDraw siga siendo const y que se puedan cambiar sus valores
     mutable int mapaMaxX{0};
     mutable int mapaMinY{0};
     mutable int mapaMaxY{0};
@@ -49,10 +48,10 @@ class Window
     void rendererPresent() const;
 
     static void renderLine(SDL_Renderer* renderer, int x1, int y1, int x2, int y2, const ListaLineas::Lista* linea);
-public:
 
+public:
     explicit Window(const int witdh_, const int height_, const char* img)
-        :width{witdh_}, height{height_}, window{SDL_CreateWindow("LogicGater", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, SDL_WINDOW_FULLSCREEN)}, renderer{SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC)}, minimapaTamañoObjetivoX{static_cast<int>(width*0.2)}, minimapaTamañoObjetivoY{static_cast<int>(height*0.2)}, minimapaFondo{"./img/minimapa.png", renderer, width-minimapaTamañoObjetivoX, height-minimapaTamañoObjetivoY}
+        : width{witdh_}, height{height_}, window{SDL_CreateWindow("LogicGater", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, SDL_WINDOW_FULLSCREEN)}, renderer{SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC)}, minimapaTamañoObjetivoX{static_cast<int>(width * 0.2)}, minimapaTamañoObjetivoY{static_cast<int>(height * 0.2)}, minimapaFondo{"./img/minimapa.png", renderer, width - minimapaTamañoObjetivoX, height - minimapaTamañoObjetivoY}
     {
         // ReSharper disable once CppDFAConstantConditions
         if(window != nullptr)
@@ -78,7 +77,8 @@ public:
 
     [[nodiscard]] auto getRenderer() const -> SDL_Renderer* { return renderer; }
     [[nodiscard]] auto getWindow() const -> SDL_Window* { return window; }
-    [[nodiscard]] auto getRaton() -> Raton* {return &raton; }
+    [[nodiscard]] auto getRaton() -> Raton* { return &raton; }
+
     void setControlador(Controlador* controlador_)
     {
         controlador = controlador_;
@@ -103,6 +103,7 @@ public:
     {
         return listaIMG.añadir(img, altura);
     }
+
     //No borra las imagenes. Eso es trabajo de la clase IMG
     auto borrar(const IMG* img, const ListaIMG::Altura altura) -> bool
     {

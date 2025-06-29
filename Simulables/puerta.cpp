@@ -60,7 +60,6 @@ auto Puerta::simularAntiguo() -> bool
 
     if(abajo != nullptr)
     {
-
         if(abajo->getTipoSimulable() == TIPOS_SIMULABLES::Entrada)
             b = dynamic_cast<Entrada*>(abajo->getSimulable())->get();
         else if(abajo->getTipoSimulable() == TIPOS_SIMULABLES::Puerta)
@@ -117,7 +116,7 @@ void Puerta::moverRel(const int x_, const int y_)
 auto Puerta::interactuar(const int posX, const int posY, const INTERACCIONES interaccion) -> bool
 {
     using enum INTERACCIONES;
-    switch (interaccion)
+    switch(interaccion)
     {
         case ConexionAbajo:
             controlador->marcarOrigen(getSalida());

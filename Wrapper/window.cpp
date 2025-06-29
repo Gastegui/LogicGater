@@ -200,8 +200,8 @@ void Window::centrar()
     int x = (maxX + minX) / 2;
     int y = (maxY + minY) / 2;
 
-    x -= width/2;
-    y -= height/2;
+    x -= width / 2;
+    y -= height / 2;
 
     mover(-x, -y);
 }

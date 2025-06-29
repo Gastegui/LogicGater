@@ -35,10 +35,10 @@ auto SistemaGuardado::guardar(const Controlador* controlador, const Window* wind
     const Salida* salida{};
     const Entrada* entrada{};
     const Temporizador* temp{};
-    for (const auto& value : controlador->simulables | std::views::values)
+    for(const auto& value : controlador->simulables | std::views::values)
     {
         if((puerta = dynamic_cast<Puerta*>(value)) != nullptr) // NOLINT(*-assignment-in-if-condition)
-            outf << "Puerta: id: " <<puerta->getId() << " tipo: " <<puerta->tipo << " arribaNegado: " <<puerta->arribaNegado << " abajoNegado: " <<puerta->abajoNegado << " salidaNegada: " <<puerta->salidaNegada << " x: " <<puerta->x << " y: " <<puerta->y << "\n";
+            outf << "Puerta: id: " << puerta->getId() << " tipo: " << puerta->tipo << " arribaNegado: " << puerta->arribaNegado << " abajoNegado: " << puerta->abajoNegado << " salidaNegada: " << puerta->salidaNegada << " x: " << puerta->x << " y: " << puerta->y << "\n";
         else if((salida = dynamic_cast<Salida*>(value)) != nullptr) // NOLINT(*-assignment-in-if-condition)
             outf << "Salida: id: " << salida->getId() << " x: " << salida->img.m_rect.x << " y: " << salida->img.m_rect.y << "\n";
         else if((entrada = dynamic_cast<Entrada*>(value)) != nullptr) // NOLINT(*-assignment-in-if-condition)
@@ -66,7 +66,7 @@ auto SistemaGuardado::guardar(const Controlador* controlador, const Window* wind
 
 auto SistemaGuardado::cargar(Controlador* controlador, Window* window, Valores* valores, const std::string& archivo) -> int
 {
-    std::ifstream inf{ archivo.c_str() };
+    std::ifstream inf{archivo.c_str()};
 
     if(!inf)
     {
@@ -194,7 +194,7 @@ auto SistemaGuardado::cargar(Controlador* controlador, Window* window, Valores* 
 
             Simulable* destino = controlador->getSimulable(simulable_destino);
             controlador->marcarOrigen(controlador->getSimulable(simulable_origen)->getIOSalida());
-            destino->interactuar(destino->getLinea(simulable_conexion)->first - destino->getImg()->getRect()->x,destino->getLinea(simulable_conexion)->second - destino->getImg()->getRect()->y, INTERACCIONES::ConexionArriba);
+            destino->interactuar(destino->getLinea(simulable_conexion)->first - destino->getImg()->getRect()->x, destino->getLinea(simulable_conexion)->second - destino->getImg()->getRect()->y, INTERACCIONES::ConexionArriba);
         }
         else if(tmp == "Coordenadas:"s)
         {
@@ -208,7 +208,6 @@ auto SistemaGuardado::cargar(Controlador* controlador, Window* window, Valores* 
             iss >> valores->velocidadSimulacion;
         else if(tmp == "CuadriculaTamaño:"s)
             iss >> valores->cuadriculaTamaño;
-
     }
     Puerta::gastarIds(puertaId ^ get_offset(ID_TIPOS::Puerta)); //Esto sirve para desactivar el bit identificador
     Entrada::gastarIds(entradaId ^ get_offset(ID_TIPOS::Entrada));

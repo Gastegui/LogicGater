@@ -31,7 +31,7 @@ void ListaLineas::añadir(Simulable* destino, IO* io, const int conexion)
     tmp->siguiente = nullptr;
 }
 
-void ListaLineas::borrar(const Simulable* destino , const IO* io, const int conexion)
+void ListaLineas::borrar(const Simulable* destino, const IO* io, const int conexion)
 {
     if(lista == nullptr || destino == nullptr || io == nullptr)
         return;

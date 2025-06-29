@@ -5,13 +5,13 @@
 #include "text.h"
 
 
-auto operator<< (TXT& anterior, const char* str) -> TXT&
+auto operator<<(TXT& anterior, const char* str) -> TXT&
 {
     anterior.write(str);
     return anterior;
 }
 
-auto operator<< (TXT& anterior, const std::string* str) -> TXT&
+auto operator<<(TXT& anterior, const std::string* str) -> TXT&
 {
     anterior.write(str->c_str());
     return anterior;

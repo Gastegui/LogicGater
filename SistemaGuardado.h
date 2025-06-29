@@ -12,7 +12,6 @@ class Window;
 class SistemaGuardado
 {
 public:
-
     struct Valores
     {
         int velocidadSimulacion = 50;
@@ -23,7 +22,6 @@ public:
 
     static auto cargar(Controlador* controlador, Window* window, Valores* valores, const std::string& archivo) -> int;
 };
-
 
 
 #endif //SISTEMAGUARDADO_H

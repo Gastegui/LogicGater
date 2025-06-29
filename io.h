@@ -31,12 +31,9 @@ class IO
     TIPOS_SIMULABLES tipoSimulable;
     unsigned int idSimulable;
 
-
 public:
-
     explicit IO(Simulable* simulable_, const int posX, const int posY)
-        :id{idGenerator()}, origen{posX, posY}, simulable(simulable_), tipoSimulable(simulable_->getTipo()), idSimulable(simulable_->getId())
-    {}
+        : id{idGenerator()}, origen{posX, posY}, simulable(simulable_), tipoSimulable(simulable_->getTipo()), idSimulable(simulable_->getId()) {}
 
     void set(const bool b) { valor = b; }
     [[nodiscard]] auto get() const -> bool { return valor; }
@@ -47,7 +44,12 @@ public:
     [[nodiscard]] auto getIdSimulable() const -> unsigned int { return idSimulable; }
 
     [[nodiscard]] auto getLineaOrigen() -> std::pair<int, int>* { return &origen; }
-    void moverLineaOrigenRel(const int x, const int y) { origen.first += x; origen.second += y; }
+
+    void moverLineaOrigenRel(const int x, const int y)
+    {
+        origen.first += x;
+        origen.second += y;
+    }
 
     void conectado() { conexiones++; }
     void desconectado() { conexiones--; }

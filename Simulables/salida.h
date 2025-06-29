@@ -45,14 +45,13 @@ class Salida final : public Simulable
     }
 
     void cambiar(bool estado);
-public:
 
+public:
     Salida(SDL_Renderer* renderer, Controlador* controlador_, const int x, const int y, Raton* raton_)
-        :Salida(renderer, controlador_, x, y, raton_, idGenerator())
-    {}
+        : Salida(renderer, controlador_, x, y, raton_, idGenerator()) {}
 
     Salida(SDL_Renderer* renderer, Controlador* controlador_, const int x, const int y, Raton* raton_, const unsigned int id_)
-        :Simulable{id_}, controlador{controlador_}, img{"./img/salida/apagado.png", renderer, x, y}, raton{raton_}
+        : Simulable{id_}, controlador{controlador_}, img{"./img/salida/apagado.png", renderer, x, y}, raton{raton_}
     {
         img.setClickable(this);
         entradaPos.first += x;
@@ -75,6 +74,7 @@ public:
     auto interactuar(int posX, int posY, INTERACCIONES interaccion) -> bool override;
     void setIONull(IO* io) override;
     [[nodiscard]] auto getIOSalida() -> IO* override { return nullptr; }
+
     [[nodiscard]] auto getLinea(const int conexion) -> std::pair<int, int>* override
     {
         if(conexion == 1)

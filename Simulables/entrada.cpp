@@ -16,7 +16,7 @@ void Entrada::moverRel(const int x, const int y)
 auto Entrada::interactuar(const int posX, const int posY, const INTERACCIONES interaccion) -> bool
 {
     using enum INTERACCIONES;
-    switch (interaccion)
+    switch(interaccion)
     {
         case ConexionAbajo:
             controlador->marcarOrigen(getSalida());
@@ -36,7 +36,7 @@ auto Entrada::interactuar(const int posX, const int posY, const INTERACCIONES in
         case MovimientoRaton:
             if(mover)
                 moverRel(posX, posY);
-        return true;
+            return true;
 
         case InteractuarAbajo:
             if(mantener)

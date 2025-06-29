@@ -69,7 +69,7 @@ enum class TIPOS : uint8_t
 
 constexpr static auto toString(const TIPOS tipo) -> std::string
 {
-    switch (tipo)
+    switch(tipo)
     {
         case TIPOS::Nada:
             return "NADA";
@@ -103,7 +103,7 @@ enum class ID_TIPOS : unsigned int
 
 constexpr static auto get_offset(const ID_TIPOS tipo) -> unsigned int
 {
-    switch (tipo)
+    switch(tipo)
     {
         case ID_TIPOS::Nada:
             return 0;
@@ -136,7 +136,8 @@ enum class TIPOS_SIMULABLES : uint8_t
 
 constexpr static auto toString(const TIPOS_SIMULABLES tipo) -> std::string
 {
-    switch (tipo) {
+    switch(tipo)
+    {
         case TIPOS_SIMULABLES::Nada:
             return "NADA";
         case TIPOS_SIMULABLES::Puerta:

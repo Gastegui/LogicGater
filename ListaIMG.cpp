@@ -7,7 +7,7 @@
 
 auto ListaIMG::getLista(const Altura altura) const -> Lista*
 {
-    switch (altura)
+    switch(altura)
     {
         case FRENTE:
             return frente;
@@ -28,7 +28,7 @@ auto ListaIMG::añadir(IMG* img, const Altura altura) -> bool
 
     Lista** lista = nullptr;
 
-    switch (altura)
+    switch(altura)
     {
         case FRENTE:
             lista = &frente;
@@ -67,20 +67,20 @@ auto ListaIMG::quitar(const unsigned int id, const Altura altura) -> bool
 {
     Lista** lista{};
 
-    switch (altura)
+    switch(altura)
     {
-    case FRENTE:
-        lista = &frente;
-        break;
-    case MEDIO:
-        lista = &medio;
-        break;
-    case FONDO:
-        lista = &fondo;
-        break;
-    case INVALIDO:
-    default:
-        return false;
+        case FRENTE:
+            lista = &frente;
+            break;
+        case MEDIO:
+            lista = &medio;
+            break;
+        case FONDO:
+            lista = &fondo;
+            break;
+        case INVALIDO:
+        default:
+            return false;
     }
 
     if(!*lista)
