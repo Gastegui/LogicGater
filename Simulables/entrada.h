@@ -74,8 +74,8 @@ public:
     {
         if(salida.get() != valor)
         {
-            cambiar();
             salida.set(valor);
+            cambiar();
         }
     }
 
