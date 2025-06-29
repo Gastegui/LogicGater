@@ -107,6 +107,16 @@ void Window::rendererDraw() const
         imagenes = imagenes->siguiente;
     }
 
+    if(seleccion.h != 0 && seleccion.w != 0)
+    {
+        SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+        SDL_Rect tmp = seleccion;
+        tmp.x += esquinaX;
+        tmp.y += esquinaY;
+        SDL_RenderDrawRect(renderer, &tmp);
+        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+    }
+
     //Minimapa
     const double factorX = static_cast<double>(minimapaTamañoObjetivoX) / (mapaMaxX - mapaMinX);
     const double factorY = static_cast<double>(minimapaTamañoObjetivoY) / (mapaMaxY - mapaMinY);

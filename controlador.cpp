@@ -35,7 +35,6 @@ void Controlador::crear(const bool mantener, int x, int y, const unsigned int id
     window->añadir(entrada->getImg(), ListaIMG::MEDIO);
 
     simulables.insert(std::make_pair(entrada->getId(), entrada));
-
 }
 
 void Controlador::crear(int x, int y, const unsigned int id)
@@ -51,7 +50,6 @@ void Controlador::crear(int x, int y, const unsigned int id)
     window->añadir(salida->getImg(), ListaIMG::MEDIO);
 
     simulables.insert(std::make_pair(salida->getId(), salida));
-
 }
 
 void Controlador::crear(int x, int y, const int tiempo, const bool entradaNegada, const bool salidaNegada, const unsigned int id)
@@ -72,27 +70,26 @@ void Controlador::crear(int x, int y, const int tiempo, const bool entradaNegada
 
 void Controlador::simular() const
 {
-    for (const auto& value : std::views::values(simulables))
+    for(const auto& value : std::views::values(simulables))
         if(value->getTipo() == TIPOS_SIMULABLES::Puerta || value->getTipo() == TIPOS_SIMULABLES::Temporizador)
             value->simular();
 
-    for (const auto& value : simulables | std::views::values)
+    for(const auto& value : simulables | std::views::values)
         if(value->getTipo() == TIPOS_SIMULABLES::Puerta || value->getTipo() == TIPOS_SIMULABLES::Temporizador)
             value->actualizar();
 
-    for (const auto& value : simulables | std::views::values)
+    for(const auto& value : simulables | std::views::values)
         if(value->getTipo() == TIPOS_SIMULABLES::Salida)
             value->simular();
-
 }
 
 void Controlador::simularInstantaneo() const
 {
-    for (const auto& value : simulables | std::views::values)
+    for(const auto& value : simulables | std::views::values)
         if(value->getTipo() == TIPOS_SIMULABLES::Salida)
             dynamic_cast<Salida*>(value)->simularAntiguo();
 
-    for (const auto& value : simulables | std::views::values)
+    for(const auto& value : simulables | std::views::values)
         if(value->getTipo() == TIPOS_SIMULABLES::Puerta)
             dynamic_cast<Puerta*>(value)->simulacionAntiguaTermindada();
 }
@@ -102,10 +99,12 @@ auto Controlador::limpiar() -> int
 {
     int limpiados = 0;
     Simulable* simulable{nullptr};
-    for (const auto& value : simulables | std::views::values)
+    for(const auto& value : simulables | std::views::values)
     {
         if(simulable != nullptr)
         {
+            if(auto it = std::ranges::find(*seleccionados, simulable); it != seleccionados->end())
+                seleccionados->erase(it);
             borrar(simulable);
             simulable = nullptr;
             limpiados++;
@@ -117,6 +116,8 @@ auto Controlador::limpiar() -> int
 
     if(simulable != nullptr)
     {
+        if(auto it = std::ranges::find(*seleccionados, simulable); it != seleccionados->end())
+            seleccionados->erase(it);
         borrar(simulable);
         limpiados++;
     }
@@ -129,4 +130,28 @@ auto Controlador::getSimulable(const unsigned int id) const -> Simulable*
 {
     const auto it = simulables.find(id);
     return it != simulables.end() ? it->second : nullptr;
+}
+
+void Controlador::seleccionar(SDL_Rect region, std::vector<Simulable*>* vector) const
+{
+    vector->clear();
+    for(const auto& value : simulables | std::views::values)
+    {
+        if(SDL_HasIntersection(&region, value->getImg()->getRect()))
+        {
+            vector->push_back(value);
+            value->seleccionar(true);
+        }
+        else
+            value->seleccionar(false);
+    }
+}
+
+void Controlador::desseleccionar(std::vector<Simulable*>* vector) const // NOLINT(*-convert-member-functions-to-static)
+{
+    for(Simulable* simulable : *vector)
+    {
+        simulable->seleccionar(false);
+    }
+    vector->clear();
 }

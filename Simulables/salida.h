@@ -29,6 +29,9 @@ class Salida final : public Simulable
     bool mover{false};
     Raton* raton;
 
+    bool ultimoEstado{false};
+    bool seleccionado{false};
+
     static auto idGenerator() -> unsigned int
     {
         static unsigned int id = 1 + get_offset(ID_TIPOS::Salida);
@@ -41,6 +44,7 @@ class Salida final : public Simulable
             idGenerator();
     }
 
+    void cambiar(bool estado);
 public:
 
     Salida(SDL_Renderer* renderer, Controlador* controlador_, const int x, const int y, Raton* raton_)
@@ -84,6 +88,17 @@ public:
         if(entrada != nullptr && entrada == io)
             return 1;
         return 0;
+    }
+
+    void seleccionar(bool estado) override
+    {
+        if(estado != seleccionado)
+        {
+            seleccionado = estado;
+            cambiar(entrada != nullptr ? entrada->get() : false);
+        }
+        else
+            seleccionado = estado;
     }
 };
 

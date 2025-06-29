@@ -4,9 +4,13 @@
 
 #ifndef RATON_H
 #define RATON_H
+#include <SDL_rect.h>
+#include <vector>
+
 #include "ListaIMG.h"
 
 
+class Simulable;
 class IMG;
 class Controlador;
 class Window;
@@ -26,6 +30,13 @@ class Raton
 
     int cuadriculaX{0};
     int cuadriculaY{0};
+
+    bool seleccionando{false};
+    SDL_Rect seleccion{};
+    int seleccionXOriginal{};
+    int seleccionYOriginal{};
+    std::vector<Simulable*> seleccionados;
+    bool moviendoSeleccion{false};
 
     void interactuar(IMG* actual);
     auto interactuarConexion(IMG* actual) -> bool;

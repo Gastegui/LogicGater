@@ -9,11 +9,16 @@ auto Temporizador::cambiar() -> bool
 {
     std::string relleno = "./img/temporizador/" + std::to_string(ciclosActuales == 0 ? 0 : static_cast<int>(static_cast<float>(ciclosActuales) / ciclosTotales * 10)); // NOLINT(*-narrowing-conversions)
     relleno.append(".png");
-    return imagen.cambiarTemporizador(
-    entradaNegada ? "./img/temporizador/entrada_negada.png" : "./img/temporizador/entrada_normal.png",
-    "./img/temporizador/cuerpo.png",
-    salidaNegada ? "./img/temporizador/salida_negada.png" : "./img/temporizador/salida_normal.png",
-    relleno.c_str(), ciclosActuales, ciclosTotales);
+    return imagen.crearImagen<IMG::Capa>(
+        IMG::Capa{.img = entradaNegada ? "./img/temporizador/entrada_negada.png" : "./img/temporizador/entrada_normal.png"},
+        IMG::Capa{.img = "./img/temporizador/cuerpo.png"},
+        IMG::Capa{.img = salidaNegada ? "./img/temporizador/salida_negada.png" : "./img/temporizador/salida_normal.png"},
+        IMG::Capa{.img = relleno},
+        IMG::Capa{.img = seleccionado ? "./img/temporizador/seleccionado.png" : "./img/temporizador/no_seleccionado.png"},
+        IMG::Capa{.texto = std::to_string(ciclosActuales), .textoX = 40, .textoY = 27},
+        IMG::Capa{.texto = std::to_string(ciclosTotales), .textoX = 40, .textoY = -8}
+    );
+
 }
 
 

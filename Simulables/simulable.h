@@ -22,6 +22,7 @@ public:
     virtual auto interactuar(int posX, int posY, INTERACCIONES accion) -> bool = 0;
     virtual auto getImg() -> IMG* = 0;
     virtual void setIONull(IO* io) = 0;
+    virtual void seleccionar(bool estado) = 0;
     [[nodiscard]] virtual auto getIOSalida() -> IO* = 0;
     [[nodiscard]] virtual auto getLinea(int conexion) -> std::pair<int, int>* = 0;
     [[nodiscard]] virtual auto getDesconectado() const -> bool = 0;

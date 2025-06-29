@@ -10,8 +10,8 @@
 #include "SDL_image.h"
 #include "../enums.h"
 #include "../Simulables/simulable.h"
+#include "text.h"
 
-class TXT;
 class Puerta;
 class Entrada;
 class Salida;
@@ -23,7 +23,7 @@ class IMG
 
     SDL_Renderer* m_renderer{nullptr};
     SDL_Texture* m_texture{nullptr};
-    SDL_Rect     m_rect{};
+    SDL_Rect m_rect{};
     unsigned int id;
     bool esClickable{false};
     Simulable* simulable{nullptr};
@@ -36,9 +36,15 @@ class IMG
         return id++;
     }
 
-    auto crearPuerta(const char* entradaArriba, const char* entradaAbajo, const char* cuerpo, const char* salida) -> bool;
-    auto crearTemporizador(const char* entrada, const char* cuerpo, const char* salida, const char* relleno, int ciclosActuales, int ciclosTotales) -> bool;
 public:
+    struct Capa
+    {
+        std::string img;
+        std::string texto;
+        int textoX;
+        int textoY;
+    };
+
     IMG(const char* path, SDL_Renderer* renderer)
         :IMG{path, renderer, 0, 0}
     {}
@@ -58,38 +64,13 @@ public:
         }
     }
 
-    //Crea la imagen de una puerta
-    IMG(SDL_Renderer* renderer, const int x, const int y, const char* entradaArriba, const char* entradaAbajo, const char* cuerpo, const char* salida)
+    IMG(SDL_Renderer* renderer, const int x, const int y, const int w, const int h)
         :m_renderer{renderer}, id{idGenerator()}
     {
-        if(crearPuerta(entradaArriba, entradaAbajo, cuerpo, salida))
-        {
-            SDL_QueryTexture(m_texture, nullptr, nullptr, &m_rect.w, &m_rect.h);
-            m_rect.x = x;
-            m_rect.y = y;
-        }
-        else
-            std::println(std::cerr, "No se ha podido crear la imagen de la puerta lógica. Error: {}", SDL_GetError());
-    }
-
-    //Crea la imagen de un temporizador
-    IMG(SDL_Renderer* renderer, const int x, const int y, const char* entrada, const char* cuerpo, const char* salida, const char* relleno, const int ciclos, TXT* txt_)
-        :m_renderer{renderer}, id{idGenerator()}, txt{txt_}
-    {
-        if(crearTemporizador(entrada, cuerpo, salida, relleno, 0, ciclos))
-        {
-            SDL_QueryTexture(m_texture, nullptr, nullptr, &m_rect.w, &m_rect.h);
-            m_rect.x = x;
-            m_rect.y = y;
-        }
-        else
-            std::println(std::cerr, "No se ha podido crear la imagen del temporizador. Error: {}", SDL_GetError());
-    }
-
-    ~IMG()
-    {
-        if(m_texture != nullptr)
-            SDL_DestroyTexture(m_texture);
+        m_rect.x = x;
+        m_rect.y = y;
+        m_rect.w = w;
+        m_rect.h = h;
     }
 
     [[nodiscard]] auto getId() const -> unsigned long { return id; }
@@ -103,10 +84,12 @@ public:
         tipoSimulable = simulable_->getTipo();
         esClickable = true;
     }
+
     void setClickable()
     {
         esClickable = true;
     }
+
     [[nodiscard]] auto getSimulable() const -> Simulable* { return simulable; }
 
     auto operator==(const IMG& a) const -> bool
@@ -125,37 +108,55 @@ public:
         m_rect.y = y;
     }
 
-    void cambiarImagen(const char* path)
+    void interactuar(const int x, const int y, const INTERACCIONES interaccion) const
     {
-        SDL_DestroyTexture(m_texture);
+        simulable->interactuar(x, y, interaccion);
+    }
 
-        m_texture = IMG_LoadTexture(m_renderer, path);
+    template <typename... Args>
+    auto crearImagen(Args&&... capas) -> bool
+    {
+        if(m_texture != nullptr)
+            SDL_DestroyTexture(m_texture);
+
+        m_texture = SDL_CreateTexture(m_renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, m_rect.w, m_rect.h);
 
         if(m_texture == nullptr)
-            std::println(std::cerr, "No se h podido cargar la imagen: {} Error: {}", path, SDL_GetError());
-    }
-
-    auto cambiarPuerta(const char* entradaArriba, const char* entradaAbajo, const char* cuerpo, const char* salida) -> bool
-    {
-        if(tipoSimulable != TIPOS_SIMULABLES::Puerta)
             return false;
 
-        SDL_DestroyTexture(m_texture);
+        SDL_SetRenderTarget(m_renderer, m_texture);
+        SDL_SetTextureBlendMode(m_texture, SDL_BLENDMODE_BLEND);
 
-        return crearPuerta(entradaArriba, entradaAbajo, cuerpo, salida);
+        SDL_SetRenderDrawColor(m_renderer, 0, 0, 0, 0); // Color transparente
+        SDL_RenderClear(m_renderer);
+        // Procesar cada capa usando fold expression (C++17)
+        (procesarCapa(std::forward<Args>(capas)), ...);
+        SDL_SetRenderTarget(m_renderer, nullptr);
+        return true;
     }
 
-    auto cambiarTemporizador(const char* entrada, const char* cuerpo, const char* salida, const char* relleno, const int ciclosActuales, const int ciclosTotales) -> bool
+    void setTXT(TXT* txt_) {txt = txt_;}
+
+private:
+    void procesarCapa(const Capa& capa)
     {
-        if(tipoSimulable != TIPOS_SIMULABLES::Temporizador)
-            return false;
+        if(!capa.img.empty())
+        {
+            SDL_Texture* tmp = IMG_LoadTexture(m_renderer, capa.img.c_str());
 
-        SDL_DestroyTexture(m_texture);
+            if(tmp == nullptr)
+                std::println(std::cerr, "No se h podido cargar la imagen: {} Error: {}", capa.img, SDL_GetError());
 
-        return crearTemporizador(entrada, cuerpo, salida, relleno, ciclosActuales, ciclosTotales);
+            SDL_SetTextureBlendMode(tmp, SDL_BLENDMODE_BLEND);
+            SDL_RenderCopy(m_renderer, tmp, nullptr, nullptr);
+            SDL_DestroyTexture(tmp); // No olvides liberar la memoria
+        }
+        else
+        {
+            txt->write(capa.textoX, capa.textoY, capa.texto.c_str());
+        }
     }
 
-    void interactuar(const int x, const int y, const INTERACCIONES interaccion) const { simulable->interactuar(x, y, interaccion); }
 };
 
 #endif //IMAGE_H

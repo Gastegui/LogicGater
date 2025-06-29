@@ -25,6 +25,7 @@ class Entrada final : public Simulable
     IMG img;
     bool mover{false};
     bool interactuarAbajo{false};
+    bool seleccionado{false};
 
     //std::pair<int, int> linea{25, 25};
     Raton* raton;
@@ -39,6 +40,14 @@ class Entrada final : public Simulable
     {
         for(unsigned int i = 0; i < cantidad; i++)
             idGenerator();
+    }
+
+    void cambiar()
+    {
+        img.crearImagen<IMG::Capa>(
+            IMG::Capa{.img=salida.get() ? "./img/entrada/encendido.png" : "./img/entrada/apagado.png"},
+            IMG::Capa{.img=seleccionado ? "./img/entrada/seleccionado.png" : "./img/entrada/no_seleccionado.png"}
+        );
     }
 
 public:
@@ -64,8 +73,11 @@ public:
     [[nodiscard]] auto get() const -> bool { return salida.get(); }
     void set(const bool valor)
     {
-        img.cambiarImagen(valor ? "./img/entrada/encendido.png" : "./img/entrada/apagado.png");
-        salida.set(valor);
+        if(salida.get() != valor)
+        {
+            cambiar();
+            salida.set(valor);
+        }
     }
 
     void moverRel(int x, int y);
@@ -77,6 +89,16 @@ public:
     [[nodiscard]] auto getIOSalida() -> IO* override { return &salida; }
     [[nodiscard]] auto getLinea( [[maybe_unused]] int conexion) -> std::pair<int, int>* override { return nullptr; }
     [[nodiscard]] auto getConexion( [[maybe_unused]] IO* io) const -> int override { return 0; }
+    void seleccionar(bool estado) override
+    {
+        if(estado != seleccionado)
+        {
+            seleccionado = estado;
+            cambiar();
+        }
+        else
+            seleccionado = estado;
+    }
 };
 
 

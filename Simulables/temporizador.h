@@ -35,6 +35,7 @@ class Temporizador final : public Simulable
     int ciclosActuales{0};
 
     bool interactuarAbajo{false};
+    bool seleccionado{false};
 
     IMG imagen;
 
@@ -60,12 +61,11 @@ public:
 
     Temporizador(SDL_Renderer* renderer, Controlador* controlador_, Raton* raton_, const int tiempo_, const int x_, const int y_, const bool entradaNegada_, const bool salidaNegada_, TXT* txt_, const unsigned int id_)
         :Simulable(id_), controlador{controlador_}, raton{raton_}, entradaNegada{entradaNegada_}, salidaNegada{salidaNegada_}, salida{this, x_ + 100, y_ + 25}, x{x_}, y{y_}, ciclosTotales{tiempo_},
-    imagen(renderer, x_, y_,
-        entradaNegada_ ? "./img/temporizador/entrada_negada.png" : "./img/temporizador/entrada_normal.png",
-        "./img/temporizador/cuerpo.png",
-        salidaNegada_ ? "./img/temporizador/salida_negada.png" : "./img/temporizador/salida_normal.png",
-        "./img/temporizador/0.png", ciclosTotales, txt_)
+    imagen(renderer, x_, y_, 100, 50)
+
     {
+        imagen.setTXT(txt_);
+        cambiar();
         imagen.setClickable(this);
         linea.first += x_;
         linea.second += y_;
@@ -96,6 +96,18 @@ public:
             return 1;
         return 0;
     }
+
+    void seleccionar(bool estado) override
+    {
+        if(estado != seleccionado)
+        {
+            seleccionado = estado;
+            cambiar();
+        }
+        else
+            seleccionado = estado;
+    }
+
 };
 
 

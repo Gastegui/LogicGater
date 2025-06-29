@@ -3,6 +3,8 @@
 //
 
 #include "raton.h"
+
+#include <algorithm>
 #include "Wrapper/image.h"
 #include "controlador.h"
 #include "controles.h"
@@ -111,12 +113,72 @@ void Raton::setControlador(Controlador* controlador_)
 {
     controlador = controlador_;
     window = controlador->getWindow();
+    controlador->setSeleccionados(&seleccionados);
 }
 
 
 auto Raton::manejarRaton() -> void
 {
     SDL_GetMouseState(&posX, &posY);
+    const ListaIMG::Lista* lista{};
+    IMG* actual{};
+
+    if(posX < 10)
+    {
+        window->moverRel(1, 0);
+    }
+    else if(posX > 1910)
+        window->moverRel(-1, 0);
+    if(posY < 10)
+        window->moverRel(0, 1);
+    else if(posY > 1070)
+        window->moverRel(0, -1);
+
+    if(seleccionando)
+    {
+        switch(Controles::getUltimaAccion())
+        {
+            case ACCION::MovimientoRaton:
+            {
+                const int posXmapa = -window->getEsquinaX() + posX;
+                const int posYmapa = -window->getEsquinaY() + posY;
+
+                if(posXmapa > seleccionXOriginal)
+                {
+                    seleccion.x = seleccionXOriginal;
+                    seleccion.w = posXmapa - seleccionXOriginal;
+                }
+                else
+                {
+                    seleccion.x = posXmapa;
+                    seleccion.w = seleccionXOriginal - seleccion.x;
+                }
+
+                if(posYmapa > seleccionYOriginal)
+                {
+                    seleccion.y = seleccionYOriginal;
+                    seleccion.h = posYmapa - seleccionYOriginal;
+                }
+                else
+                {
+                    seleccion.y = posYmapa;
+                    seleccion.h = seleccionYOriginal - seleccion.y;
+                }
+                window->setSeleccion(seleccion);
+                controlador->seleccionar(seleccion, &seleccionados);
+            }
+                break;
+            case ACCION::InteractuarArriba:
+                seleccionando = false;
+                seleccion = {.x=0, .y=0, .w=0, .h=0};
+                window->setSeleccion(seleccion);
+                break;
+            default:
+                break;
+        }
+        return;
+    }
+
 
     if(moviendoPantalla)
     {
@@ -129,6 +191,64 @@ auto Raton::manejarRaton() -> void
             window->moverRel(evento->motion.xrel, evento->motion.yrel);
             return;
         }
+    }
+
+    if(!seleccionados.empty())
+    {
+        actual = buscarLista(controlador->getListaIMG(ListaIMG::MEDIO), posX, posY);
+        const bool imagen = actual != nullptr && std::ranges::find(seleccionados, actual->getSimulable()) != seleccionados.end();
+        switch(Controles::getUltimaAccion())
+        {
+            case ACCION::MoverAbajo:
+                if(!imagen)
+                {
+                    moviendoPantalla = true;
+                    break;
+                }
+                for(Simulable* simulable : seleccionados)
+                    simulable->interactuar(0, 0, INTERACCIONES::MoverAbajo);
+                moviendoSeleccion = true;
+                break;
+            case ACCION::MovimientoRaton:
+                {
+                    if(!moviendoSeleccion)
+                        break;
+                    const SDL_Event* evento = Controles::getEvent();
+                    for(Simulable* simulable : seleccionados)
+                        simulable->interactuar(evento->motion.xrel, evento->motion.yrel, INTERACCIONES::MovimientoRaton);
+                }
+                break;
+            case ACCION::MoverArriba:
+                if(!moviendoSeleccion)
+                    break;
+                for(Simulable* simulable : seleccionados)
+                    simulable->interactuar(0, 0, INTERACCIONES::MoverArriba);
+                moviendoSeleccion = false;
+                break;
+            case ACCION::AlternarBorrando:
+                if(moviendoSeleccion)
+                    break;
+                for(Simulable* simulable : seleccionados)
+                    controlador->borrar(simulable);
+                seleccionados.clear();
+                break;
+            case ACCION::InteractuarArriba:
+                controlador->desseleccionar(&seleccionados);
+                moviendoSeleccion = false;
+                break;
+            case ACCION::InteractuarAbajo:
+                controlador->desseleccionar(&seleccionados);
+                moviendoSeleccion = false;
+                seleccionando = true;
+                seleccion.x = -window->getEsquinaX() + posX;
+                seleccion.y = -window->getEsquinaY() + posY;
+                seleccionXOriginal = seleccion.x;
+                seleccionYOriginal = seleccion.y;
+                break;
+            default:
+                break;
+        }
+        return;
     }
 
     if(moviendoImg != nullptr)
@@ -179,8 +299,8 @@ auto Raton::manejarRaton() -> void
         }
     }
 
-    const ListaIMG::Lista* lista{controlador->getListaIMG(ListaIMG::FRENTE)};
-    IMG* actual = buscarLista(lista, posX, posY, true);
+    lista = controlador->getListaIMG(ListaIMG::FRENTE);
+    actual = buscarLista(lista, posX, posY, true);
     if(actual != nullptr)
     {
         if(window->getIMGMinimapa() == actual && Controles::getUltimaAccion() == ACCION::InteractuarArriba)
@@ -223,12 +343,28 @@ auto Raton::manejarRaton() -> void
         imgAnterior = nullptr;
     }
 
-    if(Controles::getUltimaAccion() == ACCION::MoverAbajo)
-        moviendoPantalla = true;
+    switch(Controles::getUltimaAccion())
+    {
+        case ACCION::MoverAbajo:
+            moviendoPantalla = true;
+            break;
+        case ACCION::InteractuarAbajo:
+            seleccionando = true;
+            seleccion.x = -window->getEsquinaX() + posX;
+            seleccion.y = -window->getEsquinaY() + posY;
+            seleccionXOriginal = seleccion.x;
+            seleccionYOriginal = seleccion.y;
+            break;
+        default:
+            break;
+    }
 }
 
 void Raton::setBorrando(const bool borrando_)
 {
-    borrando = borrando_;
-    controlador->desmarcarOrigen();
+    if(seleccionados.empty())
+    {
+        borrando = borrando_;
+        controlador->desmarcarOrigen();
+    }
 }

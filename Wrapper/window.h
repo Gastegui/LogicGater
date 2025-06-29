@@ -42,6 +42,8 @@ class Window
     mutable int mapaMinY{0};
     mutable int mapaMaxY{0};
 
+    mutable SDL_Rect seleccion{};
+
     void rendererClear() const;
     void rendererDraw() const;
     void rendererPresent() const;
@@ -126,6 +128,11 @@ public:
     [[nodiscard]] auto getMapaMaxY() const -> int { return mapaMaxY; }
     [[nodiscard]] auto getMinimapaTamañoX() const -> int { return minimapaTamañoObjetivoX; }
     [[nodiscard]] auto getMinimapaTamañoY() const -> int { return minimapaTamañoObjetivoY; }
+
+    void setSeleccion(SDL_Rect rect)
+    {
+        seleccion = rect;
+    }
 };
 
 #endif //WINDOW_H

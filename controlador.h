@@ -37,6 +37,7 @@ class Controlador
     std::map<unsigned int, Simulable*> simulables;
 
     ListaLineas listaLineas;
+    std::vector<Simulable*>* seleccionados{};
 
 public:
     explicit Controlador(Window* window_, TXT* txt_)
@@ -109,6 +110,10 @@ public:
     [[nodiscard]] auto getCuadriculaActiva() const -> bool { return cuadricula; }
     [[nodiscard]] auto getCuadriculaTamaño() const -> int { return cuadriculaTamaño; }
     [[nodiscard]] auto getSimulablesLenght() const -> unsigned long {return simulables.size(); }
+
+    void setSeleccionados(std::vector<Simulable*>* seleccionados_) { seleccionados = seleccionados_; }
+    void seleccionar(SDL_Rect region, std::vector<Simulable*>* vector) const;
+    void desseleccionar(std::vector<Simulable*>* vector) const;
 };
 
 #endif //CONTROLADOR_H

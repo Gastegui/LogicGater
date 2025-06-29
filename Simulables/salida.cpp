@@ -8,6 +8,14 @@
 #include "puerta.h"
 #include "../controlador.h"
 
+void Salida::cambiar(bool estado)
+{
+    img.crearImagen<IMG::Capa>(
+        IMG::Capa{.img= estado ? "./img/salida/encendido.png" : "./img/salida/apagado.png"},
+        IMG::Capa{.img = seleccionado ? "./img/salida/seleccionado.png" : "./img/salida/no_seleccionado.png"}
+    );
+}
+
 
 void Salida::moverRel(const int x, const int y)
 {
@@ -20,21 +28,31 @@ void Salida::simular()
 {
     if(entrada == nullptr )
     {
-        img.cambiarImagen("./img/salida/apagado.png");
+        if(ultimoEstado)
+        {
+            cambiar(false);
+            ultimoEstado = false;
+        }
         return;
     }
 
-    if(entrada->get())
-        img.cambiarImagen("./img/salida/encendido.png");
-    else
-        img.cambiarImagen("./img/salida/apagado.png");
+    if(entrada->get() && !ultimoEstado)
+        cambiar(true);
+    else if(!entrada->get() && ultimoEstado)
+        cambiar(false);
+
+    ultimoEstado = entrada->get();
 }
 
 void Salida::simularAntiguo()
 {
     if(entrada == nullptr )
     {
-        img.cambiarImagen("./img/salida/apagado.png");
+        if(ultimoEstado)
+        {
+            cambiar(false);
+            ultimoEstado = false;
+        }
         return;
     }
 
@@ -43,10 +61,12 @@ void Salida::simularAntiguo()
 
     //Si la salida está directamente conectada a una entrada, al hacer entrada->get() ya se pilla su valor sin simular
 
-    if(entrada->get())
-        img.cambiarImagen("./img/salida/encendido.png");
-    else
-        img.cambiarImagen("./img/salida/apagado.png");
+    if(entrada->get() && !ultimoEstado)
+        cambiar(true);
+    else if(!entrada->get() && ultimoEstado)
+        cambiar(false);
+
+    ultimoEstado = entrada->get();
 }
 
 auto Salida::interactuar(const int posX, const int posY, const INTERACCIONES interaccion) -> bool
