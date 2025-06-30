@@ -16,7 +16,7 @@ class IO
 {
     static auto idGenerator() -> unsigned int
     {
-        static unsigned int id = 1 + get_offset(ID_TIPOS::IO);
+        static unsigned int id = 1 + getOffset(ID_TIPOS::IO);
         return id++;
     }
 
@@ -35,7 +35,7 @@ public:
     explicit IO(Simulable* simulable_, const int posX, const int posY)
         : id{idGenerator()}, origen{posX, posY}, simulable(simulable_), tipoSimulable(simulable_->getTipo()), idSimulable(simulable_->getId()) {}
 
-    void set(const bool b) { valor = b; }
+    auto set(const bool b) -> void { valor = b; }
     [[nodiscard]] auto get() const -> bool { return valor; }
     [[nodiscard]] auto getId() const -> unsigned int { return id; }
 
@@ -45,14 +45,14 @@ public:
 
     [[nodiscard]] auto getLineaOrigen() -> std::pair<int, int>* { return &origen; }
 
-    void moverLineaOrigenRel(const int x, const int y)
+    auto moverLineaOrigenRel(const int x, const int y) -> void
     {
         origen.first += x;
         origen.second += y;
     }
 
-    void conectado() { conexiones++; }
-    void desconectado() { conexiones--; }
+    auto conectado() -> void { conexiones++; }
+    auto desconectado() -> void { conexiones--; }
     [[nodiscard]] auto getConexiones() const -> int { return conexiones; }
 
     explicit operator bool() const

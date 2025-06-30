@@ -37,11 +37,11 @@ class Puerta final : public Simulable
 
     static auto idGenerator() -> unsigned int
     {
-        static unsigned int id = 1 + get_offset(ID_TIPOS::Puerta);
+        static unsigned int id = 1 + getOffset(ID_TIPOS::Puerta);
         return id++;
     }
 
-    static void gastarIds(const unsigned int cantidad)
+    static auto gastarIds(const unsigned int cantidad) -> void
     {
         for(unsigned int i = 0; i < cantidad; i++)
             idGenerator();
@@ -54,7 +54,7 @@ class Puerta final : public Simulable
     Raton* raton;
 
 public:
-    enum Tipo : uint8_t
+    enum TIPO : uint8_t
     {
         AND,
         OR,
@@ -62,14 +62,14 @@ public:
     };
 
 private:
-    Tipo tipo{};
+    TIPO tipo{};
     IMG imagen;
 
 public:
-    Puerta(SDL_Renderer* renderer, Controlador* controlador_, const Tipo tipo_, const int x_, const int y_, const bool arribaNegado_, const bool abajoNegado_, const bool salidaNegada_, Raton* raton_)
+    Puerta(SDL_Renderer* renderer, Controlador* controlador_, const TIPO tipo_, const int x_, const int y_, const bool arribaNegado_, const bool abajoNegado_, const bool salidaNegada_, Raton* raton_)
         : Puerta(renderer, controlador_, tipo_, x_, y_, arribaNegado_, abajoNegado_, salidaNegada_, raton_, idGenerator()) {}
 
-    Puerta(SDL_Renderer* renderer, Controlador* controlador_, const Tipo tipo_, const int x_, const int y_, const bool arribaNegado_, const bool abajoNegado_, const bool salidaNegada_, Raton* raton_, const unsigned int id_)
+    Puerta(SDL_Renderer* renderer, Controlador* controlador_, const TIPO tipo_, const int x_, const int y_, const bool arribaNegado_, const bool abajoNegado_, const bool salidaNegada_, Raton* raton_, const unsigned int id_)
         : Simulable(id_), controlador(controlador_), arribaNegado{arribaNegado_}, abajoNegado{abajoNegado_}, salidaNegada{salidaNegada_}, salida(this, 100 + x_, 25 + y_), x{x_}, y{y_}, raton{raton_}, tipo{tipo_}, imagen{renderer, x_, y_, 100, 50}
     {
         imagen.crearImagen<IMG::Capa>(
@@ -104,13 +104,13 @@ public:
     }
 
 
-    void simular() override;
-    void actualizar() override;
+    auto simular() -> void override;
+    auto actualizar() -> void override;
     auto simularAntiguo() -> bool;
-    void simulacionAntiguaTermindada();
-    void moverRel(int x_, int y_);
+    auto simulacionAntiguaTermindada() -> void;
+    auto moverRel(int x_, int y_) -> void;
     auto interactuar(int posX, int posY, INTERACCIONES interaccion) -> bool override;
-    void setIONull(IO* io) override;
+    auto setIONull(IO* io) -> void override;
     [[nodiscard]] auto getIOSalida() -> IO* override { return &salida; }
 
     [[nodiscard]] auto getLinea(const int conexion) -> std::pair<int, int>* override
@@ -132,7 +132,7 @@ public:
         return 0;
     }
 
-    void seleccionar(bool estado) override
+    auto seleccionar(const bool estado) -> void override
     {
         if(estado != seleccionado)
         {

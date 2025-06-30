@@ -8,12 +8,12 @@
 #include "../Simulables/puerta.h"
 #include "../controlador.h"
 
-void Window::rendererClear() const
+auto Window::rendererClear() const -> void
 {
     SDL_RenderClear(renderer);
 }
 
-void Window::renderLine(SDL_Renderer* renderer, const int x1, const int y1, const int x2, const int y2, const ListaLineas::Linea* linea)
+auto Window::renderLine(SDL_Renderer* renderer, const int x1, const int y1, const int x2, const int y2, const ListaLineas::Linea* linea) -> void
 {
     if(linea->io->get())
         SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
@@ -23,9 +23,9 @@ void Window::renderLine(SDL_Renderer* renderer, const int x1, const int y1, cons
     SDL_RenderDrawLine(renderer, x1, y1, x2, y2);
 }
 
-void Window::rendererDraw() const
+auto Window::rendererDraw() const -> void
 {
-    const std::vector<IMG*>* imagenes{listaIMG.getLista(ListaIMG::FONDO)};
+    const std::vector<IMG*>* imagenes{listaIMG.getLista(ListaIMG::Fondo)};
     const std::vector<ListaLineas::Linea>* lineas{controlador->getListaLineas()->getLista()};
     mapaMinX = -esquinaX;
     mapaMaxX = -esquinaX + width;
@@ -49,7 +49,7 @@ void Window::rendererDraw() const
     for(IMG* img : *imagenes)
         SDL_RenderCopy(renderer, img->getTexture(), nullptr, img->getRect());
 
-    imagenes = listaIMG.getLista(ListaIMG::MEDIO);
+    imagenes = listaIMG.getLista(ListaIMG::Medio);
     for(IMG* img : *imagenes)
     {
         SDL_Rect rect{*img->getRect()};
@@ -96,7 +96,7 @@ void Window::rendererDraw() const
     }
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
 
-    imagenes = listaIMG.getLista(ListaIMG::FRENTE);
+    imagenes = listaIMG.getLista(ListaIMG::Frente);
     for(IMG* img : *imagenes)
         SDL_RenderCopy(renderer, img->getTexture(), nullptr, img->getRect());
 
@@ -113,7 +113,7 @@ void Window::rendererDraw() const
     //Minimapa
     const double factorX = static_cast<double>(minimapaTamañoObjetivoX) / (mapaMaxX - mapaMinX);
     const double factorY = static_cast<double>(minimapaTamañoObjetivoY) / (mapaMaxY - mapaMinY);
-    imagenes = listaIMG.getLista(ListaIMG::MEDIO);
+    imagenes = listaIMG.getLista(ListaIMG::Medio);
     for(IMG* img : *imagenes)
     {
         rect = *img->getRect();
@@ -133,42 +133,42 @@ void Window::rendererDraw() const
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
 }
 
-void Window::rendererPresent() const
+auto Window::rendererPresent() const -> void
 {
     SDL_RenderPresent(renderer);
 }
 
-void Window::limpiar() const
+auto Window::limpiar() const -> void
 {
     rendererClear();
 }
 
-void Window::render()
+auto Window::render() const -> void
 {
     rendererDraw();
     rendererPresent();
 }
 
-void Window::moverRel(const int x, const int y)
+auto Window::moverRel(const int x, const int y) -> void
 {
     esquinaX += x;
     esquinaY += y;
 }
 
-void Window::mover(const int x, const int y)
+auto Window::mover(const int x, const int y) -> void
 {
     esquinaX = x;
     esquinaY = y;
 }
 
-void Window::centrar()
+auto Window::centrar() -> void
 {
     int minX = std::numeric_limits<int>::max();
     int maxX = std::numeric_limits<int>::min();
     int minY = std::numeric_limits<int>::max();
     int maxY = std::numeric_limits<int>::min();
 
-    const std::vector<IMG*>* imagenes = listaIMG.getLista(ListaIMG::MEDIO);
+    const std::vector<IMG*>* imagenes = listaIMG.getLista(ListaIMG::Medio);
 
     if(imagenes == nullptr)
     {

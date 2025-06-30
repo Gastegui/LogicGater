@@ -51,7 +51,7 @@ public:
         simulables.clear();
     }
 
-    [[nodiscard]] auto getListaIMG(const ListaIMG::Altura altura) const -> const std::vector<IMG*>*
+    [[nodiscard]] auto getListaIMG(const ListaIMG::ALTURA altura) const -> const std::vector<IMG*>*
     {
         return window->getListaIMG(altura);
     }
@@ -62,50 +62,50 @@ public:
     [[nodiscard]] auto getListaLineas() -> ListaLineas* { return &listaLineas; }
 
     //Crea una puerta
-    void crear(Puerta::Tipo tipo, int x, int y, bool arribaNegado = false, bool abajoNegado = false, bool salidaNegada = false, unsigned int id = 0);
+    auto crear(Puerta::TIPO tipo, int x, int y, bool arribaNegado = false, bool abajoNegado = false, bool salidaNegada = false, unsigned int id = 0) -> void;
 
     //Crea una entrada
-    void crear(bool mantener, int x, int y, unsigned int id = 0);
+    auto crear(bool mantener, int x, int y, unsigned int id = 0) -> void;
 
     //Crea una salida
-    void crear(int x, int y, unsigned int id = 0);
+    auto crear(int x, int y, unsigned int id = 0) -> void;
 
     //Crea un temporizador
-    void crear(int x, int y, int tiempo, bool entradaNegada = false, bool salidaNegada = false, unsigned int id = 0);
+    auto crear(int x, int y, int tiempo, bool entradaNegada = false, bool salidaNegada = false, unsigned int id = 0) -> void;
 
 
-    void borrar(Simulable* simulable)
+    auto borrar(Simulable* simulable) -> void
     {
         if(!simulables.contains(simulable->getId()))
             return;
         borrarConexiones(simulable);
 
-        window->borrar(simulable->getImg(), ListaIMG::MEDIO);
+        window->borrar(simulable->getImg(), ListaIMG::Medio);
         simulables.erase(simulable->getId());
 
         delete simulable;
     }
 
-    void añadirConexion(Simulable* simulable_destino, const int conexion) { listaLineas.añadir(simulable_destino, origen, conexion); }
-    void borrarConexiones(const IO* io) { listaLineas.borrar(io); }
-    void borrarConexiones(const Simulable* simulable) { listaLineas.borrar(simulable); }
-    void borrarConexion(const Simulable* destino, const IO* io, const int conexion) { listaLineas.borrar(destino, io, conexion); }
+    auto añadirConexion(Simulable* simulableDestino, const int conexion) -> void { listaLineas.añadir(simulableDestino, origen, conexion); }
+    auto borrarConexiones(const IO* io) -> void { listaLineas.borrar(io); }
+    auto borrarConexiones(const Simulable* simulable) -> void { listaLineas.borrar(simulable); }
+    auto borrarConexion(const Simulable* destino, const IO* io, const int conexion) -> void { listaLineas.borrar(destino, io, conexion); }
 
-    void marcarOrigen(IO* origen_) { origen = origen_; }
+    auto marcarOrigen(IO* origen_) -> void { origen = origen_; }
     [[nodiscard]] auto getOrigen() const -> IO* { return origen; }
 
-    void desmarcarOrigen() { origen = nullptr; }
+    auto desmarcarOrigen() -> void { origen = nullptr; }
     [[nodiscard]] auto getConectando() const -> bool { return origen != nullptr; }
 
 
     auto limpiar() -> int;
 
-    void simular() const;
-    void simularInstantaneo() const;
+    auto simular() const -> void;
+    auto simularInstantaneo() const -> void;
 
     [[nodiscard]] auto getSimulable(unsigned int id) const -> Simulable*;
 
-    void alternarCuadricula() { cuadricula = !cuadricula; }
+    auto alternarCuadricula() -> void { cuadricula = !cuadricula; }
 
     auto cambiarCuadriculaRel(const int cambio) -> int
     {
@@ -118,9 +118,9 @@ public:
     [[nodiscard]] auto getCuadriculaTamaño() const -> int { return cuadriculaTamaño; }
     [[nodiscard]] auto getSimulablesLenght() const -> unsigned long { return simulables.size(); }
 
-    void setSeleccionados(std::vector<Simulable*>* seleccionados_) { seleccionados = seleccionados_; }
-    void seleccionar(SDL_Rect region, std::vector<Simulable*>* vector) const;
-    void desseleccionar(std::vector<Simulable*>* vector) const;
+    auto setSeleccionados(std::vector<Simulable*>* seleccionados_) -> void { seleccionados = seleccionados_; }
+    auto seleccionar(SDL_Rect region, std::vector<Simulable*>* vector) const -> void;
+    auto desseleccionar(std::vector<Simulable*>* vector) const -> void;
 };
 
 #endif //CONTROLADOR_H

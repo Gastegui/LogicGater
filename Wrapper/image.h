@@ -21,9 +21,9 @@ class IMG
 {
     friend class SistemaGuardado;
 
-    SDL_Renderer* m_renderer{nullptr};
-    SDL_Texture* m_texture{nullptr};
-    SDL_Rect m_rect{};
+    SDL_Renderer* renderer{nullptr};
+    SDL_Texture* texture{nullptr};
+    SDL_Rect rect{};
     unsigned int id;
     bool esClickable{false};
     Simulable* simulable{nullptr};
@@ -32,7 +32,7 @@ class IMG
 
     static auto idGenerator() -> unsigned int
     {
-        static unsigned int id = 1 + get_offset(ID_TIPOS::IMG);
+        static unsigned int id = 1 + getOffset(ID_TIPOS::IMG);
         return id++;
     }
 
@@ -49,42 +49,42 @@ public:
         : IMG{path, renderer, 0, 0} {}
 
     IMG(const char* path, SDL_Renderer* renderer, const int x, const int y)
-        : m_renderer{renderer}, m_texture{IMG_LoadTexture(m_renderer, path)}, id{idGenerator()}
+        : renderer{renderer}, texture{IMG_LoadTexture(renderer, path)}, id{idGenerator()}
     {
         // ReSharper disable once CppDFAConstantConditions
-        if(m_texture == nullptr)
+        if(texture == nullptr)
         // ReSharper disable once CppDFAUnreachableCode
             std::println(std::cerr, "No se ha podido cargar la imagen: {} Error: {}", path, SDL_GetError());
         else
         {
-            SDL_QueryTexture(m_texture, nullptr, nullptr, &m_rect.w, &m_rect.h);
-            m_rect.x = x;
-            m_rect.y = y;
+            SDL_QueryTexture(texture, nullptr, nullptr, &rect.w, &rect.h);
+            rect.x = x;
+            rect.y = y;
         }
     }
 
     IMG(SDL_Renderer* renderer, const int x, const int y, const int w, const int h)
-        : m_renderer{renderer}, id{idGenerator()}
+        : renderer{renderer}, id{idGenerator()}
     {
-        m_rect.x = x;
-        m_rect.y = y;
-        m_rect.w = w;
-        m_rect.h = h;
+        rect.x = x;
+        rect.y = y;
+        rect.w = w;
+        rect.h = h;
     }
 
     [[nodiscard]] auto getId() const -> unsigned long { return id; }
-    [[nodiscard]] auto getTexture() const -> SDL_Texture* { return m_texture; }
-    [[nodiscard]] auto getRect() -> SDL_Rect* { return &m_rect; }
+    [[nodiscard]] auto getTexture() const -> SDL_Texture* { return texture; }
+    [[nodiscard]] auto getRect() -> SDL_Rect* { return &rect; }
     [[nodiscard]] auto getClickable() const -> bool { return esClickable; }
 
-    void setClickable(Simulable* simulable_)
+    auto setClickable(Simulable* simulable_) -> void
     {
         simulable = simulable_;
         tipoSimulable = simulable_->getTipo();
         esClickable = true;
     }
 
-    void setClickable()
+    auto setClickable() -> void
     {
         esClickable = true;
     }
@@ -98,16 +98,16 @@ public:
 
     auto operator!() const -> bool
     {
-        return m_texture == nullptr;
+        return texture == nullptr;
     }
 
-    void mover(const int x, const int y)
+    auto mover(const int x, const int y) -> void
     {
-        m_rect.x = x;
-        m_rect.y = y;
+        rect.x = x;
+        rect.y = y;
     }
 
-    void interactuar(const int x, const int y, const INTERACCIONES interaccion) const
+    auto interactuar(const int x, const int y, const INTERACCIONES interaccion) const -> void
     {
         simulable->interactuar(x, y, interaccion);
     }
@@ -115,39 +115,39 @@ public:
     template <typename... Args>
     auto crearImagen(Args&&... capas) -> bool
     {
-        if(m_texture != nullptr)
-            SDL_DestroyTexture(m_texture);
+        if(texture != nullptr)
+            SDL_DestroyTexture(texture);
 
-        m_texture = SDL_CreateTexture(m_renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, m_rect.w, m_rect.h);
+        texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, rect.w, rect.h);
 
-        if(m_texture == nullptr)
+        if(texture == nullptr)
             return false;
 
-        SDL_SetRenderTarget(m_renderer, m_texture);
-        SDL_SetTextureBlendMode(m_texture, SDL_BLENDMODE_BLEND);
+        SDL_SetRenderTarget(renderer, texture);
+        SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_BLEND);
 
-        SDL_SetRenderDrawColor(m_renderer, 0, 0, 0, 0); // Color transparente
-        SDL_RenderClear(m_renderer);
+        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0); // Color transparente
+        SDL_RenderClear(renderer);
         // Procesar cada capa usando fold expression (C++17)
         (procesarCapa(std::forward<Args>(capas)), ...);
-        SDL_SetRenderTarget(m_renderer, nullptr);
+        SDL_SetRenderTarget(renderer, nullptr);
         return true;
     }
 
-    void setTXT(TXT* txt_) { txt = txt_; }
+    auto setTXT(TXT* txt_) -> void { txt = txt_; }
 
 private:
-    void procesarCapa(const Capa& capa)
+    auto procesarCapa(const Capa& capa) const -> void
     {
         if(!capa.img.empty())
         {
-            SDL_Texture* tmp = IMG_LoadTexture(m_renderer, capa.img.c_str());
+            SDL_Texture* tmp = IMG_LoadTexture(renderer, capa.img.c_str());
 
             if(tmp == nullptr)
                 std::println(std::cerr, "No se h podido cargar la imagen: {} Error: {}", capa.img, SDL_GetError());
 
             SDL_SetTextureBlendMode(tmp, SDL_BLENDMODE_BLEND);
-            SDL_RenderCopy(m_renderer, tmp, nullptr, nullptr);
+            SDL_RenderCopy(renderer, tmp, nullptr, nullptr);
             SDL_DestroyTexture(tmp); // No olvides liberar la memoria
         }
         else

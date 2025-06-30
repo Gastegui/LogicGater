@@ -16,7 +16,6 @@ add_executable(LogicGater main.cpp
         Wrapper/text.h
         Wrapper/text.cpp
         Wrapper/image.h
-        Wrapper/image.cpp
         ListaLineas.cpp
         ListaLineas.h
         Simulables/puerta.cpp

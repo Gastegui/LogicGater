@@ -32,17 +32,17 @@ class Entrada final : public Simulable
 
     static auto idGenerator() -> unsigned int
     {
-        static unsigned int id = 1 + get_offset(ID_TIPOS::Entrada);
+        static unsigned int id = 1 + getOffset(ID_TIPOS::Entrada);
         return id++;
     }
 
-    static void gastarIds(const unsigned int cantidad)
+    static auto gastarIds(const unsigned int cantidad) -> void
     {
         for(unsigned int i = 0; i < cantidad; i++)
             idGenerator();
     }
 
-    void cambiar()
+    auto cambiar() -> void
     {
         img.crearImagen<IMG::Capa>(
             IMG::Capa{.img = salida.get() ? "./img/entrada/encendido.png" : "./img/entrada/apagado.png"},
@@ -66,11 +66,11 @@ public:
     [[nodiscard]] auto getImg() -> IMG* override { return &img; }
     [[nodiscard]] auto getDesconectado() const -> bool override { return salida.getConexiones() == 0; }
     [[nodiscard]] auto getMantener() const -> bool { return mantener; }
-    void setMantener(const bool mantener_) { mantener = mantener_; }
+    auto setMantener(const bool mantener_) -> void { mantener = mantener_; }
 
     [[nodiscard]] auto get() const -> bool { return salida.get(); }
 
-    void set(const bool valor)
+    auto set(const bool valor) -> void
     {
         if(salida.get() != valor)
         {
@@ -79,17 +79,17 @@ public:
         }
     }
 
-    void moverRel(int x, int y);
+    auto moverRel(int x, int y) -> void;
 
-    void simular() override {}
-    void actualizar() override {}
+    auto simular() -> void override {}
+    auto actualizar() -> void override {}
     auto interactuar(int posX, int posY, INTERACCIONES interaccion) -> bool override;
-    void setIONull(IO* io) override {}
+    auto setIONull(IO* io) -> void override {}
     [[nodiscard]] auto getIOSalida() -> IO* override { return &salida; }
     [[nodiscard]] auto getLinea([[maybe_unused]] int conexion) -> std::pair<int, int>* override { return nullptr; }
     [[nodiscard]] auto getConexion([[maybe_unused]] IO* io) const -> int override { return 0; }
 
-    void seleccionar(bool estado) override
+    auto seleccionar(const bool estado) -> void override
     {
         if(estado != seleccionado)
         {

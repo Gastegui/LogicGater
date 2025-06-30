@@ -21,7 +21,7 @@ auto Temporizador::cambiar() -> bool
 }
 
 
-void Temporizador::simular()
+auto Temporizador::simular() -> void
 {
     if(entrada == nullptr)
         return;
@@ -45,7 +45,7 @@ void Temporizador::simular()
     }
 }
 
-void Temporizador::actualizar()
+auto Temporizador::actualizar() -> void
 {
     if(salidaNegada)
     {

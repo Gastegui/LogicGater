@@ -29,11 +29,11 @@ public:
 
     [[nodiscard]] auto getLista() -> std::vector<Linea>* { return &lista; }
 
-    void añadir(Simulable* destino, IO* io, int conexion);
+    auto añadir(Simulable* destino, IO* io, int conexion) -> void;
 
-    void borrar(const Simulable* destino, const IO* io, int conexion);
-    void borrar(const IO* involucrado);
-    void borrar(const Simulable* involucrado);
+    auto borrar(const Simulable* destino, const IO* io, int conexion) -> void;
+    auto borrar(const IO* involucrado) -> void;
+    auto borrar(const Simulable* involucrado) -> void;
 };
 
 

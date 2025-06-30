@@ -10,55 +10,55 @@
 
 class TXT
 {
-    TTF_Font* m_font{};
-    int m_size{10};
-    SDL_Color m_color{255, 255, 255};
-    SDL_Renderer* m_renderer;
-    int m_x{0};
-    int m_y{0};
-    int m_alturaSalto{30};
+    TTF_Font* font{};
+    int size{10};
+    SDL_Color color{255, 255, 255};
+    SDL_Renderer* renderer;
+    int x{0};
+    int y{0};
+    int alturaSalto{30};
 
 public:
     TXT(const char* fontName, const int fontSize, const SDL_Color fontColor, SDL_Renderer* renderer)
-        : m_font{TTF_OpenFont(fontName, fontSize)}, m_color{fontColor}, m_renderer(renderer)
+        : font{TTF_OpenFont(fontName, fontSize)}, color{fontColor}, renderer(renderer)
     {
         // ReSharper disable once CppDFAConstantConditions
-        if(m_font == nullptr)
+        if(font == nullptr)
             // ReSharper disable once CppDFAUnreachableCode
             std::println(std::cerr, "No se ha podido crear el texto. Error: {}", SDL_GetError());
     }
 
     ~TXT()
     {
-        if(m_font != nullptr)
-            TTF_CloseFont(m_font);
+        if(font != nullptr)
+            TTF_CloseFont(font);
     }
 
     constexpr auto operator!() const -> bool
     {
-        return m_font == nullptr;
+        return font == nullptr;
     }
 
     friend auto operator<<(TXT& anterior, const char* str) -> TXT&;
 
     friend auto operator<<(TXT& anterior, const std::string* str) -> TXT&;
 
-    void setPos(const int x, const int y)
+    auto setPos(const int x_, const int y_) -> void
     {
-        m_x = x;
-        m_y = y;
+        x = x_;
+        y = y_;
     }
 
-    void setPos(const int x, const int y, const int salto)
+    auto setPos(const int x_, const int y_, const int salto) -> void
     {
-        m_x = x;
-        m_y = y;
-        m_alturaSalto = salto;
+        x = x_;
+        y = y_;
+        alturaSalto = salto;
     }
 
-    void write(const char* text);
+    auto write(const char* text) -> void;
 
-    void write(int x, int y, const char* text);
+    auto write(int x_, int y_, const char* text) -> void;
 };
 
 #endif //TEXT_H

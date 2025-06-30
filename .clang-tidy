@@ -16,5 +16,6 @@ Checks: >
   -*-math-missing-parentheses,
   -*-implicit-bool-conversion,
   -*-avoid-nested-conditional-operator,
+  -*-convert-member-functions-to-static,
   
   -*-owning-memory,

@@ -8,7 +8,7 @@
 #include "puerta.h"
 #include "../controlador.h"
 
-void Salida::cambiar(bool estado)
+auto Salida::cambiar(const bool estado) -> void
 {
     img.crearImagen<IMG::Capa>(
         IMG::Capa{.img = estado ? "./img/salida/encendido.png" : "./img/salida/apagado.png"},
@@ -17,14 +17,14 @@ void Salida::cambiar(bool estado)
 }
 
 
-void Salida::moverRel(const int x, const int y)
+auto Salida::moverRel(const int x, const int y) -> void
 {
     img.mover(img.getRect()->x + x, img.getRect()->y + y);
     entradaPos.first += x;
     entradaPos.second += y;
 }
 
-void Salida::simular()
+auto Salida::simular() -> void
 {
     if(entrada == nullptr)
     {
@@ -44,7 +44,7 @@ void Salida::simular()
     ultimoEstado = entrada->get();
 }
 
-void Salida::simularAntiguo()
+auto Salida::simularAntiguo() -> void
 {
     if(entrada == nullptr)
     {
@@ -111,7 +111,7 @@ auto Salida::interactuar(const int posX, const int posY, const INTERACCIONES int
     }
 }
 
-void Salida::setIONull(IO* io)
+auto Salida::setIONull(IO* io) -> void
 {
     if(entrada == io)
         entrada = nullptr;

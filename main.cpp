@@ -57,7 +57,7 @@ auto main() -> int
     bool guardar = false;
     bool cargar = false;
 
-    std::string strTMP;
+    std::string strTmp;
 
     Uint64 ultimaSimulacion = SDL_GetTicks64();
     SistemaGuardado::Valores valores;
@@ -258,24 +258,24 @@ auto main() -> int
             if(valores.velocidadSimulacion >= 0)
             {
                 txt.setPos(1700, 10);
-                strTMP = std::format("SIMULANDO ({} ms)", valores.velocidadSimulacion);
+                strTmp = std::format("SIMULANDO ({} ms)", valores.velocidadSimulacion);
             }
             else
             {
                 txt.setPos(1640, 10);
-                strTMP = std::format("SIMULANDO (instantáneo");
+                strTmp = std::format("SIMULANDO (instantáneo");
             }
-            txt << &strTMP;
+            txt << &strTmp;
         }
 
         txt.setPos(10, 10);
-        strTMP = std::format("X: {} Y: {}", -window.getEsquinaX(), -window.getEsquinaY());
-        txt << &strTMP;
+        strTmp = std::format("X: {} Y: {}", -window.getEsquinaX(), -window.getEsquinaY());
+        txt << &strTmp;
 
         if(controlador.getCuadriculaActiva())
         {
-            strTMP = std::format("Cuadríacula activa. Tamaño: {}", controlador.getCuadriculaTamaño());
-            txt << &strTMP;
+            strTmp = std::format("Cuadríacula activa. Tamaño: {}", controlador.getCuadriculaTamaño());
+            txt << &strTmp;
         }
 
         if(mensajeTiempo + mensajeDuracion > SDL_GetTicks64())

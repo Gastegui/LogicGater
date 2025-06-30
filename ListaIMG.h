@@ -11,25 +11,24 @@ class IMG;
 
 class ListaIMG
 {
-private:
     std::vector<IMG*> frente;
     std::vector<IMG*> medio;
     std::vector<IMG*> fondo;
 
 public:
-    enum Altura : uint8_t
+    enum ALTURA : uint8_t
     {
-        INVALIDO,
-        FRENTE,
-        MEDIO,
-        FONDO
+        Invalido,
+        Frente,
+        Medio,
+        Fondo
     };
 
-    [[nodiscard]] auto getLista(Altura altura) const -> const std::vector<IMG*>*;
+    [[nodiscard]] auto getLista(ALTURA altura) const -> const std::vector<IMG*>*;
 
-    auto añadir(IMG* img, Altura altura) -> bool;
-    auto quitar(const IMG* img, Altura altura) -> bool;
-    auto quitar(unsigned int id, Altura altura) -> bool;
+    auto añadir(IMG* img, ALTURA altura) -> bool;
+    auto quitar(const IMG* img, ALTURA altura) -> bool;
+    auto quitar(unsigned int id, ALTURA altura) -> bool;
 };
 
 

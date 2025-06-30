@@ -7,7 +7,7 @@
 #include "../controlador.h"
 
 
-void Entrada::moverRel(const int x, const int y)
+auto Entrada::moverRel(const int x, const int y) -> void
 {
     img.mover(img.getRect()->x + x, img.getRect()->y + y);
     salida.moverLineaOrigenRel(x, y);

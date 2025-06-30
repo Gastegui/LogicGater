@@ -7,7 +7,7 @@
 #include "../controlador.h"
 
 
-void Puerta::simular()
+auto Puerta::simular() -> void
 {
     bool a{false};
     bool b{false};
@@ -87,17 +87,17 @@ auto Puerta::simularAntiguo() -> bool
     return ret;
 }
 
-void Puerta::simulacionAntiguaTermindada()
+auto Puerta::simulacionAntiguaTermindada() -> void
 {
     simulandoAntiguo = false;
 }
 
-void Puerta::actualizar()
+auto Puerta::actualizar() -> void
 {
     salida.set(siguiente);
 }
 
-void Puerta::moverRel(const int x_, const int y_)
+auto Puerta::moverRel(const int x_, const int y_) -> void
 {
     imagen.mover(imagen.getRect()->x + x_, imagen.getRect()->y + y_);
 
@@ -211,7 +211,7 @@ auto Puerta::interactuar(const int posX, const int posY, const INTERACCIONES int
     }
 }
 
-void Puerta::setIONull(IO* io)
+auto Puerta::setIONull(IO* io) -> void
 {
     if(arriba == io)
         arriba = nullptr;

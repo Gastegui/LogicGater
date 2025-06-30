@@ -34,17 +34,17 @@ class Salida final : public Simulable
 
     static auto idGenerator() -> unsigned int
     {
-        static unsigned int id = 1 + get_offset(ID_TIPOS::Salida);
+        static unsigned int id = 1 + getOffset(ID_TIPOS::Salida);
         return id++;
     }
 
-    static void gastarIds(const unsigned int cantidad)
+    static auto gastarIds(const unsigned int cantidad) -> void
     {
         for(unsigned int i = 0; i < cantidad; i++)
             idGenerator();
     }
 
-    void cambiar(bool estado);
+    auto cambiar(bool estado) -> void;
 
 public:
     Salida(SDL_Renderer* renderer, Controlador* controlador_, const int x, const int y, Raton* raton_)
@@ -60,19 +60,19 @@ public:
 
     ~Salida() override = default;
 
-    void setEntrada(IO* entrada_) { entrada = entrada_; }
+    auto setEntrada(IO* entrada_) -> void { entrada = entrada_; }
     [[nodiscard]] auto getEntrada() const -> IO* { return entrada; }
     [[nodiscard]] auto getImg() -> IMG* override { return &img; }
     [[nodiscard]] auto get() const -> bool { return entrada->get(); }
     [[nodiscard]] auto getDesconectado() const -> bool override { return entrada == nullptr; }
 
-    void simular() override;
-    void actualizar() override {}
-    void simularAntiguo();
+    auto simular() -> void override;
+    auto actualizar() -> void override {}
+    auto simularAntiguo() -> void;
 
-    void moverRel(int x, int y);
+    auto moverRel(int x, int y) -> void;
     auto interactuar(int posX, int posY, INTERACCIONES interaccion) -> bool override;
-    void setIONull(IO* io) override;
+    auto setIONull(IO* io) -> void override;
     [[nodiscard]] auto getIOSalida() -> IO* override { return nullptr; }
 
     [[nodiscard]] auto getLinea(const int conexion) -> std::pair<int, int>* override
@@ -90,7 +90,7 @@ public:
         return 0;
     }
 
-    void seleccionar(bool estado) override
+    auto seleccionar(const bool estado) -> void override
     {
         if(estado != seleccionado)
         {

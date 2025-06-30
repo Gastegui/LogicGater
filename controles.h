@@ -22,7 +22,7 @@ class Controles
     static bool escribiendo;
 
 public:
-    static void init(SDL_Event* evento_, Window* window_)
+    static auto init(SDL_Event* evento_, Window* window_) -> void
     {
         evento = evento_;
         window = window_;
@@ -68,13 +68,13 @@ public:
     [[nodiscard]] static auto getUltimaAccion() -> ACCION { return accionAnterior; }
     [[nodiscard]] static auto getEvent() -> SDL_Event* { return evento; }
 
-    static void setTextInput()
+    static auto setTextInput() -> void
     {
         escribiendo = true;
         SDL_StartTextInput();
     }
 
-    static void unsetTextInput()
+    static auto unsetTextInput() -> void
     {
         escribiendo = false;
         SDL_StopTextInput();

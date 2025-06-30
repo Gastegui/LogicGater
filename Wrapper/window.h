@@ -43,11 +43,11 @@ class Window
 
     mutable SDL_Rect seleccion{};
 
-    void rendererClear() const;
-    void rendererDraw() const;
-    void rendererPresent() const;
+    auto rendererClear() const -> void;
+    auto rendererDraw() const -> void;
+    auto rendererPresent() const -> void;
 
-    static void renderLine(SDL_Renderer* renderer, int x1, int y1, int x2, int y2, const ListaLineas::Linea* linea);
+    static auto renderLine(SDL_Renderer* renderer, int x1, int y1, int x2, int y2, const ListaLineas::Linea* linea) -> void;
 
 public:
     explicit Window(const int witdh_, const int height_, const char* img)
@@ -62,7 +62,7 @@ public:
             SDL_SetRenderTarget(renderer, nullptr);
         }
         minimapaFondo.setClickable();
-        listaIMG.añadir(&minimapaFondo, ListaIMG::FRENTE);
+        listaIMG.añadir(&minimapaFondo, ListaIMG::Frente);
     }
 
     ~Window()
@@ -79,7 +79,7 @@ public:
     [[nodiscard]] auto getWindow() const -> SDL_Window* { return window; }
     [[nodiscard]] auto getRaton() -> Raton* { return &raton; }
 
-    void setControlador(Controlador* controlador_)
+    auto setControlador(Controlador* controlador_) -> void
     {
         controlador = controlador_;
         raton.setControlador(controlador_);
@@ -90,22 +90,22 @@ public:
         return window == nullptr;
     }
 
-    void limpiar() const;
-    void render();
+    auto limpiar() const -> void;
+    auto render() const -> void;
 
-    [[nodiscard]] auto getListaIMG(const ListaIMG::Altura altura) const -> const std::vector<IMG*>*
+    [[nodiscard]] auto getListaIMG(const ListaIMG::ALTURA altura) const -> const std::vector<IMG*>*
     {
         return listaIMG.getLista(altura);
     }
 
     //No borra la imagen. Eso es trabajo de la clase IMG
-    auto añadir(IMG* img, const ListaIMG::Altura altura) -> bool
+    auto añadir(IMG* img, const ListaIMG::ALTURA altura) -> bool
     {
         return listaIMG.añadir(img, altura);
     }
 
     //No borra las imagenes. Eso es trabajo de la clase IMG
-    auto borrar(const IMG* img, const ListaIMG::Altura altura) -> bool
+    auto borrar(const IMG* img, const ListaIMG::ALTURA altura) -> bool
     {
         if(listaIMG.quitar(img, altura))
         {
@@ -115,14 +115,14 @@ public:
         return false;
     }
 
-    void moverRel(int x, int y);
-    void mover(int x, int y);
-    void centrar();
+    auto moverRel(int x, int y) -> void;
+    auto mover(int x, int y) -> void;
+    auto centrar() -> void;
 
     [[nodiscard]] auto getEsquinaX() const -> int { return esquinaX; }
     [[nodiscard]] auto getEsquinaY() const -> int { return esquinaY; }
 
-    [[nodiscard]] auto getIMGMinimapa() -> IMG* { return &minimapaFondo; }
+    [[nodiscard]] auto getImgMinimapa() -> IMG* { return &minimapaFondo; }
     [[nodiscard]] auto getMapaMinX() const -> int { return mapaMinX; }
     [[nodiscard]] auto getMapaMaxX() const -> int { return mapaMaxX; }
     [[nodiscard]] auto getMapaMinY() const -> int { return mapaMinY; }
@@ -130,7 +130,7 @@ public:
     [[nodiscard]] auto getMinimapaTamañoX() const -> int { return minimapaTamañoObjetivoX; }
     [[nodiscard]] auto getMinimapaTamañoY() const -> int { return minimapaTamañoObjetivoY; }
 
-    void setSeleccion(SDL_Rect rect)
+    auto setSeleccion(const SDL_Rect rect) const -> void
     {
         seleccion = rect;
     }

@@ -34,7 +34,7 @@ auto Raton::buscarLista(const std::vector<IMG*>* lista, const int posX, const in
     return nullptr;
 }
 
-void Raton::interactuar(IMG* actual)
+auto Raton::interactuar(IMG* actual) -> void
 {
     const ACCION accion = Controles::getUltimaAccion();
     if(borrando)
@@ -105,7 +105,7 @@ auto Raton::interactuarConexion(IMG* actual) -> bool
     return false;
 }
 
-void Raton::setControlador(Controlador* controlador_)
+auto Raton::setControlador(Controlador* controlador_) -> void
 {
     controlador = controlador_;
     window = controlador->getWindow();
@@ -191,7 +191,7 @@ auto Raton::manejarRaton() -> void
 
     if(!seleccionados.empty())
     {
-        actual = buscarLista(controlador->getListaIMG(ListaIMG::MEDIO), posX, posY);
+        actual = buscarLista(controlador->getListaIMG(ListaIMG::Medio), posX, posY);
         const bool imagen = actual != nullptr && std::ranges::find(seleccionados, actual->getSimulable()) != seleccionados.end();
         switch(Controles::getUltimaAccion())
         {
@@ -295,11 +295,11 @@ auto Raton::manejarRaton() -> void
         }
     }
 
-    lista = controlador->getListaIMG(ListaIMG::FRENTE);
+    lista = controlador->getListaIMG(ListaIMG::Frente);
     actual = buscarLista(lista, posX, posY, true);
     if(actual != nullptr)
     {
-        if(window->getIMGMinimapa() == actual && Controles::getUltimaAccion() == ACCION::InteractuarArriba)
+        if(window->getImgMinimapa() == actual && Controles::getUltimaAccion() == ACCION::InteractuarArriba)
         {
             window->mover(-interpolacionLinear(posX - actual->getRect()->x, 0, window->getMinimapaTamañoX(), window->getMapaMinX(), window->getMapaMaxX()),
                           -interpolacionLinear(posY - actual->getRect()->y, 0, window->getMinimapaTamañoY(), window->getMapaMinY(), window->getMapaMaxY()));
@@ -308,7 +308,7 @@ auto Raton::manejarRaton() -> void
         return;
     }
 
-    lista = controlador->getListaIMG(ListaIMG::MEDIO);
+    lista = controlador->getListaIMG(ListaIMG::Medio);
     actual = buscarLista(lista, posX, posY);
     if(actual != nullptr)
     {
@@ -324,7 +324,7 @@ auto Raton::manejarRaton() -> void
         controlador->desmarcarOrigen();
     }
 
-    lista = controlador->getListaIMG(ListaIMG::FONDO);
+    lista = controlador->getListaIMG(ListaIMG::Fondo);
     actual = buscarLista(lista, posX, posY);
     if(actual != nullptr)
     {
@@ -356,7 +356,7 @@ auto Raton::manejarRaton() -> void
     }
 }
 
-void Raton::setBorrando(const bool borrando_)
+auto Raton::setBorrando(const bool borrando_) -> void
 {
     if(seleccionados.empty())
     {

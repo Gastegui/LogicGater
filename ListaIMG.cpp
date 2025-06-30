@@ -5,23 +5,23 @@
 #include "ListaIMG.h"
 #include "Wrapper/image.h"
 
-auto ListaIMG::getLista(const Altura altura) const -> const std::vector<IMG*>*
+auto ListaIMG::getLista(const ALTURA altura) const -> const std::vector<IMG*>*
 {
     switch(altura)
     {
-        case FRENTE:
+        case Frente:
             return &frente;
-        case MEDIO:
+        case Medio:
             return &medio;
-        case FONDO:
+        case Fondo:
             return &fondo;
-        case INVALIDO:
+        case Invalido:
         default:
             return nullptr;
     }
 }
 
-auto ListaIMG::añadir(IMG* img, const Altura altura) -> bool
+auto ListaIMG::añadir(IMG* img, const ALTURA altura) -> bool
 {
     if(img == nullptr)
         return false;
@@ -30,16 +30,16 @@ auto ListaIMG::añadir(IMG* img, const Altura altura) -> bool
 
     switch(altura)
     {
-        case FRENTE:
+        case Frente:
             lista = &frente;
             break;
-        case MEDIO:
+        case Medio:
             lista = &medio;
             break;
-        case FONDO:
+        case Fondo:
             lista = &fondo;
             break;
-        case INVALIDO:
+        case Invalido:
         default:
             return false;
     }
@@ -49,22 +49,22 @@ auto ListaIMG::añadir(IMG* img, const Altura altura) -> bool
     return true;
 }
 
-auto ListaIMG::quitar(const unsigned int id, const Altura altura) -> bool
+auto ListaIMG::quitar(const unsigned int id, const ALTURA altura) -> bool
 {
     std::vector<IMG*>* lista{};
 
     switch(altura)
     {
-        case FRENTE:
+        case Frente:
             lista = &frente;
             break;
-        case MEDIO:
+        case Medio:
             lista = &medio;
             break;
-        case FONDO:
+        case Fondo:
             lista = &fondo;
             break;
-        case INVALIDO:
+        case Invalido:
         default:
             return false;
     }
@@ -81,7 +81,7 @@ auto ListaIMG::quitar(const unsigned int id, const Altura altura) -> bool
 }
 
 
-auto ListaIMG::quitar(const IMG* img, const Altura altura) -> bool
+auto ListaIMG::quitar(const IMG* img, const ALTURA altura) -> bool
 {
     return quitar(img->getId(), altura);
 }

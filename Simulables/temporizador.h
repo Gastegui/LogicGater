@@ -41,11 +41,11 @@ class Temporizador final : public Simulable
 
     static auto idGenerator() -> unsigned int
     {
-        static unsigned int id = 1 + get_offset(ID_TIPOS::Temporizador);
+        static unsigned int id = 1 + getOffset(ID_TIPOS::Temporizador);
         return id++;
     }
 
-    static void gastarIds(const unsigned int cantidad)
+    static auto gastarIds(const unsigned int cantidad) -> void
     {
         for(unsigned int i = 0; i < cantidad; i++)
             idGenerator();
@@ -70,12 +70,12 @@ public:
 
     ~Temporizador() override = default;
 
-    void simular() override;
-    void actualizar() override;
+    auto simular() -> void override;
+    auto actualizar() -> void override;
     auto interactuar(int posX, int posY, INTERACCIONES interaccion) -> bool override;
     auto getImg() -> IMG* override { return &imagen; }
 
-    void setIONull(IO* io) override
+    auto setIONull(IO* io) -> void override
     {
         if(entrada != nullptr && entrada == io)
             entrada = nullptr;
@@ -98,7 +98,7 @@ public:
         return 0;
     }
 
-    void seleccionar(bool estado) override
+    auto seleccionar(const bool estado) -> void override
     {
         if(estado != seleccionado)
         {

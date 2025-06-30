@@ -17,33 +17,33 @@ auto operator<<(TXT& anterior, const std::string* str) -> TXT&
     return anterior;
 }
 
-void TXT::write(const char* text)
+auto TXT::write(const char* text) -> void
 {
-    if(m_font == nullptr)
+    if(font == nullptr)
     {
         std::println(std::cerr, "Se ha intentado escribir pero no se ha cargado el texto");
         return;
     }
     SDL_Rect rect;
-    SDL_Surface* surface = TTF_RenderUTF8_Blended(m_font, text, m_color);
-    SDL_Texture* texture = SDL_CreateTextureFromSurface(m_renderer, surface);
+    SDL_Surface* surface = TTF_RenderUTF8_Blended(font, text, color);
+    SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);
 
-    rect.x = m_x;
-    rect.y = m_y;
+    rect.x = x;
+    rect.y = y;
     rect.w = surface->w;
     rect.h = surface->h;
 
-    m_y += m_alturaSalto;
+    y += alturaSalto;
 
-    SDL_RenderCopy(m_renderer, texture, nullptr, &rect);
+    SDL_RenderCopy(renderer, texture, nullptr, &rect);
     SDL_FreeSurface(surface);
     SDL_DestroyTexture(texture);
 }
 
 
-void TXT::write(const int x, const int y, const char* text)
+auto TXT::write(const int x_, const int y_, const char* text) -> void
 {
-    m_x = x;
-    m_y = y;
+    x = x_;
+    y = y_;
     write(text);
 }

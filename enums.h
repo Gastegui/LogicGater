@@ -101,7 +101,7 @@ enum class ID_TIPOS : unsigned int
     Temporizador = static_cast<unsigned int>(1 << 26)
 };
 
-constexpr static auto get_offset(const ID_TIPOS tipo) -> unsigned int
+constexpr static auto getOffset(const ID_TIPOS tipo) -> unsigned int
 {
     switch(tipo)
     {

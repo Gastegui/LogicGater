@@ -38,7 +38,7 @@ class Raton
     std::vector<Simulable*> seleccionados;
     bool moviendoSeleccion{false};
 
-    void interactuar(IMG* actual);
+    auto interactuar(IMG* actual) -> void;
     auto interactuarConexion(IMG* actual) -> bool;
     auto buscarLista(const std::vector<IMG*>* lista, int posX, int posY, bool absoluto = false) const -> IMG*;
 
@@ -48,14 +48,14 @@ class Raton
     }
 
 public:
-    void setControlador(Controlador* controlador_);
+    auto setControlador(Controlador* controlador_) -> void;
 
-    void setBorrando(bool borrando_);
+    auto setBorrando(bool borrando_) -> void;
     [[nodiscard]] auto getBorrando() const -> bool { return borrando; }
-    void setImgAnteriorNull() { imgAnterior = nullptr; }
+    auto setImgAnteriorNull() -> void { imgAnterior = nullptr; }
 
-    void manejarRaton();
-    void setMoviendoImg(IMG* img) { moviendoImg = img; }
+    auto manejarRaton() -> void;
+    auto setMoviendoImg(IMG* img) -> void { moviendoImg = img; }
 };
 
 

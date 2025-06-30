@@ -6,7 +6,7 @@
 
 #include "io.h"
 
-void ListaLineas::añadir(Simulable* destino, IO* io, const int conexion)
+auto ListaLineas::añadir(Simulable* destino, IO* io, const int conexion) -> void
 {
     if(destino == nullptr || io == nullptr)
         return;
@@ -14,7 +14,7 @@ void ListaLineas::añadir(Simulable* destino, IO* io, const int conexion)
     lista.push_back(Linea{.destino = destino, .io = io, .conexion = conexion});
 }
 
-void ListaLineas::borrar(const Simulable* destino, const IO* io, const int conexion)
+auto ListaLineas::borrar(const Simulable* destino, const IO* io, const int conexion) -> void
 {
     if(lista.empty() || destino == nullptr || io == nullptr)
         return;
@@ -32,7 +32,7 @@ void ListaLineas::borrar(const Simulable* destino, const IO* io, const int conex
     }
 }
 
-void ListaLineas::borrar(const IO* involucrado)
+auto ListaLineas::borrar(const IO* involucrado) -> void
 {
     if(lista.empty() || involucrado == nullptr)
         return;
@@ -43,7 +43,7 @@ void ListaLineas::borrar(const IO* involucrado)
         borrado = false;
         auto it = lista.begin();
         for(; it != lista.end(); ++it)
-            if((*it).io == involucrado)
+            if(it->io == involucrado)
                 break;
 
         if(it != lista.end())
@@ -57,7 +57,7 @@ void ListaLineas::borrar(const IO* involucrado)
     }while(borrado);
 }
 
-void ListaLineas::borrar(const Simulable* involucrado)
+auto ListaLineas::borrar(const Simulable* involucrado) -> void
 {
     if(lista.empty() || involucrado == nullptr)
         return;
