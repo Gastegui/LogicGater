@@ -25,6 +25,7 @@ auto Window::renderLine(SDL_Renderer* renderer, const int x1, const int y1, cons
 
 auto Window::rendererDraw() const -> void
 {
+    // ReSharper disable CppDFANullDereference
     const std::vector<IMG*>* imagenes{listaIMG.getLista(ListaIMG::Fondo)};
     const std::vector<ListaLineas::Linea>* lineas{controlador->getListaLineas()->getLista()};
     mapaMinX = -esquinaX;
@@ -45,7 +46,7 @@ auto Window::rendererDraw() const -> void
 
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
     }
-
+    // ReSharper restore CppDFANullDereference
     for(IMG* img : *imagenes)
         SDL_RenderCopy(renderer, img->getTexture(), nullptr, img->getRect());
 

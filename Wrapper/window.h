@@ -75,6 +75,11 @@ public:
             SDL_FreeSurface(windowIcon);
     }
 
+    Window(const Window&) = delete;
+    auto operator=(const Window&) -> Window& = delete;
+    Window(Window&&) = delete;
+    auto operator=(Window&&) -> Window& = delete;
+
     [[nodiscard]] auto getRenderer() const -> SDL_Renderer* { return renderer; }
     [[nodiscard]] auto getWindow() const -> SDL_Window* { return window; }
     [[nodiscard]] auto getRaton() -> Raton* { return &raton; }

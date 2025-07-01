@@ -17,6 +17,11 @@ public:
     explicit Simulable(const unsigned int id) : id(id) {}
 
     virtual ~Simulable() = default;
+    Simulable(const Simulable&) = delete;
+    auto operator=(const Simulable&) -> Simulable& = delete;
+    Simulable(Simulable&&) = delete;
+    auto operator=(Simulable&&) -> Simulable& = delete;
+
     virtual auto simular() -> void = 0;
     virtual auto actualizar() -> void = 0;
     virtual auto interactuar(int posX, int posY, INTERACCIONES accion) -> bool = 0;

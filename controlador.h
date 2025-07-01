@@ -18,7 +18,6 @@ class Window;
 class IO;
 class Entrada;
 class Salida;
-class SistemaGuardado;
 
 class Controlador
 {
@@ -50,6 +49,12 @@ public:
             delete value;
         simulables.clear();
     }
+
+
+    Controlador(const Controlador&) = delete;
+    auto operator=(const Controlador&) -> Controlador& = delete;
+    Controlador(Controlador&&) = delete;
+    auto operator=(Controlador&&) -> Controlador& = delete;
 
     [[nodiscard]] auto getListaIMG(const ListaIMG::ALTURA altura) const -> const std::vector<IMG*>*
     {

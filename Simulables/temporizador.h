@@ -59,7 +59,6 @@ public:
 
     Temporizador(SDL_Renderer* renderer, Controlador* controlador_, Raton* raton_, const int tiempo_, const int x_, const int y_, const bool entradaNegada_, const bool salidaNegada_, TXT* txt_, const unsigned int id_)
         : Simulable(id_), controlador{controlador_}, raton{raton_}, entradaNegada{entradaNegada_}, salidaNegada{salidaNegada_}, salida{this, x_ + 100, y_ + 25}, x{x_}, y{y_}, ciclosTotales{tiempo_}, imagen(renderer, x_, y_, 100, 50)
-
     {
         imagen.setTXT(txt_);
         cambiar();
@@ -67,8 +66,6 @@ public:
         linea.first += x_;
         linea.second += y_;
     }
-
-    ~Temporizador() override = default;
 
     auto simular() -> void override;
     auto actualizar() -> void override;

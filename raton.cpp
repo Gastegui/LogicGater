@@ -89,7 +89,7 @@ auto Raton::interactuarConexion(IMG* actual) -> bool
 
     if(controlador->getConectando())
     {
-        if(Controles::getUltimaAccion() == ACCION::ConexionArriba)
+        if(Controles::getUltimaAccion() == ACCION::ConexionArriba && actual->getSimulable() != nullptr)
         {
             if(!actual->getSimulable()->interactuar(-window->getEsquinaX() + posX - actual->getRect()->x, -window->getEsquinaY() + posY - actual->getRect()->y, INTERACCIONES::ConexionArriba))
                 controlador->desmarcarOrigen(); //Si no se puede conectar, desmarcar origen
@@ -97,7 +97,7 @@ auto Raton::interactuarConexion(IMG* actual) -> bool
             return true;
         }
     }
-    else if(Controles::getUltimaAccion() == ACCION::ConexionAbajo)
+    else if(Controles::getUltimaAccion() == ACCION::ConexionAbajo && actual->getSimulable() != nullptr)
     {
         return actual->getSimulable()->interactuar(-window->getEsquinaX() + posX - actual->getRect()->x, -window->getEsquinaY() + posY - actual->getRect()->y, INTERACCIONES::ConexionAbajo);
     }

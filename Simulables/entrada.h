@@ -60,8 +60,6 @@ public:
         img.setClickable(this);
     }
 
-    ~Entrada() override = default;
-
     [[nodiscard]] auto getSalida() -> IO* { return &salida; }
     [[nodiscard]] auto getImg() -> IMG* override { return &img; }
     [[nodiscard]] auto getDesconectado() const -> bool override { return salida.getConexiones() == 0; }

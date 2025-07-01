@@ -58,8 +58,6 @@ public:
         entradaPos.second += y;
     }
 
-    ~Salida() override = default;
-
     auto setEntrada(IO* entrada_) -> void { entrada = entrada_; }
     [[nodiscard]] auto getEntrada() const -> IO* { return entrada; }
     [[nodiscard]] auto getImg() -> IMG* override { return &img; }

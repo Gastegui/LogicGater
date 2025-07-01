@@ -17,5 +17,7 @@ Checks: >
   -*-implicit-bool-conversion,
   -*-avoid-nested-conditional-operator,
   -*-convert-member-functions-to-static,
+  -misc-include-cleaner,
   
   -*-owning-memory,
+  -*-function-cognitive-complexity,

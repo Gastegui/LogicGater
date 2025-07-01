@@ -34,6 +34,11 @@ public:
             TTF_CloseFont(font);
     }
 
+    TXT(const TXT&) = delete;
+    auto operator=(const TXT&) -> TXT& = delete;
+    TXT(TXT&&) = delete;
+    auto operator=(TXT&&) -> TXT& = delete;
+
     constexpr auto operator!() const -> bool
     {
         return font == nullptr;
