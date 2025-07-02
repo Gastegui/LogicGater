@@ -50,7 +50,9 @@ auto main() -> int
     window.render();
 
     SDL_Event event;
+    // ReSharper disable CppDFALocalValueEscapesFunction
     Controles::init(&event, &window);
+    // ReSharper restore CppDFALocalValueEscapesFunction
     bool enMarcha = true;
     bool simulando = false;
     bool mostrarControles = true;
@@ -76,7 +78,8 @@ auto main() -> int
             switch(Controles::getNuevaAccion(&event))
             {
                 case ACCION::BorrarSueltos:
-                    std::println("Se han borrado {} elementos", controlador.limpiar());
+                    mensaje = std::format("Se han borrado {} elemento(s)", controlador.limpiar());
+                    mensajeTiempo = SDL_GetTicks64();
                     break;
                 case ACCION::CrearAnd:
                     controlador.crear(Puerta::AND, -1, -1);

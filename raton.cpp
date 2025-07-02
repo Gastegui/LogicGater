@@ -122,13 +122,27 @@ auto Raton::manejarRaton() -> void
     if(posX < 10)
     {
         window->moverRel(1, 0);
+        if(moviendoImg != nullptr)
+                moviendoImg->interactuar(-1,0, INTERACCIONES::MovimientoRaton);
     }
     else if(posX > 1910)
+    {
         window->moverRel(-1, 0);
+        if(moviendoImg != nullptr)
+            moviendoImg->interactuar(1,0, INTERACCIONES::MovimientoRaton);
+    }
     if(posY < 10)
+    {
         window->moverRel(0, 1);
+        if(moviendoImg != nullptr)
+            moviendoImg->interactuar(0,-1, INTERACCIONES::MovimientoRaton);
+    }
     else if(posY > 1070)
+    {
         window->moverRel(0, -1);
+        if(moviendoImg != nullptr)
+            moviendoImg->interactuar(0,1, INTERACCIONES::MovimientoRaton);
+    }
 
     if(seleccionando)
     {
