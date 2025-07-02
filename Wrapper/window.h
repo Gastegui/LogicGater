@@ -10,6 +10,7 @@
 #include "image.h"
 #include "../raton.h"
 #include "../ListaLineas.h"
+#include "../ListaIMG.h"
 
 class IO;
 class Raton;

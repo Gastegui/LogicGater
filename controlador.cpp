@@ -2,6 +2,8 @@
 // Created by julen on 23/08/24.
 //
 
+#include <ranges>
+
 #include "controlador.h"
 #include "Simulables/salida.h"
 #include "Simulables/entrada.h"
@@ -12,14 +14,14 @@ auto Controlador::crear(const Puerta::TIPO tipo, int x, int y, const bool arriba
     if(x == -1 && y == -1)
         SDL_GetMouseState(&x, &y);
 
-    Puerta* puerta{};
+    std::unique_ptr<Puerta> puerta;
     if(id == 0)
-        puerta = new Puerta{renderer, this, tipo, -window->getEsquinaX() + x, -window->getEsquinaY() + y, arribaNegado, abajoNegado, salidaNegada, window->getRaton()};
+        puerta = std::make_unique<Puerta>(renderer, this, tipo, -window->getEsquinaX() + x, -window->getEsquinaY() + y, arribaNegado, abajoNegado, salidaNegada, window->getRaton());
     else
-        puerta = new Puerta{renderer, this, tipo, -window->getEsquinaX() + x, -window->getEsquinaY() + y, arribaNegado, abajoNegado, salidaNegada, window->getRaton(), id};
+        puerta = std::make_unique<Puerta>(renderer, this, tipo, -window->getEsquinaX() + x, -window->getEsquinaY() + y, arribaNegado, abajoNegado, salidaNegada, window->getRaton(), id);
 
     window->añadir(puerta->getImg(), ListaIMG::Medio);
-    simulables.insert(std::make_pair(puerta->getId(), puerta));
+    simulables[puerta->getId()] = std::move(puerta);
 }
 
 auto Controlador::crear(const bool mantener, int x, int y, const unsigned int id) -> void
@@ -27,14 +29,14 @@ auto Controlador::crear(const bool mantener, int x, int y, const unsigned int id
     if(x == -1 && y == -1)
         SDL_GetMouseState(&x, &y);
 
-    Entrada* entrada{};
+    std::unique_ptr<Entrada> entrada{};
     if(id == 0)
-        entrada = new Entrada{renderer, this, -window->getEsquinaX() + x, -window->getEsquinaY() + y, window->getRaton(), mantener};
+        entrada = std::make_unique<Entrada>(renderer, this, -window->getEsquinaX() + x, -window->getEsquinaY() + y, window->getRaton(), mantener);
     else
-        entrada = new Entrada{renderer, this, -window->getEsquinaX() + x, -window->getEsquinaY() + y, window->getRaton(), id, mantener};
+        entrada = std::make_unique<Entrada>(renderer, this, -window->getEsquinaX() + x, -window->getEsquinaY() + y, window->getRaton(), id, mantener);
     window->añadir(entrada->getImg(), ListaIMG::Medio);
 
-    simulables.insert(std::make_pair(entrada->getId(), entrada));
+    simulables[entrada->getId()] = std::move(entrada);
 }
 
 auto Controlador::crear(int x, int y, const unsigned int id) -> void
@@ -42,14 +44,14 @@ auto Controlador::crear(int x, int y, const unsigned int id) -> void
     if(x == -1 && y == -1)
         SDL_GetMouseState(&x, &y);
 
-    Salida* salida{};
+    std::unique_ptr<Salida> salida{};
     if(id == 0)
-        salida = new Salida{renderer, this, -window->getEsquinaX() + x, -window->getEsquinaY() + y, window->getRaton()};
+        salida = std::make_unique<Salida>(renderer, this, -window->getEsquinaX() + x, -window->getEsquinaY() + y, window->getRaton());
     else
-        salida = new Salida{renderer, this, -window->getEsquinaX() + x, -window->getEsquinaY() + y, window->getRaton(), id};
+        salida = std::make_unique<Salida>(renderer, this, -window->getEsquinaX() + x, -window->getEsquinaY() + y, window->getRaton(), id);
     window->añadir(salida->getImg(), ListaIMG::Medio);
 
-    simulables.insert(std::make_pair(salida->getId(), salida));
+    simulables[salida->getId()] = std::move(salida);
 }
 
 auto Controlador::crear(int x, int y, const int tiempo, const bool entradaNegada, const bool salidaNegada, const unsigned int id) -> void
@@ -57,41 +59,41 @@ auto Controlador::crear(int x, int y, const int tiempo, const bool entradaNegada
     if(x == -1 && y == -1)
         SDL_GetMouseState(&x, &y);
 
-    Temporizador* temporizador{};
+    std::unique_ptr<Temporizador> temporizador{};
     if(id == 0)
-        temporizador = new Temporizador(renderer, this, window->getRaton(), tiempo, -window->getEsquinaX() + x, -window->getEsquinaY() + y, entradaNegada, salidaNegada, txt);
+        temporizador = std::make_unique<Temporizador>(renderer, this, window->getRaton(), tiempo, -window->getEsquinaX() + x, -window->getEsquinaY() + y, entradaNegada, salidaNegada, txt);
     else
-        temporizador = new Temporizador(renderer, this, window->getRaton(), tiempo, -window->getEsquinaX() + x, -window->getEsquinaY() + y, entradaNegada, salidaNegada, txt, id);
+        temporizador = std::make_unique<Temporizador>(renderer, this, window->getRaton(), tiempo, -window->getEsquinaX() + x, -window->getEsquinaY() + y, entradaNegada, salidaNegada, txt, id);
     window->añadir(temporizador->getImg(), ListaIMG::Medio);
 
-    simulables.insert(std::make_pair(temporizador->getId(), temporizador));
+    simulables[temporizador->getId()] = std::move(temporizador);
 }
 
 
 auto Controlador::simular() const -> void
 {
     for(const auto& value : std::views::values(simulables))
-        if(value->getTipo() == TIPOS_SIMULABLES::Puerta || value->getTipo() == TIPOS_SIMULABLES::Temporizador)
-            value->simular();
+        if(value.get()->getTipo() == TIPOS_SIMULABLES::Puerta || value.get()->getTipo() == TIPOS_SIMULABLES::Temporizador)
+            value.get()->simular();
 
     for(const auto& value : simulables | std::views::values)
-        if(value->getTipo() == TIPOS_SIMULABLES::Puerta || value->getTipo() == TIPOS_SIMULABLES::Temporizador)
-            value->actualizar();
+        if(value.get()->getTipo() == TIPOS_SIMULABLES::Puerta || value.get()->getTipo() == TIPOS_SIMULABLES::Temporizador)
+            value.get()->actualizar();
 
     for(const auto& value : simulables | std::views::values)
-        if(value->getTipo() == TIPOS_SIMULABLES::Salida)
-            value->simular();
+        if(value.get()->getTipo() == TIPOS_SIMULABLES::Salida)
+            value.get()->simular();
 }
 
 auto Controlador::simularInstantaneo() const -> void
 {
     for(const auto& value : simulables | std::views::values)
-        if(value->getTipo() == TIPOS_SIMULABLES::Salida)
-            dynamic_cast<Salida*>(value)->simularAntiguo();
+        if(value.get()->getTipo() == TIPOS_SIMULABLES::Salida)
+            dynamic_cast<Salida*>(value.get())->simularAntiguo();
 
     for(const auto& value : simulables | std::views::values)
-        if(value->getTipo() == TIPOS_SIMULABLES::Puerta)
-            dynamic_cast<Puerta*>(value)->simulacionAntiguaTermindada();
+        if(value.get()->getTipo() == TIPOS_SIMULABLES::Puerta)
+            dynamic_cast<Puerta*>(value.get())->simulacionAntiguaTermindada();
 }
 
 
@@ -110,8 +112,8 @@ auto Controlador::limpiar() -> int
             limpiados++;
         }
 
-        if(value->getDesconectado())
-            simulable = value;
+        if(value.get()->getDesconectado())
+            simulable = value.get();
     }
 
     if(simulable != nullptr)
@@ -129,7 +131,7 @@ auto Controlador::limpiar() -> int
 auto Controlador::getSimulable(const unsigned int id) const -> Simulable*
 {
     const auto it = simulables.find(id);
-    return it != simulables.end() ? it->second : nullptr;
+    return it != simulables.end() ? it->second.get() : nullptr;
 }
 
 auto Controlador::seleccionar(const SDL_Rect region, std::vector<Simulable*>* vector) const -> void
@@ -137,13 +139,13 @@ auto Controlador::seleccionar(const SDL_Rect region, std::vector<Simulable*>* ve
     vector->clear();
     for(const auto& value : simulables | std::views::values)
     {
-        if(SDL_HasIntersection(&region, value->getImg()->getRect()))
+        if(SDL_HasIntersection(&region, value.get()->getImg()->getRect()))
         {
-            vector->push_back(value);
-            value->seleccionar(true);
+            vector->push_back(value.get());
+            value.get()->seleccionar(true);
         }
         else
-            value->seleccionar(false);
+            value.get()->seleccionar(false);
     }
 }
 

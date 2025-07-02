@@ -8,6 +8,7 @@
 #include <fstream>
 #include <sstream>
 #include <string>
+#include <ranges>
 
 #include "controlador.h"
 #include "Wrapper/window.h"
@@ -37,13 +38,13 @@ auto SistemaGuardado::guardar(Controlador* controlador, const Window* window, co
     const Temporizador* temp{};
     for(const auto& value : controlador->simulables | std::views::values)
     {
-        if((puerta = dynamic_cast<Puerta*>(value)) != nullptr) // NOLINT(*-assignment-in-if-condition)
+        if((puerta = dynamic_cast<Puerta*>(value.get())) != nullptr) // NOLINT(*-assignment-in-if-condition)
             outf << "Puerta: id: " << puerta->getId() << " tipo: " << puerta->tipo << " arribaNegado: " << puerta->arribaNegado << " abajoNegado: " << puerta->abajoNegado << " salidaNegada: " << puerta->salidaNegada << " x: " << puerta->x << " y: " << puerta->y << "\n";
-        else if((salida = dynamic_cast<Salida*>(value)) != nullptr) // NOLINT(*-assignment-in-if-condition)
+        else if((salida = dynamic_cast<Salida*>(value.get())) != nullptr) // NOLINT(*-assignment-in-if-condition)
             outf << "Salida: id: " << salida->getId() << " x: " << salida->img.rect.x << " y: " << salida->img.rect.y << "\n";
-        else if((entrada = dynamic_cast<Entrada*>(value)) != nullptr) // NOLINT(*-assignment-in-if-condition)
+        else if((entrada = dynamic_cast<Entrada*>(value.get())) != nullptr) // NOLINT(*-assignment-in-if-condition)
             outf << "Entrada: id: " << entrada->getId() << " mantener: " << entrada->mantener << " x: " << entrada->img.rect.x << " y: " << entrada->img.rect.y << "\n";
-        else if((temp = dynamic_cast<Temporizador*>(value)) != nullptr) // NOLINT(*-assignment-in-if-condition)
+        else if((temp = dynamic_cast<Temporizador*>(value.get())) != nullptr) // NOLINT(*-assignment-in-if-condition)
             outf << "Temporizador: id: " << temp->getId() << " x: " << temp->imagen.rect.x << " y: " << temp->imagen.rect.y << " entradaNegada: " << temp->entradaNegada << " salidaNegada: " << temp->salidaNegada << " ciclosTotales: " << temp->ciclosTotales << "\n";
     }
 

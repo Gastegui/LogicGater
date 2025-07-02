@@ -6,7 +6,7 @@
 #define CONTROLADOR_H
 
 #include <map>
-#include <ranges>
+#include <memory>
 
 #include "ListaLineas.h"
 #include "Simulables/puerta.h"
@@ -33,7 +33,7 @@ class Controlador
     bool cuadricula{false};
     int cuadriculaTamaño{50};
 
-    std::map<unsigned int, Simulable*> simulables;
+    std::map<unsigned int, std::unique_ptr<Simulable>> simulables;
 
     ListaLineas listaLineas;
     std::vector<Simulable*>* seleccionados{};
@@ -42,15 +42,7 @@ public:
     explicit Controlador(Window* window_, TXT* txt_)
         : window{window_}, renderer{window_->getRenderer()}, txt{txt_} {}
 
-    ~Controlador()
-    {
-        for(const auto& value : simulables | std::views::values)
-            // ReSharper disable once CppDFADeletedPointer
-            delete value;
-        simulables.clear();
-    }
-
-
+    ~Controlador() = default;
     Controlador(const Controlador&) = delete;
     auto operator=(const Controlador&) -> Controlador& = delete;
     Controlador(Controlador&&) = delete;
@@ -62,8 +54,6 @@ public:
     }
 
     [[nodiscard]] auto getWindow() const -> Window* { return window; }
-
-    [[nodiscard]] auto getSimulables() const -> std::map<unsigned int, Simulable*> { return simulables; }
     [[nodiscard]] auto getListaLineas() -> ListaLineas* { return &listaLineas; }
 
     //Crea una puerta
@@ -88,7 +78,7 @@ public:
         window->borrar(simulable->getImg(), ListaIMG::Medio);
         simulables.erase(simulable->getId());
 
-        delete simulable;
+        //delete simulable;
     }
 
     auto añadirConexion(Simulable* simulableDestino, const int conexion) -> void { listaLineas.añadir(simulableDestino, origen, conexion); }

@@ -7,7 +7,6 @@
 #include <SDL_rect.h>
 #include <vector>
 
-#include "ListaIMG.h"
 
 
 class Simulable;

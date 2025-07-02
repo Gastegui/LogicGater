@@ -19,5 +19,4 @@ Checks: >
   -*-convert-member-functions-to-static,
   -misc-include-cleaner,
   
-  -*-owning-memory,
   -*-function-cognitive-complexity,

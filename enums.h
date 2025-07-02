@@ -4,6 +4,7 @@
 
 #ifndef ENUMS_H
 #define ENUMS_H
+// ReSharper disable once CppUnusedIncludeDirective
 #include <cstdint>
 #include <string>
 
