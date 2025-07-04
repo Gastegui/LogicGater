@@ -19,7 +19,8 @@
         MoverArriba,        /* Soltar clic derecho */ \
         ConexionAbajo,      /* Pulsar clic central o espacio */ \
         ConexionArriba,     /* Soltar clic central o espacio */ \
-        AlternarBorrando,   /* Backspace */ \
+        AlternarBorrando,   /* Backspace arriba */ \
+        AlternarBorrando_,  /* Backspace abajo*/ \
         BorrarSueltos,      /* L */ \
         CrearAnd,           /* A */ \
         CrearOr,            /* O */ \

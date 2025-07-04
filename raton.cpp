@@ -235,13 +235,6 @@ auto Raton::manejarRaton() -> void
                     simulable->interactuar(0, 0, INTERACCIONES::MoverArriba);
                 moviendoSeleccion = false;
                 break;
-            case ACCION::AlternarBorrando:
-                if(moviendoSeleccion)
-                    break;
-                for(Simulable* simulable : seleccionados)
-                    controlador->borrar(simulable);
-                seleccionados.clear();
-                break;
             case ACCION::InteractuarArriba:
                 controlador->desseleccionar(&seleccionados);
                 moviendoSeleccion = false;
@@ -372,9 +365,15 @@ auto Raton::manejarRaton() -> void
 
 auto Raton::setBorrando(const bool borrando_) -> void
 {
-    if(seleccionados.empty())
+    if(seleccionados.empty() && !seleccionando)
     {
         borrando = borrando_;
         controlador->desmarcarOrigen();
+    }
+    else if(!moviendoSeleccion && !seleccionando)
+    {
+        for(Simulable* simulable : seleccionados)
+            controlador->borrar(simulable);
+        seleccionados.clear();
     }
 }

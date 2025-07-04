@@ -38,6 +38,7 @@ public:
         acciones.insert(std::make_pair("sE", ACCION::ConexionArriba));
         acciones.insert(std::make_pair("pM", ACCION::ConexionAbajo));
         acciones.insert(std::make_pair("sM", ACCION::ConexionArriba));
+        acciones.insert(std::make_pair("pB", ACCION::AlternarBorrando_));
         acciones.insert(std::make_pair("sB", ACCION::AlternarBorrando));
         acciones.insert(std::make_pair("sl", ACCION::BorrarSueltos));
         acciones.insert(std::make_pair("sa", ACCION::CrearAnd));

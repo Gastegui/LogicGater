@@ -107,7 +107,7 @@ auto Controles::getNuevaAccion(const SDL_Event* evento) -> ACCION
         return accionAnterior;
     }
 
-    if(window != nullptr && window->getRaton()->getBorrando() && accionAnterior != InteractuarArriba && accionAnterior != InteractuarAbajo && accionAnterior != ConexionArriba && accionAnterior != ConexionAbajo && accionAnterior != MovimientoRaton)
+    if(window != nullptr && window->getRaton()->getBorrando() && accionAnterior != AlternarBorrando && accionAnterior != AlternarBorrando_ && accionAnterior != InteractuarArriba && accionAnterior != InteractuarAbajo && accionAnterior != ConexionArriba && accionAnterior != ConexionAbajo && accionAnterior != MovimientoRaton)
         window->getRaton()->setBorrando(false);
     return accionAnterior;
 }
