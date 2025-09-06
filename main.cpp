@@ -242,7 +242,7 @@ auto main() -> int
         window.limpiar();
         if(mostrarControles)
         {
-            txt.setPos(0, 60);
+            txt.setPos(0, 30);
             txt << "Creación:" << "    A: puerta AND" << "    O: puerta OR" << "    X: puerta XOR" << "    I: interruptor" << "    B: botón" << "    S: salida" << "    T: temporizador";
             txt << "Modificadores:" << "    Espacio: crear conexión" << "    Retroceso: modo borrar";
             if(!window.getRaton()->getBorrando())
@@ -251,7 +251,7 @@ auto main() -> int
                 txt << "Ratón:" << "    Izquierda: borrar elemento" << "    Medio: borrar conexión" << "    Arriba: temporizador +" << "    Abajo: temporizador -";
             txt << "Simulación:" << "    Entrar: simular una vez" << "    Q: empezar simulación" << "    W: parar simulación" << "    -: acelerar simulación" << "    +: decelerar simulación";
             txt << "Cuadrícula:" << "    E: alternar" << "    R: aumentar" << "    F: disminuir";
-            txt << "Otros:" << "    L: borrar elementos desconectados" << "    H: centrar cámara" << "    G: guardar" << "    C: cargar" << "    Escape: cerrar" << "    M: ocultar controles";
+            txt << "Otros:" << "    L: borrar elementos desconectados" << "    H: centrar cámara" << "    D: Duplicar selección" << "    G: guardar" << "    C: cargar" << "    Escape: cerrar" << "    M: ocultar controles";
         }
         else
         {
