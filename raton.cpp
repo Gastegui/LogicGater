@@ -122,26 +122,38 @@ auto Raton::manejarRaton() -> void
     if(posX < 10)
     {
         window->moverRel(1, 0);
-        if(moviendoImg != nullptr)
-                moviendoImg->interactuar(-1,0, INTERACCIONES::MovimientoRaton);
+        if(!seleccionados.empty())
+        {
+            for (Simulable* seleccionado : seleccionados)
+                seleccionado->interactuar(-1, 0, INTERACCIONES::MovimientoRaton);
+        }
     }
     else if(posX > 1910)
     {
         window->moverRel(-1, 0);
-        if(moviendoImg != nullptr)
-            moviendoImg->interactuar(1,0, INTERACCIONES::MovimientoRaton);
+        if(!seleccionados.empty())
+        {
+            for (Simulable* seleccionado : seleccionados)
+                seleccionado->interactuar(1, 0, INTERACCIONES::MovimientoRaton);
+        }
     }
     if(posY < 10)
     {
         window->moverRel(0, 1);
-        if(moviendoImg != nullptr)
-            moviendoImg->interactuar(0,-1, INTERACCIONES::MovimientoRaton);
+        if(!seleccionados.empty())
+        {
+            for (Simulable* seleccionado : seleccionados)
+                seleccionado->interactuar(0, -1, INTERACCIONES::MovimientoRaton);
+        }
     }
     else if(posY > 1070)
     {
         window->moverRel(0, -1);
-        if(moviendoImg != nullptr)
-            moviendoImg->interactuar(0,1, INTERACCIONES::MovimientoRaton);
+        if(!seleccionados.empty())
+        {
+            for (Simulable* seleccionado : seleccionados)
+                seleccionado->interactuar(0, 1, INTERACCIONES::MovimientoRaton);
+        }
     }
 
     if(seleccionando)
@@ -175,7 +187,7 @@ auto Raton::manejarRaton() -> void
                         seleccion.h = seleccionYOriginal - seleccion.y;
                     }
                     window->setSeleccion(seleccion);
-                    controlador->seleccionar(seleccion, &seleccionados);
+                    controlador->seleccionar(seleccion);
                 }
                 break;
             case ACCION::InteractuarArriba:
@@ -236,11 +248,11 @@ auto Raton::manejarRaton() -> void
                 moviendoSeleccion = false;
                 break;
             case ACCION::InteractuarArriba:
-                controlador->desseleccionar(&seleccionados);
+                controlador->desseleccionar();
                 moviendoSeleccion = false;
                 break;
             case ACCION::InteractuarAbajo:
-                controlador->desseleccionar(&seleccionados);
+                controlador->desseleccionar();
                 moviendoSeleccion = false;
                 seleccionando = true;
                 seleccion.x = -window->getEsquinaX() + posX;

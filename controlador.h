@@ -57,16 +57,16 @@ public:
     [[nodiscard]] auto getListaLineas() -> ListaLineas* { return &listaLineas; }
 
     //Crea una puerta
-    auto crear(Puerta::TIPO tipo, int x, int y, bool arribaNegado = false, bool abajoNegado = false, bool salidaNegada = false, unsigned int id = 0) -> void;
+    auto crear(Puerta::TIPO tipo, int x, int y, bool arribaNegado = false, bool abajoNegado = false, bool salidaNegada = false, unsigned int id = 0) -> unsigned int;
 
     //Crea una entrada
-    auto crear(bool mantener, int x, int y, unsigned int id = 0) -> void;
+    auto crear(bool mantener, int x, int y, unsigned int id = 0) -> unsigned int;
 
     //Crea una salida
-    auto crear(int x, int y, unsigned int id = 0) -> void;
+    auto crear(int x, int y, unsigned int id = 0) -> unsigned int;
 
     //Crea un temporizador
-    auto crear(int x, int y, int tiempo, bool entradaNegada = false, bool salidaNegada = false, unsigned int id = 0) -> void;
+    auto crear(int x, int y, int tiempo, bool entradaNegada = false, bool salidaNegada = false, unsigned int id = 0) -> unsigned int;
 
 
     auto borrar(Simulable* simulable) -> void
@@ -114,8 +114,10 @@ public:
     [[nodiscard]] auto getSimulablesLenght() const -> unsigned long { return simulables.size(); }
 
     auto setSeleccionados(std::vector<Simulable*>* seleccionados_) -> void { seleccionados = seleccionados_; }
-    auto seleccionar(SDL_Rect region, std::vector<Simulable*>* vector) const -> void;
-    auto desseleccionar(std::vector<Simulable*>* vector) const -> void;
+    auto seleccionar(SDL_Rect region) const -> void;
+    auto desseleccionar() const -> void;
+
+    auto duplicarSeleccion() -> void;
 };
 
 #endif //CONTROLADOR_H

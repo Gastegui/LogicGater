@@ -39,7 +39,7 @@ auto SistemaGuardado::guardar(Controlador* controlador, const Window* window, co
     for(const auto& value : controlador->simulables | std::views::values)
     {
         if((puerta = dynamic_cast<Puerta*>(value.get())) != nullptr) // NOLINT(*-assignment-in-if-condition)
-            outf << "Puerta: id: " << puerta->getId() << " tipo: " << puerta->tipo << " arribaNegado: " << puerta->arribaNegado << " abajoNegado: " << puerta->abajoNegado << " salidaNegada: " << puerta->salidaNegada << " x: " << puerta->x << " y: " << puerta->y << "\n";
+            outf << "Puerta: id: " << puerta->getId() << " tipo: " << puerta->tipo << " arribaNegado: " << puerta->arribaNegado << " abajoNegado: " << puerta->abajoNegado << " salidaNegada: " << puerta->salidaNegada << " x: " << puerta->imagen.rect.x << " y: " << puerta->imagen.rect.y << "\n";
         else if((salida = dynamic_cast<Salida*>(value.get())) != nullptr) // NOLINT(*-assignment-in-if-condition)
             outf << "Salida: id: " << salida->getId() << " x: " << salida->img.rect.x << " y: " << salida->img.rect.y << "\n";
         else if((entrada = dynamic_cast<Entrada*>(value.get())) != nullptr) // NOLINT(*-assignment-in-if-condition)

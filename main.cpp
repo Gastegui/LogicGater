@@ -189,6 +189,9 @@ auto main() -> int
                     guardar = false;
                     cargar = false;
                     break;
+                case ACCION::DuplicarSeleccion:
+                    controlador.duplicarSeleccion();
+                    break;
                 case ACCION::Nada:
                 default:
                     break;

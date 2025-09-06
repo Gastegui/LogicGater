@@ -108,9 +108,6 @@ auto Puerta::moverRel(const int x_, const int y_) -> void
 
     lineaAbajo.first += x_;
     lineaAbajo.second += y_;
-
-    x += x_;
-    y += y_;
 }
 
 auto Puerta::interactuar(const int posX, const int posY, const INTERACCIONES interaccion) -> bool

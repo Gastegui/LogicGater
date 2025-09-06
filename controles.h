@@ -63,6 +63,7 @@ public:
         acciones.insert(std::make_pair(".U", ACCION::TemporizadorSubir));
         acciones.insert(std::make_pair(".J", ACCION::TemporizadorBajar));
         acciones.insert(std::make_pair("sh", ACCION::CamaraCentrar));
+        acciones.insert(std::make_pair("sd", ACCION::DuplicarSeleccion));
     }
 
     static auto getNuevaAccion(const SDL_Event* evento) -> ACCION;

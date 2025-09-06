@@ -80,6 +80,9 @@ public:
 
     [[nodiscard]] auto getIOSalida() -> IO* override { return &salida; }
     [[nodiscard]] auto getDesconectado() const -> bool override { return entrada == nullptr && salida.getConexiones() == 0; }
+    [[nodiscard]] auto getTiempoTotal() const -> int { return ciclosTotales; }
+    [[nodiscard]] auto getEntradaNegada() const -> bool { return entradaNegada; }
+    [[nodiscard]] auto getSalidaNegada() const -> bool { return salidaNegada; }
 
     [[nodiscard]] auto getLinea(const int conexion) -> std::pair<int, int>* override
     {

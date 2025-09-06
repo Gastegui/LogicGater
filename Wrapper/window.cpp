@@ -2,6 +2,7 @@
 // Created by julen on 22/08/24.
 //
 
+#include <ranges>
 #include "window.h"
 #include "image.h"
 #include "../Simulables/entrada.h"
@@ -51,7 +52,7 @@ auto Window::rendererDraw() const -> void
         SDL_RenderCopy(renderer, img->getTexture(), nullptr, img->getRect());
 
     imagenes = listaIMG.getLista(ListaIMG::Medio);
-    for(IMG* img : *imagenes)
+    for(IMG* img : *imagenes | std::views::reverse)
     {
         SDL_Rect rect{*img->getRect()};
 

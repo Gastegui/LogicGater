@@ -43,7 +43,8 @@
         MostrarControles,   /* M */ \
         TemporizadorSubir,  /* Rueda arriba */ \
         TemporizadorBajar,  /* Rueda abajo */ \
-        CamaraCentrar,      /* B */
+        CamaraCentrar,      /* B */ \
+        DuplicarSeleccion,  /* D */
 
 enum class ACCION : uint8_t
 {

@@ -44,7 +44,7 @@ auto ListaIMG::añadir(IMG* img, const ALTURA altura) -> bool
             return false;
     }
 
-    lista->push_back(img);
+    lista->insert(lista->begin(), img);
 
     return true;
 }

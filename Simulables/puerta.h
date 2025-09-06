@@ -47,8 +47,6 @@ class Puerta final : public Simulable
             idGenerator();
     }
 
-    int x;
-    int y;
     bool mover{false};
 
     Raton* raton;
@@ -70,7 +68,7 @@ public:
         : Puerta(renderer, controlador_, tipo_, x_, y_, arribaNegado_, abajoNegado_, salidaNegada_, raton_, idGenerator()) {}
 
     Puerta(SDL_Renderer* renderer, Controlador* controlador_, const TIPO tipo_, const int x_, const int y_, const bool arribaNegado_, const bool abajoNegado_, const bool salidaNegada_, Raton* raton_, const unsigned int id_)
-        : Simulable(id_), controlador(controlador_), arribaNegado{arribaNegado_}, abajoNegado{abajoNegado_}, salidaNegada{salidaNegada_}, salida(this, 100 + x_, 25 + y_), x{x_}, y{y_}, raton{raton_}, tipo{tipo_}, imagen{renderer, x_, y_, 100, 50}
+        : Simulable(id_), controlador(controlador_), arribaNegado{arribaNegado_}, abajoNegado{abajoNegado_}, salidaNegada{salidaNegada_}, salida(this, 100 + x_, 25 + y_), raton{raton_}, tipo{tipo_}, imagen{renderer, x_, y_, 100, 50}
     {
         imagen.crearImagen<IMG::Capa>(
             IMG::Capa{.img = arribaNegado_ ? "./img/puertas/entrada_arriba_negada.png" : "./img/puertas/entrada_arriba_normal.png"},
@@ -89,6 +87,10 @@ public:
     [[nodiscard]] auto getSalida() -> IO* { return &salida; }
     [[nodiscard]] auto getDesconectado() const -> bool override { return arriba == nullptr && abajo == nullptr && salida.getConexiones() == 0; }
     [[nodiscard]] auto getImg() -> IMG* override { return &imagen; }
+    [[nodiscard]] auto getArribaNegado() const -> bool { return arribaNegado; }
+    [[nodiscard]] auto getAbajoNegado() const -> bool { return abajoNegado; }
+    [[nodiscard]] auto getSalidaNegada() const -> bool { return salidaNegada; }
+    [[nodiscard]] auto getTipoPuerta() const -> TIPO { return tipo; }
 
     auto cambiar() -> bool
     {
