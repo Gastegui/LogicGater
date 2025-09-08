@@ -145,9 +145,10 @@ auto Window::limpiar() const -> void
     rendererClear();
 }
 
-auto Window::render() const -> void
+auto Window::render(bool rendererDraw_) const -> void
 {
-    rendererDraw();
+    if(rendererDraw_)
+        rendererDraw();
     rendererPresent();
 }
 

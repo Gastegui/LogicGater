@@ -97,7 +97,7 @@ public:
     }
 
     auto limpiar() const -> void;
-    auto render() const -> void;
+    auto render(bool rendererDraw) const -> void;
 
     [[nodiscard]] auto getListaIMG(const ListaIMG::ALTURA altura) const -> const std::vector<IMG*>*
     {

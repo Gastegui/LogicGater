@@ -156,4 +156,16 @@ constexpr static auto toString(const TIPOS_SIMULABLES tipo) -> std::string
     }
 }
 
+
+enum class ESTADOS : uint8_t
+{
+    Error = 0,
+    Cerrar,
+    Normal,
+    Guardar,
+    Cargar,
+    Controles
+};
+
+
 #endif //ENUMS_H
