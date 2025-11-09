@@ -208,6 +208,9 @@ auto main() -> int
                             mensaje = ID_TEXTO::IdiomaCambiado;
                             mensajeTiempo = SDL_GetTicks64();
                             break;
+                        case ACCION::AlternarOculto:
+                            controlador.alternarConexionesOcultas();
+                            break;
                         case ACCION::Nada:
                         default:
                             break;
@@ -231,6 +234,9 @@ auto main() -> int
                     else
                         idiomas.print(ID_TEXTO::SimulandoInstantaneo);
                 }
+
+                if(controlador.getConexionesOcultas())
+                    idiomas.print(ID_TEXTO::ConexionesOcultas);
 
                 txt.setPos(10, 10);
                 txt << std::format("X: {} Y: {}", -window.getEsquinaX(), -window.getEsquinaY());
@@ -402,8 +408,8 @@ auto main() -> int
                     idiomas.print(ID_TEXTO::Boton);
                     idiomas.print(ID_TEXTO::Salida);
                     idiomas.print(ID_TEXTO::Temporizador);
-                    idiomas.print(ID_TEXTO::Vacio1);
-                    idiomas.print(ID_TEXTO::Vacio1);
+                    idiomas.print(ID_TEXTO::Vacio);
+                    idiomas.print(ID_TEXTO::Vacio);
                     //SIMULACIÓN
                     idiomas.print(ID_TEXTO::Simulacion);
                     idiomas.print(ID_TEXTO::SimularPaso);
@@ -415,7 +421,7 @@ auto main() -> int
                     idiomas.print(ID_TEXTO::Modificadores);
                     idiomas.print(ID_TEXTO::CrearConexionEspacio);
                     idiomas.print(ID_TEXTO::ModoBorrar);
-                    idiomas.print(ID_TEXTO::Vacio1);
+                    idiomas.print(ID_TEXTO::Vacio);
                     //RATÓN
                     idiomas.print(ID_TEXTO::Raton);
                     idiomas.print(ID_TEXTO::Interactuar);
@@ -429,13 +435,13 @@ auto main() -> int
                     idiomas.print(ID_TEXTO::BorrarConexion);
                     idiomas.print(ID_TEXTO::TemporizadorArribaBorrando);
                     idiomas.print(ID_TEXTO::TemporizadorAbajoBorrando);
-                    idiomas.print(ID_TEXTO::Vacio1);
+                    idiomas.print(ID_TEXTO::Vacio);
                     //CUADRÍCULA
                     idiomas.print(ID_TEXTO::Cuadricula);
                     idiomas.print(ID_TEXTO::CuadriculaAlternar);
                     idiomas.print(ID_TEXTO::CuadriculaAumentar);
                     idiomas.print(ID_TEXTO::CuadriculaDisminuir);
-                    idiomas.print(ID_TEXTO::Vacio1);
+                    idiomas.print(ID_TEXTO::Vacio);
                     //OTROS
                     idiomas.print(ID_TEXTO::Otros);
                     idiomas.print(ID_TEXTO::BorrarElementosDesconectados);
@@ -445,12 +451,13 @@ auto main() -> int
                     idiomas.print(ID_TEXTO::Cargar);
                     idiomas.print(ID_TEXTO::Cerrar);
                     idiomas.print(ID_TEXTO::CambiarIdioma);
+                    idiomas.print(ID_TEXTO::AlternarConexionesOcultas);
                     idiomas.print(ID_TEXTO::OcultarControles);
                 }
                 break;
             default:
                 estado = ESTADOS::Error;
-                std::cout << "Máquina de estados rota";
+                std::println(std::cout, "Máquina de estados rota");
         }
 
         if(controlador.getCuadriculaActiva())

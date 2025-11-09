@@ -1,62 +1,59 @@
 id,x,y,ES,EN,EU
-0,0,0, , , 
-1,-2,1050,Se han borrado {} elemento(s),{} elements were deleted,{} elementu ezabatu dira
-2,1700,10,SIMULANDO ({} ms),SIMULATING ({} ms),SIMULATZEN ({} ms)
-3,1640,10,SIMULANDO (instantáneo),SIMULATING (instantaneous),SIMULATZEN (berehala)
-4,0,1050,M: mostrar controles,M: show controls,M: erakutsi kontrolak
-5,500,-2,Escribe el nombre del archivo: ,Type the name of the file:,Idatzi fitxategiaren izena
-6,-2,1050,No se ha podido cargar,Couldn't be loaded,Ezin izan da kargatu
-7,-2,1050,Se ha cargado,Loaded,Kargatuta
-8,-2,1050,No se puede cargar si se ha creado algo,Nothing can be loaded if something got created,Ezin da ezer kargatu zerbait sortu izan bada
-9,-2,1050,Se ha guardado,Saved,Gorde izan da
-10,-2,1050,No se ha podido guardar,Couldn't be saved,Ezin izan da gorde
-11,10,40,Cuadríacula activa. Tamaño: {},Grid active. Size: {},Lauki-sarea piztuta. Tamaina: {}
-12,400,300,Creación,Creation,Sortu
-13,440,-1,A: puerta AND,A: AND gate,A: AND atea
-14,440,-1,O: puerta OR,O: OR gate,O: OR atea
-15,440,-1,X: puerta XOR,X: XOR gate,X: XOR atea
-16,440,-1,I: interruptor,I: switch,I: interruptorea
-17,440,-1,B: botón,B: button,B: botoia
-18,440,-1,S: salida,S: exit,S: irteera
-19,440,-1,T: Temporizador,T: timer,T: temporizadorea
-20,400,-1, , , 
-21,400,-1, , , 
-22,400,-1, , , 
-23,400,-1,Simulación:,Simulation:,Simulazioa:
-24,440,-1,Entrar: simular un paso,Enter: simulate one step,Sartu: simulatu pausu bat
-25,440,-1,Q: empezar simulación,Q: start simulation,Q: hasi simulazioa
-26,440,-1,W: parar simulación,W: stop simulation,W: gelditu simulazioa
-27,440,-1,-: acelerar simulación,-: accelerate simulation,-: bizkortu simulazioa
-28,440,-1,+: decelerar simulación,+: decelerate simulation,+: moteldu simulazioa
-29,800,300,Modificadores,Modifiers,Aldatzaileak
-30,840,-1,Espacio: crear conexión,Space: create connection,Tartea: sortu konexioa
-31,840,-1,Retroceso: modo borrar,Backspace: deletion mode,Atzera: ezabapen modua
-32,840,-1, , , 
-33,800,-1,Ratón:,Mouse:,Sagua:
-34,840,-1,Izquierda: interactuar,Left: interact,Ezkerra: interaktuatu
-35,840,-1,Medio: crear conexión,Center: create connection,Erdia: sortu konexioa
-36,840,-1,Derecha: mover,Right: move,Eskuma: mugitu
-37,840,-1,Arriba: temporizador +,Up: timer +,Gora: temporizadorea +
-38,840,-1,Abajo: temporizador -,Down: timer -,Behera: temporizadorea -
-39,800,-1,Ratón (borrando):,Mouse (removing):,Sagua: (ezabatzen):
-40,840,-1,Izquierda: borrar elemento,Left: remove element,Ezkerra: ezabatu elementu
-41,840,-1,Medio: borrar conexión,Center: remove connection,Erdia: ezabatu konexioa
-42,840,-1,Arriba: temporizador +,Up: timer +,Gora: temporizadorea +
-43,840,-1,Abajo: temporizador -,Down: timer -,Behera: temporizadorea -
-44,840,-1, , , 
-45,1200,300,Cuadrícula:,Grid:,Sarea:
-46,1240,-1,E: alternar,E: toggle,E: piztu/itzali
-47,1240,-1,R: aumentar,R: increase,R: handitu
-48,1240,-1,F: disminuir,F: decrease,F: txikitu
-49,1240,-1, , , 
-50,1200,-1,Otros:,Others:,Bestelakoak:
-51,1240,-1,L: borrar elementos desconectados,L: remove disconnected elements,L: ezabatu deskonektatutako elementuak
-52,1240,-1,H: centrar camara,H: center camera,H: kamera zentratu
-53,1240,-1,D: duplicar selección,D: duplicate selection,D: selekzioa duplikatu
-54,1240,-1,G: guardar,G: save,G: gorde
-55,1240,-1,C: cargar,C: load,C: kargatu
-56,1240,-1,Escape: cerrar,Escape: close,Eskape: itxi
-57,1240,-1,P: Cambiar idioma,P: Change language,P: Aldatu hizkuntza
-58,1240,-1,M: ocultar controles,M: hide controls,M: ezkutatu kontrolak
-59,-2,-2,Cargando...,Loading...,Kargatzen...
-60,-2,1050,Idioma cambiado,Language changed,Hizkuntza aldatuta
+0,0,0, , ,
+1,-1,-1, , ,
+2,-2,1050,Se han borrado {} elemento(s),{} elements were deleted,{} elementu ezabatu dira
+3,1700,10,SIMULANDO ({} ms),SIMULATING ({} ms),SIMULATZEN ({} ms)
+4,1640,10,SIMULANDO (instantáneo),SIMULATING (instantaneous),SIMULATZEN (berehala)
+5,0,1050,M: mostrar controles,M: show controls,M: erakutsi kontrolak
+6,500,-2,Escribe el nombre del archivo: ,Type the name of the file:,Idatzi fitxategiaren izena
+7,-2,1050,No se ha podido cargar,Couldn't be loaded,Ezin izan da kargatu
+8,-2,1050,Se ha cargado,Loaded,Kargatuta
+9,-2,1050,No se puede cargar si se ha creado algo,Nothing can be loaded if something got created,Ezin da ezer kargatu zerbait sortu izan bada
+10,-2,1050,Se ha guardado,Saved,Gorde izan da
+11,-2,1050,No se ha podido guardar,Couldn't be saved,Ezin izan da gorde
+12,10,40,Cuadríacula activa. Tamaño: {},Grid active. Size: {},Lauki-sarea piztuta. Tamaina: {}
+13,400,300,Creación,Creation,Sortu
+14,440,-1,A: puerta AND,A: AND gate,A: AND atea
+15,440,-1,O: puerta OR,O: OR gate,O: OR atea
+16,440,-1,X: puerta XOR,X: XOR gate,X: XOR atea
+17,440,-1,I: interruptor,I: switch,I: interruptorea
+18,440,-1,B: botón,B: button,B: botoia
+19,440,-1,S: salida,S: exit,S: irteera
+20,440,-1,T: temporizador,T: timer,T: temporizadorea
+21,400,-1,Simulación:,Simulation:,Simulazioa:
+22,440,-1,Entrar: simular un paso,Enter: simulate one step,Sartu: simulatu pausu bat
+23,440,-1,Q: empezar simulación,Q: start simulation,Q: hasi simulazioa
+24,440,-1,W: parar simulación,W: stop simulation,W: gelditu simulazioa
+25,440,-1,-: acelerar simulación,-: accelerate simulation,-: bizkortu simulazioa
+26,440,-1,+: decelerar simulación,+: decelerate simulation,+: moteldu simulazioa
+27,800,300,Modificadores,Modifiers,Aldatzaileak
+28,840,-1,Espacio: crear conexión,Space: create connection,Tartea: sortu konexioa
+29,840,-1,Retroceso: modo borrar,Backspace: deletion mode,Atzera: ezabapen modua
+30,800,-1,Ratón:,Mouse:,Sagua:
+31,840,-1,Izquierda: interactuar,Left: interact,Ezkerra: interaktuatu
+32,840,-1,Medio: crear conexión,Center: create connection,Erdia: sortu konexioa
+33,840,-1,Derecha: mover,Right: move,Eskuma: mugitu
+34,840,-1,Arriba: temporizador +,Up: timer +,Gora: temporizadorea +
+35,840,-1,Abajo: temporizador -,Down: timer -,Behera: temporizadorea -
+36,800,-1,Ratón (borrando):,Mouse (removing):,Sagua: (ezabatzen):
+37,840,-1,Izquierda: borrar elemento,Left: remove element,Ezkerra: ezabatu elementu
+38,840,-1,Medio: borrar conexión,Center: remove connection,Erdia: ezabatu konexioa
+39,840,-1,Arriba: temporizador +,Up: timer +,Gora: temporizadorea +
+40,840,-1,Abajo: temporizador -,Down: timer -,Behera: temporizadorea -
+41,1200,300,Cuadrícula:,Grid:,Sarea:
+42,1240,-1,E: alternar,E: toggle,E: piztu/itzali
+43,1240,-1,R: aumentar,R: increase,R: handitu
+44,1240,-1,F: disminuir,F: decrease,F: txikitu
+45,1200,-1,Otros:,Others:,Bestelakoak:
+46,1240,-1,L: borrar elementos desconectados,L: remove disconnected elements,L: ezabatu deskonektatutako elementuak
+47,1240,-1,H: centrar camara,H: center camera,H: kamera zentratu
+48,1240,-1,D: duplicar selección,D: duplicate selection,D: selekzioa duplikatu
+49,1240,-1,G: guardar,G: save,G: gorde
+50,1240,-1,C: cargar,C: load,C: kargatu
+51,1240,-1,Escape: cerrar,Escape: close,Eskape: itxi
+52,1240,-1,P: Cambiar idioma,P: Change language,P: Aldatu hizkuntza
+53,1240,-1,M: ocultar controles,M: hide controls,M: ezkutatu kontrolak
+54,-2,-2,Cargando...,Loading...,Kargatzen...
+55,-2,1050,Idioma cambiado,Language changed,Hizkuntza aldatuta
+56,10,80,Conexiones ocultas,Hidden conenctions,Konexio izkutuak
+57,1240,-1,Alt: alternar conexiones ocultas,Alt: toggle hidden connections,Alt: txandakatu konexio izkutuak

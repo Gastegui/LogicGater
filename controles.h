@@ -65,6 +65,7 @@ public:
         acciones.insert(std::make_pair("sh", ACCION::CamaraCentrar));
         acciones.insert(std::make_pair("sd", ACCION::DuplicarSeleccion));
         acciones.insert(std::make_pair("sp", ACCION::CambiarIdioma));
+        acciones.insert(std::make_pair("sA", ACCION::AlternarOculto));
     }
 
     static auto getNuevaAccion(const SDL_Event* evento) -> ACCION;

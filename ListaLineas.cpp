@@ -6,12 +6,12 @@
 
 #include "io.h"
 
-auto ListaLineas::añadir(Simulable* destino, IO* io, const int conexion) -> void
+auto ListaLineas::añadir(Simulable* destino, IO* io, const int conexion, const bool oculta) -> void
 {
     if(destino == nullptr || io == nullptr)
         return;
 
-    lista.push_back(Linea{.destino = destino, .io = io, .conexion = conexion});
+    lista.push_back(Linea{.destino = destino, .io = io, .conexion = conexion, .oculta = oculta});
 }
 
 auto ListaLineas::borrar(const Simulable* destino, const IO* io, const int conexion) -> void

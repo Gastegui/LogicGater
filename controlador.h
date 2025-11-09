@@ -38,6 +38,8 @@ class Controlador
     ListaLineas listaLineas;
     std::vector<Simulable*>* seleccionados{};
 
+    bool conexionesOcultas{false};
+
 public:
     explicit Controlador(Window* window_, TXT* txt_)
         : window{window_}, renderer{window_->getRenderer()}, txt{txt_} {}
@@ -81,7 +83,7 @@ public:
         //delete simulable;
     }
 
-    auto añadirConexion(Simulable* simulableDestino, const int conexion) -> void { listaLineas.añadir(simulableDestino, origen, conexion); }
+    auto añadirConexion(Simulable* simulableDestino, const int conexion) -> void { listaLineas.añadir(simulableDestino, origen, conexion, conexionesOcultas); }
     auto borrarConexiones(const IO* io) -> void { listaLineas.borrar(io); }
     auto borrarConexiones(const Simulable* simulable) -> void { listaLineas.borrar(simulable); }
     auto borrarConexion(const Simulable* destino, const IO* io, const int conexion) -> void { listaLineas.borrar(destino, io, conexion); }
@@ -118,6 +120,12 @@ public:
     auto desseleccionar() const -> void;
 
     auto duplicarSeleccion() -> void;
+
+    auto getConexionesOcultas() const -> bool { return conexionesOcultas; }
+    auto alternarConexionesOcultas() -> void
+    {
+        conexionesOcultas = !conexionesOcultas;
+    }
 };
 
 #endif //CONTROLADOR_H

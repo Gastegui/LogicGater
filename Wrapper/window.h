@@ -48,7 +48,7 @@ class Window
     auto rendererDraw() const -> void;
     auto rendererPresent() const -> void;
 
-    static auto renderLine(SDL_Renderer* renderer, int x1, int y1, int x2, int y2, const ListaLineas::Linea* linea) -> void;
+    auto renderLine(int x1, int y1, int x2, int y2, const ListaLineas::Linea *linea) const -> void;
 
 public:
     explicit Window(const int witdh_, const int height_, const char* img)

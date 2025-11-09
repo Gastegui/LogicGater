@@ -98,6 +98,8 @@ public:
                 }
             }
             Texto texto{x, y, es, en, eu};
+            if(static_cast<ID_TEXTO>(id) == ID_TEXTO::NADA || static_cast<ID_TEXTO>(id) == ID_TEXTO::Vacio)
+                texto = Texto{x, y, " ", " ", " "};
             textos.insert_or_assign(static_cast<ID_TEXTO>(id), std::move(texto));
         }
     }

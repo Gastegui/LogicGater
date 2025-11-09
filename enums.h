@@ -45,7 +45,8 @@
         TemporizadorBajar,  /* Rueda abajo */ \
         CamaraCentrar,      /* B */ \
         DuplicarSeleccion,  /* D */ \
-        CambiarIdioma,      /* P */
+        CambiarIdioma,      /* P */ \
+        AlternarOculto,     /* Alt */
 
 enum class ACCION : uint8_t
 {
@@ -178,6 +179,7 @@ enum class IDIOMA : uint8_t
 enum class ID_TEXTO : uint8_t
 {
     NADA = 0,
+    Vacio,
     ElementoBorrados, //Main.cpp
     SimulandoMs,
     SimulandoInstantaneo,
@@ -197,9 +199,6 @@ enum class ID_TEXTO : uint8_t
     Boton,
     Salida,
     Temporizador,
-    Vacio1,
-    Vacio2,
-    Vacio3,
     Simulacion,
     SimularPaso,
     SimularEmpezar,
@@ -209,7 +208,6 @@ enum class ID_TEXTO : uint8_t
     Modificadores,
     CrearConexionEspacio,
     ModoBorrar,
-    Vacio4,
     Raton,
     Interactuar,
     CrearConexionRaton,
@@ -221,12 +219,10 @@ enum class ID_TEXTO : uint8_t
     BorrarConexion,
     TemporizadorArribaBorrando,
     TemporizadorAbajoBorrando,
-    Vacio5,
     Cuadricula,
     CuadriculaAlternar,
     CuadriculaAumentar,
     CuadriculaDisminuir,
-    Vacio6,
     Otros,
     BorrarElementosDesconectados,
     CentrarCamara,
@@ -238,6 +234,8 @@ enum class ID_TEXTO : uint8_t
     OcultarControles,
     Cargando,
     IdiomaCambiado,
+    ConexionesOcultas,
+    AlternarConexionesOcultas,
 };
 
 #endif //ENUMS_H

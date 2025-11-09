@@ -18,6 +18,7 @@ public:
         Simulable* destino;
         IO* io;
         int conexion;
+        bool oculta;
     };
 
 private:
@@ -29,7 +30,7 @@ public:
 
     [[nodiscard]] auto getLista() -> std::vector<Linea>* { return &lista; }
 
-    auto añadir(Simulable* destino, IO* io, int conexion) -> void;
+    auto añadir(Simulable* destino, IO* io, int conexion, bool oculta) -> void;
 
     auto borrar(const Simulable* destino, const IO* io, int conexion) -> void;
     auto borrar(const IO* involucrado) -> void;

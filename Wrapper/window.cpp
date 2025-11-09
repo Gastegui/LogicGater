@@ -14,14 +14,24 @@ auto Window::rendererClear() const -> void
     SDL_RenderClear(renderer);
 }
 
-auto Window::renderLine(SDL_Renderer* renderer, const int x1, const int y1, const int x2, const int y2, const ListaLineas::Linea* linea) -> void
+auto Window::renderLine(const int x1, const int y1, const int x2, const int y2, const ListaLineas::Linea *linea) const -> void
 {
     if(linea->io->get())
-        SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
+    {
+        if(linea->oculta)
+            SDL_SetRenderDrawColor(renderer, 0, 150, 0, 255);
+        else
+            SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
+    }
     else
-        SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
-
-    SDL_RenderDrawLine(renderer, x1, y1, x2, y2);
+    {
+        if(linea->oculta)
+            SDL_SetRenderDrawColor(renderer, 100, 100, 100, 255);
+        else
+            SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+    }
+    if(!linea->oculta || (linea->oculta && controlador->getConexionesOcultas()))
+        SDL_RenderDrawLine(renderer, x1, y1, x2, y2);
 }
 
 auto Window::rendererDraw() const -> void
@@ -84,7 +94,8 @@ auto Window::rendererDraw() const -> void
         //Comprueba si alguno de los dos puntos de la línea está dentro de la pantalla
         if((origen->first > -esquinaX && origen->first < -esquinaX + width && origen->second > -esquinaY && origen->second < -esquinaY + height) ||
                 (destino->first > -esquinaX && destino->first < -esquinaX + width && destino->second > -esquinaY && destino->second < -esquinaY + height))
-            renderLine(renderer, origen->first + esquinaX, origen->second + esquinaY, destino->first + esquinaX, destino->second + esquinaY, &linea);
+            renderLine(origen->first + esquinaX, origen->second + esquinaY, destino->first + esquinaX,
+                       destino->second + esquinaY, &linea);
         else
         {
             //Si no esta el origen o final de la línea dentro de la pantalla, comprueba si la línea intersecciona la pantalla
@@ -93,7 +104,8 @@ auto Window::rendererDraw() const -> void
             int x2 = destino->first;
             int y2 = destino->second;
             if(SDL_IntersectRectAndLine(&rect, &x1, &y1, &x2, &y2))
-                renderLine(renderer, origen->first + esquinaX, origen->second + esquinaY, destino->first + esquinaX, destino->second + esquinaY, &linea);
+                renderLine(origen->first + esquinaX, origen->second + esquinaY, destino->first + esquinaX,
+                           destino->second + esquinaY, &linea);
         }
     }
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
