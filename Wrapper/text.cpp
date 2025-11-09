@@ -11,9 +11,9 @@ auto operator<<(TXT& anterior, const char* str) -> TXT&
     return anterior;
 }
 
-auto operator<<(TXT& anterior, const std::string* str) -> TXT&
+auto operator<<(TXT& anterior, const std::string& str) -> TXT&
 {
-    anterior.write(str->c_str());
+    anterior.write(str.c_str());
     return anterior;
 }
 
@@ -32,6 +32,12 @@ auto TXT::write(const char* text) -> void
     rect.y = y;
     rect.w = surface->w;
     rect.h = surface->h;
+
+    if(x == -2)
+        rect.x = 960 - rect.w/2; //960 = 1920/2
+
+    if(y == -2)
+        rect.y = 540 - rect.h/2; //540 = 1080/2
 
     y += alturaSalto;
 

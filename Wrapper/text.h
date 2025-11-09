@@ -46,7 +46,7 @@ public:
 
     friend auto operator<<(TXT& anterior, const char* str) -> TXT&;
 
-    friend auto operator<<(TXT& anterior, const std::string* str) -> TXT&;
+    friend auto operator<<(TXT& anterior, const std::string& str) -> TXT&;
 
     auto setPos(const int x_, const int y_) -> void
     {
@@ -59,6 +59,16 @@ public:
         x = x_;
         y = y_;
         alturaSalto = salto;
+    }
+
+    auto setX(const int x_) -> void
+    {
+        x = x_;
+    }
+
+    auto setY(const int y_) -> void
+    {
+        y = y_;
     }
 
     auto write(const char* text) -> void;

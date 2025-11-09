@@ -11,6 +11,8 @@
 
 #include <print>
 
+#include "Idiomas.h"
+
 auto main() -> int
 {
     if(SDL_Init(SDL_INIT_VIDEO) != 0)
@@ -46,6 +48,7 @@ auto main() -> int
         return 1;
     }
 
+    Idiomas idiomas{txt, IDIOMA::ES};
 
     window.render(true);
 
@@ -55,15 +58,14 @@ auto main() -> int
     // ReSharper restore CppDFALocalValueEscapesFunction
     bool simulando = false;
 
-    std::string strTmp;
-
     Uint64 ultimaSimulacion = SDL_GetTicks64();
     SistemaGuardado::Valores valores;
 
     std::string inputStr;
     bool escribiendo = false;
 
-    std::string mensaje;
+    ID_TEXTO mensaje{ID_TEXTO::NADA};
+    std::string mensajeParam;
     constexpr int mensajeDuracion = 5000;
     Uint64 mensajeTiempo = -mensajeDuracion;
 
@@ -83,7 +85,8 @@ auto main() -> int
                     switch(Controles::getNuevaAccion(&event))
                     {
                         case ACCION::BorrarSueltos:
-                            mensaje = std::format("Se han borrado {} elemento(s)", controlador.limpiar());
+                            mensaje = ID_TEXTO::ElementoBorrados;
+                            mensajeParam = std::to_string(controlador.limpiar());
                             mensajeTiempo = SDL_GetTicks64();
                             break;
                         case ACCION::CrearAnd:
@@ -200,6 +203,11 @@ auto main() -> int
                         case ACCION::DuplicarSeleccion:
                             controlador.duplicarSeleccion();
                             break;
+                        case ACCION::CambiarIdioma:
+                            idiomas.cambiar();
+                            mensaje = ID_TEXTO::IdiomaCambiado;
+                            mensajeTiempo = SDL_GetTicks64();
+                            break;
                         case ACCION::Nada:
                         default:
                             break;
@@ -219,24 +227,15 @@ auto main() -> int
                         controlador.simularInstantaneo();
 
                     if(valores.velocidadSimulacion >= 0)
-                    {
-                        txt.setPos(1700, 10);
-                        strTmp = std::format("SIMULANDO ({} ms)", valores.velocidadSimulacion);
-                    }
+                        idiomas.print(ID_TEXTO::SimulandoMs, valores.velocidadSimulacion);
                     else
-                    {
-                        txt.setPos(1640, 10);
-                        strTmp = std::format("SIMULANDO (instantáneo");
-                    }
-                    txt << &strTmp;
+                        idiomas.print(ID_TEXTO::SimulandoInstantaneo);
                 }
 
                 txt.setPos(10, 10);
-                strTmp = std::format("X: {} Y: {}", -window.getEsquinaX(), -window.getEsquinaY());
-                txt << &strTmp;
+                txt << std::format("X: {} Y: {}", -window.getEsquinaX(), -window.getEsquinaY());
 
-                txt.setPos(0, 1050);
-                txt << "M: mostrar controles";
+                idiomas.print(ID_TEXTO::MostrarControles);
                 break;
             case ESTADOS::Guardar:
                 while(SDL_PollEvent(&event) != 0)
@@ -287,17 +286,16 @@ auto main() -> int
 
                 if(escribiendo)
                 {
-                    txt.setPos(500, 500);
-                    txt << "Escribe el nombre del archivo: ";
-                    txt.setPos(840, 500);
+                    idiomas.print(ID_TEXTO::NombreArchivo);
+                    txt.setPos(840, -2);
                     txt << (inputStr.empty() ? " " : inputStr.c_str());
                 }
                 else
                 {
                     if(SistemaGuardado::guardar(&controlador, &window, &valores, inputStr))
-                        mensaje = "Se ha guardado";
+                        mensaje = ID_TEXTO::GuardadoSi;
                     else
-                        mensaje = "No se ha podido guardar";
+                        mensaje = ID_TEXTO::GuardadoNo;
                     mensajeTiempo = SDL_GetTicks64();
                     estado = ESTADOS::Normal;
                 }
@@ -352,24 +350,22 @@ auto main() -> int
 
                 if(escribiendo)
                 {
-                    txt.setPos(500, 500);
-                    txt << "Escribe el nombre del archivo: ";
-                    txt.setPos(840, 500);
+                    idiomas.print(ID_TEXTO::NombreArchivo);
+                    txt.setPos(840, -2);
                     txt << (inputStr.empty() ? " " : inputStr.c_str());
                 }
                 else
                 {
                     window.limpiar();
-                    txt.setPos(500, 500);
-                    txt << "Cargando...";
+                    idiomas.print(ID_TEXTO::Cargando);
                     window.render(false);
                     const int ret = SistemaGuardado::cargar(&controlador, &window, &valores, inputStr);
                     if(ret == -1)
-                        mensaje = "No se ha podido guardar";
+                        mensaje = ID_TEXTO::CargadoNo;
                     else if(ret == -2)
-                        mensaje = "No se puede cargar si se ha creado algo";
+                        mensaje = ID_TEXTO::CargadoNoPosible;
                     else
-                        mensaje = "Se ha cargado";
+                        mensaje = ID_TEXTO::CargadoSi;
 
                     mensajeTiempo = SDL_GetTicks64();
                     estado = ESTADOS::Normal;
@@ -383,6 +379,12 @@ auto main() -> int
                         case ACCION::Cerrar:
                         case ACCION::MostrarControles:
                             estado = ESTADOS::Normal;
+                            break;
+                        case ACCION::CambiarIdioma:
+                            idiomas.cambiar();
+                            mensaje = ID_TEXTO::IdiomaCambiado;
+                            mensajeTiempo = SDL_GetTicks64();
+                            break;
                         case ACCION::Nada:
                         default:
                             break;
@@ -391,16 +393,59 @@ auto main() -> int
 
                 if(estado == ESTADOS::Controles)
                 {
-                    txt.setPos(400, 300);
-                    txt << "Creación:" << "    A: puerta AND" << "    O: puerta OR" << "    X: puerta XOR" << "    I: interruptor" << "    B: botón" << "    S: salida" << "    T: temporizador" << " " << " ";
-                    txt << "Simulación:" << "    Entrar: simular una vez" << "    Q: empezar simulación" << "    W: parar simulación" << "    -: acelerar simulación" << "    +: decelerar simulación";
-                    txt.setPos(800, 300);
-                    txt << "Modificadores:" << "    Espacio: crear conexión" << "    Retroceso: modo borrar" << " ";
-                    txt << "Ratón:" << "    Izquierda: borrar elemento" << "    Medio: borrar conexión" << "    Arriba: temporizador +" << "    Abajo: temporizador -" << " ";
-                    txt << "Ratón (borrando):" << "    Izquierda: interactuar" << "    Medio: crear conexión" << "    Derecha: mover" << "    Arriba: temporizador +" << "    Abajo: temporizador -";
-                    txt.setPos(1200, 300);
-                    txt << "Cuadrícula:" << "    E: alternar" << "    R: aumentar" << "    F: disminuir" << " ";
-                    txt << "Otros:" << "    L: borrar elementos desconectados" << "    H: centrar cámara" << "    D: duplicar selección" << "    G: guardar" << "    C: cargar" << "    Escape: cerrar" << "    M: ocultar controles";
+                    //CREACIÓN
+                    idiomas.print(ID_TEXTO::Creacion);
+                    idiomas.print(ID_TEXTO::AND);
+                    idiomas.print(ID_TEXTO::OR);
+                    idiomas.print(ID_TEXTO::XOR);
+                    idiomas.print(ID_TEXTO::Interruptor);
+                    idiomas.print(ID_TEXTO::Boton);
+                    idiomas.print(ID_TEXTO::Salida);
+                    idiomas.print(ID_TEXTO::Temporizador);
+                    idiomas.print(ID_TEXTO::Vacio1);
+                    idiomas.print(ID_TEXTO::Vacio1);
+                    //SIMULACIÓN
+                    idiomas.print(ID_TEXTO::Simulacion);
+                    idiomas.print(ID_TEXTO::SimularPaso);
+                    idiomas.print(ID_TEXTO::SimularEmpezar);
+                    idiomas.print(ID_TEXTO::SimularParar);
+                    idiomas.print(ID_TEXTO::SimularAcelerar);
+                    idiomas.print(ID_TEXTO::SimularDecelerar);
+                    //MODIFICADORES
+                    idiomas.print(ID_TEXTO::Modificadores);
+                    idiomas.print(ID_TEXTO::CrearConexionEspacio);
+                    idiomas.print(ID_TEXTO::ModoBorrar);
+                    idiomas.print(ID_TEXTO::Vacio1);
+                    //RATÓN
+                    idiomas.print(ID_TEXTO::Raton);
+                    idiomas.print(ID_TEXTO::Interactuar);
+                    idiomas.print(ID_TEXTO::CrearConexionRaton);
+                    idiomas.print(ID_TEXTO::Mover);
+                    idiomas.print(ID_TEXTO::TemporizadorArriba);
+                    idiomas.print(ID_TEXTO::TemporizadorAbajo);
+                    //RATÓN (BORRANDO)
+                    idiomas.print(ID_TEXTO::RatonBorrando);
+                    idiomas.print(ID_TEXTO::BorrarElemento);
+                    idiomas.print(ID_TEXTO::BorrarConexion);
+                    idiomas.print(ID_TEXTO::TemporizadorArribaBorrando);
+                    idiomas.print(ID_TEXTO::TemporizadorAbajoBorrando);
+                    idiomas.print(ID_TEXTO::Vacio1);
+                    //CUADRÍCULA
+                    idiomas.print(ID_TEXTO::Cuadricula);
+                    idiomas.print(ID_TEXTO::CuadriculaAlternar);
+                    idiomas.print(ID_TEXTO::CuadriculaAumentar);
+                    idiomas.print(ID_TEXTO::CuadriculaDisminuir);
+                    idiomas.print(ID_TEXTO::Vacio1);
+                    //OTROS
+                    idiomas.print(ID_TEXTO::Otros);
+                    idiomas.print(ID_TEXTO::BorrarElementosDesconectados);
+                    idiomas.print(ID_TEXTO::CentrarCamara);
+                    idiomas.print(ID_TEXTO::Duplicar);
+                    idiomas.print(ID_TEXTO::Guardar);
+                    idiomas.print(ID_TEXTO::Cargar);
+                    idiomas.print(ID_TEXTO::Cerrar);
+                    idiomas.print(ID_TEXTO::CambiarIdioma);
+                    idiomas.print(ID_TEXTO::OcultarControles);
                 }
                 break;
             default:
@@ -409,15 +454,19 @@ auto main() -> int
         }
 
         if(controlador.getCuadriculaActiva())
-        {
-            strTmp = std::format("Cuadríacula activa. Tamaño: {}", controlador.getCuadriculaTamaño());
-            txt << &strTmp;
-        }
+            idiomas.print(ID_TEXTO::CuadriculaActiva, controlador.getCuadriculaTamaño());
 
         if(mensajeTiempo + mensajeDuracion > SDL_GetTicks64())
         {
-            txt.setPos(900, 1050);
-            txt << mensaje.c_str();
+            switch(mensaje)
+            {
+                case ID_TEXTO::ElementoBorrados:
+                    idiomas.print(mensaje, mensajeParam);
+                    break;
+                default:
+                    idiomas.print(mensaje);
+                    break;
+            }
         }
 
         window.render(estado == ESTADOS::Normal);

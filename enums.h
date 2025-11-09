@@ -44,7 +44,8 @@
         TemporizadorSubir,  /* Rueda arriba */ \
         TemporizadorBajar,  /* Rueda abajo */ \
         CamaraCentrar,      /* B */ \
-        DuplicarSeleccion,  /* D */
+        DuplicarSeleccion,  /* D */ \
+        CambiarIdioma,      /* P */
 
 enum class ACCION : uint8_t
 {
@@ -167,5 +168,76 @@ enum class ESTADOS : uint8_t
     Controles
 };
 
+enum class IDIOMA : uint8_t
+{
+    ES = 0,
+    EN,
+    EU
+};
+
+enum class ID_TEXTO : uint8_t
+{
+    NADA = 0,
+    ElementoBorrados, //Main.cpp
+    SimulandoMs,
+    SimulandoInstantaneo,
+    MostrarControles,
+    NombreArchivo,
+    CargadoNo,
+    CargadoSi,
+    CargadoNoPosible,
+    GuardadoSi,
+    GuardadoNo,
+    CuadriculaActiva,
+    Creacion,
+    AND,
+    OR,
+    XOR,
+    Interruptor,
+    Boton,
+    Salida,
+    Temporizador,
+    Vacio1,
+    Vacio2,
+    Vacio3,
+    Simulacion,
+    SimularPaso,
+    SimularEmpezar,
+    SimularParar,
+    SimularAcelerar,
+    SimularDecelerar,
+    Modificadores,
+    CrearConexionEspacio,
+    ModoBorrar,
+    Vacio4,
+    Raton,
+    Interactuar,
+    CrearConexionRaton,
+    Mover,
+    TemporizadorArriba,
+    TemporizadorAbajo,
+    RatonBorrando,
+    BorrarElemento,
+    BorrarConexion,
+    TemporizadorArribaBorrando,
+    TemporizadorAbajoBorrando,
+    Vacio5,
+    Cuadricula,
+    CuadriculaAlternar,
+    CuadriculaAumentar,
+    CuadriculaDisminuir,
+    Vacio6,
+    Otros,
+    BorrarElementosDesconectados,
+    CentrarCamara,
+    Duplicar,
+    Guardar,
+    Cargar,
+    Cerrar,
+    CambiarIdioma,
+    OcultarControles,
+    Cargando,
+    IdiomaCambiado,
+};
 
 #endif //ENUMS_H
