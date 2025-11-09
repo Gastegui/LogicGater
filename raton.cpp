@@ -112,7 +112,6 @@ auto Raton::setControlador(Controlador* controlador_) -> void
     controlador->setSeleccionados(&seleccionados);
 }
 
-
 auto Raton::manejarRaton() -> void
 {
     SDL_GetMouseState(&posX, &posY);
@@ -127,6 +126,8 @@ auto Raton::manejarRaton() -> void
             for (Simulable* seleccionado : seleccionados)
                 seleccionado->interactuar(-1, 0, INTERACCIONES::MovimientoRaton);
         }
+        if(moviendoImg != nullptr)
+            moviendoImg->interactuar(-1, 0, INTERACCIONES::MovimientoRaton);
     }
     else if(posX > 1910)
     {
@@ -136,6 +137,8 @@ auto Raton::manejarRaton() -> void
             for (Simulable* seleccionado : seleccionados)
                 seleccionado->interactuar(1, 0, INTERACCIONES::MovimientoRaton);
         }
+        if(moviendoImg != nullptr)
+            moviendoImg->interactuar(1, 0, INTERACCIONES::MovimientoRaton);
     }
     if(posY < 10)
     {
@@ -145,6 +148,8 @@ auto Raton::manejarRaton() -> void
             for (Simulable* seleccionado : seleccionados)
                 seleccionado->interactuar(0, -1, INTERACCIONES::MovimientoRaton);
         }
+        if(moviendoImg != nullptr)
+            moviendoImg->interactuar(0, -1, INTERACCIONES::MovimientoRaton);
     }
     else if(posY > 1070)
     {
@@ -154,6 +159,8 @@ auto Raton::manejarRaton() -> void
             for (Simulable* seleccionado : seleccionados)
                 seleccionado->interactuar(0, 1, INTERACCIONES::MovimientoRaton);
         }
+        if(moviendoImg != nullptr)
+            moviendoImg->interactuar(0, 1, INTERACCIONES::MovimientoRaton);
     }
 
     if(seleccionando)
