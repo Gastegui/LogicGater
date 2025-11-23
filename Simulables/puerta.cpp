@@ -55,7 +55,7 @@ auto Puerta::simularAntiguo() -> bool
         if(arriba->getTipoSimulable() == TIPOS_SIMULABLES::Entrada)
             a = dynamic_cast<Entrada*>(arriba->getSimulable())->get();
         else if(arriba->getTipoSimulable() == TIPOS_SIMULABLES::Puerta)
-            a = dynamic_cast<Puerta*>(arriba->getSimulable())->getSalida()->get();
+            a = dynamic_cast<Puerta*>(arriba->getSimulable())->getIOSalida()->get();
     }
 
     if(abajo != nullptr)
@@ -63,7 +63,7 @@ auto Puerta::simularAntiguo() -> bool
         if(abajo->getTipoSimulable() == TIPOS_SIMULABLES::Entrada)
             b = dynamic_cast<Entrada*>(abajo->getSimulable())->get();
         else if(abajo->getTipoSimulable() == TIPOS_SIMULABLES::Puerta)
-            b = dynamic_cast<Puerta*>(abajo->getSimulable())->getSalida()->get();
+            b = dynamic_cast<Puerta*>(abajo->getSimulable())->getIOSalida()->get();
     }
 
     if(arribaNegado)
@@ -116,7 +116,7 @@ auto Puerta::interactuar(const int posX, const int posY, const INTERACCIONES int
     switch(interaccion)
     {
         case ConexionAbajo:
-            controlador->marcarOrigen(getSalida());
+            controlador->marcarOrigen(getIOSalida());
             return true;
         case ConexionArriba:
             {

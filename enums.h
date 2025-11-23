@@ -29,6 +29,7 @@
         CrearBoton,         /* B */ \
         CrearSalida,        /* S */ \
         CrearTemporizador,  /* T */ \
+        CrearCondensador,   /* N */ \
         SimularPaso,        /* Enter */ \
         SimularEmpezar,     /* Q */ \
         SimularParar,       /* W */ \
@@ -69,7 +70,8 @@ enum class TIPOS : uint8_t
     Entrada,
     IO,
     IMG,
-    Temporizador
+    Temporizador,
+    Condensador
 };
 
 constexpr static auto toString(const TIPOS tipo) -> std::string
@@ -90,6 +92,8 @@ constexpr static auto toString(const TIPOS tipo) -> std::string
             return "IO";
         case TIPOS::IMG:
             return "IMG";
+        case TIPOS::Condensador:
+            return "Condensador";
         default:
             return "Desconocido";
     }
@@ -103,7 +107,8 @@ enum class ID_TIPOS : unsigned int
     Salida = static_cast<unsigned int>(1 << 29),
     IO = static_cast<unsigned int>(1 << 28),
     IMG = static_cast<unsigned int>(1 << 27),
-    Temporizador = static_cast<unsigned int>(1 << 26)
+    Temporizador = static_cast<unsigned int>(1 << 26),
+    Condensador = static_cast<unsigned int>(1 << 25)
 };
 
 constexpr static auto getOffset(const ID_TIPOS tipo) -> unsigned int
@@ -124,6 +129,8 @@ constexpr static auto getOffset(const ID_TIPOS tipo) -> unsigned int
             return static_cast<unsigned int>(ID_TIPOS::IO);
         case ID_TIPOS::IMG:
             return static_cast<unsigned int>(ID_TIPOS::IMG);
+        case ID_TIPOS::Condensador:
+            return static_cast<unsigned int>(ID_TIPOS::Condensador);
         default:
             return 0;
     }
@@ -136,7 +143,8 @@ enum class TIPOS_SIMULABLES : uint8_t
     Puerta,
     Salida,
     Entrada,
-    Temporizador
+    Temporizador,
+    Condensador
 };
 
 constexpr static auto toString(const TIPOS_SIMULABLES tipo) -> std::string
@@ -153,6 +161,8 @@ constexpr static auto toString(const TIPOS_SIMULABLES tipo) -> std::string
             return "Entrada";
         case TIPOS_SIMULABLES::Temporizador:
             return "Temporizador";
+        case TIPOS_SIMULABLES::Condensador:
+            return "Condensador";
         default:
             return "Desconocido";
     }
@@ -236,6 +246,7 @@ enum class ID_TEXTO : uint8_t
     IdiomaCambiado,
     ConexionesOcultas,
     AlternarConexionesOcultas,
+    Elementos,
 };
 
 #endif //ENUMS_H

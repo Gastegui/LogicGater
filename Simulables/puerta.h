@@ -84,7 +84,6 @@ public:
         lineaAbajo.second += y_;
     }
 
-    [[nodiscard]] auto getSalida() -> IO* { return &salida; }
     [[nodiscard]] auto getDesconectado() const -> bool override { return arriba == nullptr && abajo == nullptr && salida.getConexiones() == 0; }
     [[nodiscard]] auto getImg() -> IMG* override { return &imagen; }
     [[nodiscard]] auto getArribaNegado() const -> bool { return arribaNegado; }

@@ -45,6 +45,8 @@ public:
             return TIPOS_SIMULABLES::Salida;
         if(id & 1 << 26)
             return TIPOS_SIMULABLES::Temporizador;
+        if(id & 1 << 25)
+            return TIPOS_SIMULABLES::Condensador;
 
         return TIPOS_SIMULABLES::Nada;
     }

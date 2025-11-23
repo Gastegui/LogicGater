@@ -12,6 +12,7 @@
 #include <print>
 
 #include "Idiomas.h"
+#include "enums.h"
 
 auto main() -> int
 {
@@ -109,6 +110,9 @@ auto main() -> int
                             break;
                         case ACCION::CrearTemporizador:
                             controlador.crear(-1, -1, 10);
+                            break;
+                        case ACCION::CrearCondensador:
+                            controlador.crear(-1, -1, Puerta::OR);
                             break;
                         case ACCION::AlternarBorrando:
                             window.getRaton()->setBorrando(!window.getRaton()->getBorrando());
@@ -242,6 +246,7 @@ auto main() -> int
                 txt << std::format("X: {} Y: {}", -window.getEsquinaX(), -window.getEsquinaY());
 
                 idiomas.print(ID_TEXTO::MostrarControles);
+                idiomas.print(ID_TEXTO::Elementos, controlador.getCantidadSimulables());
                 break;
             case ESTADOS::Guardar:
                 while(SDL_PollEvent(&event) != 0)

@@ -8,6 +8,8 @@
 #include "Simulables/salida.h"
 #include "Simulables/entrada.h"
 #include "Simulables/temporizador.h"
+#include "Simulables/condensador.h"
+#include "enums.h"
 
 auto Controlador::crear(const Puerta::TIPO tipo, int x, int y, const bool arribaNegado, const bool abajoNegado, const bool salidaNegada, const unsigned int id) -> unsigned int
 {
@@ -81,15 +83,31 @@ auto Controlador::crear(int x, int y, const int tiempo, const bool entradaNegada
     return idTemporizaador;
 }
 
+auto Controlador::crear(int x, int y, Puerta::TIPO tipo, unsigned int id) -> unsigned int
+{
+    if(x == -1 && y == -1)
+        SDL_GetMouseState(&x, &y);
+    std::unique_ptr<Condensador> condensador{};
+    if(id == 0)
+        condensador = std::make_unique<Condensador>(renderer, this, window->getRaton(), tipo, -window->getEsquinaX() + x, -window->getEsquinaY() + y);
+    else
+        condensador = std::make_unique<Condensador>(renderer, this, window->getRaton(), tipo, -window->getEsquinaX() + x, -window->getEsquinaY() + y, id);
+
+    window->añadir(condensador->getImg(), ListaIMG::Medio);
+
+    const unsigned int idCondensador = condensador->getId();
+    simulables[idCondensador] = std::move(condensador);
+    return idCondensador;
+}
 
 auto Controlador::simular() const -> void
 {
     for(const auto& value : std::views::values(simulables))
-        if(value.get()->getTipo() == TIPOS_SIMULABLES::Puerta || value.get()->getTipo() == TIPOS_SIMULABLES::Temporizador)
+        if(value.get()->getTipo() == TIPOS_SIMULABLES::Puerta || value.get()->getTipo() == TIPOS_SIMULABLES::Temporizador || value.get()->getTipo() == TIPOS_SIMULABLES::Condensador)
             value.get()->simular();
 
     for(const auto& value : simulables | std::views::values)
-        if(value.get()->getTipo() == TIPOS_SIMULABLES::Puerta || value.get()->getTipo() == TIPOS_SIMULABLES::Temporizador)
+        if(value.get()->getTipo() == TIPOS_SIMULABLES::Puerta || value.get()->getTipo() == TIPOS_SIMULABLES::Temporizador || value.get()->getTipo() == TIPOS_SIMULABLES::Condensador)
             value.get()->actualizar();
 
     for(const auto& value : simulables | std::views::values)
@@ -177,7 +195,7 @@ auto Controlador::duplicarSeleccion() -> void
     Entrada* entrada{};
     Salida* salida{};
     Temporizador* temporizador{};
-
+    Condensador* condensador{};
 
     for(Simulable* simulable : *seleccionados)
     {
@@ -189,7 +207,9 @@ auto Controlador::duplicarSeleccion() -> void
             nuevos[salida->getId()] = crear(window->getEsquinaX() + salida->getImg()->getRect()->x + 10, window->getEsquinaY() + salida->getImg()->getRect()->y + 10);
         else if((temporizador = dynamic_cast<Temporizador*>(simulable)) != nullptr) // NOLINT(*-assignment-in-if-condition)
             nuevos[temporizador->getId()] = crear(window->getEsquinaX() + temporizador->getImg()->getRect()->x + 10, window->getEsquinaY() + temporizador->getImg()->getRect()->y + 10, temporizador->getTiempoTotal(), temporizador->getEntradaNegada(), temporizador->getSalidaNegada());
-    }
+        else if((condensador = dynamic_cast<Condensador*>(simulable)) != nullptr) // NOLINT(*-assignment-in-if-condition)
+            nuevos[condensador->getId()] = crear(condensador->getImg()->getRect()->x + 10, condensador->getImg()->getRect()->y + 10, condensador->getTipoPuerta());
+        }
 
     for(const ListaLineas::Linea linea : *listaLineas.getLista())
     {

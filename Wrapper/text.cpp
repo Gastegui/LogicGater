@@ -35,9 +35,13 @@ auto TXT::write(const char* text) -> void
 
     if(x == -2)
         rect.x = 960 - rect.w/2; //960 = 1920/2
+    else if(x == -3)
+        rect.x = 1920 - rect.w - 10;
 
     if(y == -2)
         rect.y = 540 - rect.h/2; //540 = 1080/2
+    else if(y == -3)
+        rect.y = 1080 - rect.h - 10;
 
     y += alturaSalto;
 

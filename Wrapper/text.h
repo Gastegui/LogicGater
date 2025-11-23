@@ -6,7 +6,8 @@
 #define TEXT_H
 
 #include "iostream"
-#include "SDL_ttf.h"
+//#include "SDL_ttf.h"
+#include <SDL2/SDL_ttf.h>
 
 class TXT
 {

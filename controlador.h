@@ -70,6 +70,8 @@ public:
     //Crea un temporizador
     auto crear(int x, int y, int tiempo, bool entradaNegada = false, bool salidaNegada = false, unsigned int id = 0) -> unsigned int;
 
+    //Crea un condensador
+    auto crear(int x, int y, Puerta::TIPO tipo, unsigned int id = 0) -> unsigned int;
 
     auto borrar(Simulable* simulable) -> void
     {
@@ -121,11 +123,13 @@ public:
 
     auto duplicarSeleccion() -> void;
 
-    auto getConexionesOcultas() const -> bool { return conexionesOcultas; }
+    [[nodiscard]] auto getConexionesOcultas() const -> bool { return conexionesOcultas; }
     auto alternarConexionesOcultas() -> void
     {
         conexionesOcultas = !conexionesOcultas;
     }
+
+    [[nodiscard]] auto getCantidadSimulables() const -> int { return static_cast<int>(simulables.size()); }
 };
 
 #endif //CONTROLADOR_H
