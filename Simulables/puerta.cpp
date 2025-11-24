@@ -99,7 +99,7 @@ auto Puerta::actualizar() -> void
 
 auto Puerta::moverRel(const int x_, const int y_) -> void
 {
-    imagen.mover(imagen.getRect()->x + x_, imagen.getRect()->y + y_);
+    imagen.moverRel(+ x_, y_);
 
     salida.moverLineaOrigenRel(x_, y_);
 
@@ -202,6 +202,49 @@ auto Puerta::interactuar(const int posX, const int posY, const INTERACCIONES int
         case RatonSalir:
             interactuarAbajo = false;
             mover = false;
+            return true;
+        case Rotar:
+            switch(SDL_Rect rect{*imagen.getRect()}; imagen.getRotacion())
+            {
+                case 0:
+                    imagen.setRotacion(90);
+                    imagen.moverRel( -25,  25);
+                    salida.moverLineaOrigenRel(-75, 75);
+                    lineaArriba.first = rect.x + 50 - 12;
+                    lineaArriba.second = rect.y;
+                    lineaAbajo.first = rect.x + 12;
+                    lineaAbajo.second = rect.y;
+                    break;
+                case 90:
+                    imagen.setRotacion(180);
+                    imagen.moverRel( 25,  -25);
+                    salida.moverLineaOrigenRel(-25, -75);
+                    lineaArriba.first = rect.x + 100;
+                    lineaArriba.second = rect.y + 37;
+                    lineaAbajo.first = rect.x + 100;
+                    lineaAbajo.second = rect.y + 11;
+                    break;
+                case 180:
+                    imagen.setRotacion(270);
+                    imagen.moverRel( -25,  25);
+                    salida.moverLineaOrigenRel(25, -25);
+                    lineaArriba.first = rect.x + 12;
+                    lineaArriba.second = rect.y + 100;
+                    lineaAbajo.first = rect.x + 50 - 12;
+                    lineaAbajo.second = rect.y + 100;
+                    break;
+                case 270:
+                    imagen.setRotacion(0);
+                    imagen.moverRel( 25,  -25);
+                    salida.moverLineaOrigenRel(75, 25);
+                    lineaArriba.first = rect.x;
+                    lineaArriba.second = rect.y + 11;
+                    lineaAbajo.first = rect.x;
+                    lineaAbajo.second = rect.y + 37;
+                    break;
+                default:
+                    return false;
+            }
             return true;
         default:
             return false;

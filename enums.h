@@ -47,7 +47,8 @@
         CamaraCentrar,      /* B */ \
         DuplicarSeleccion,  /* D */ \
         CambiarIdioma,      /* P */ \
-        AlternarOculto,     /* Alt */
+        AlternarOculto,     /* Alt */ \
+        Rotar,              /* Ctrl */
 
 enum class ACCION : uint8_t
 {

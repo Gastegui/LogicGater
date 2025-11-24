@@ -42,10 +42,24 @@ class Entrada final : public Simulable
             idGenerator();
     }
 
+    auto getImgPath() -> std::string
+    {
+        if(mantener)
+        {
+            if(salida.get())
+                return "./img/entrada/boton_encendido.png";
+            return "./img/entrada/boton_apagado.png";
+        }
+        //else
+        if(salida.get())
+            return "./img/entrada/interruptor_encendido.png";
+        return "./img/entrada/interruptor_apagado.png";
+    }
+
     auto cambiar() -> void
     {
         img.crearImagen<IMG::Capa>(
-            IMG::Capa{.img = salida.get() ? "./img/entrada/encendido.png" : "./img/entrada/apagado.png"},
+            IMG::Capa{.img = getImgPath()},
             IMG::Capa{.img = seleccionado ? "./img/entrada/seleccionado.png" : "./img/entrada/no_seleccionado.png"}
         );
     }
@@ -55,7 +69,7 @@ public:
         : Entrada(renderer, controlador_, x, y, raton_, idGenerator(), mantener_) {}
 
     Entrada(SDL_Renderer* renderer, Controlador* controlador_, const int x, const int y, Raton* raton_, const unsigned int id_, const bool mantener_ = false)
-        : Simulable{id_}, controlador{controlador_}, salida{this, x + 25, y + 25}, mantener{mantener_}, img{"./img/entrada/apagado.png", renderer, x, y}, raton{raton_}
+        : Simulable{id_}, controlador{controlador_}, salida{this, x + 50, y + 25}, mantener{mantener_}, img{getImgPath().c_str(), renderer, x, y}, raton{raton_}
     {
         img.setClickable(this);
     }

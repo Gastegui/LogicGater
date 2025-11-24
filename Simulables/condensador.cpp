@@ -9,7 +9,7 @@
 
 auto Condensador::moverRel(int x, int y) -> void
 {
-    imagen.mover(imagen.getRect()->x + x, imagen.getRect()->y + y);
+    imagen.moverRel(x, y);
     salida.moverLineaOrigenRel(x, y);
     linea.first += x;
     linea.second += y;
@@ -69,7 +69,7 @@ auto Condensador::interactuar(int posX, int posY, INTERACCIONES interaccion) -> 
         case ConexionArriba:
             {
                 IO* origen = controlador->getOrigen();
-                if(origen == nullptr)
+                if(origen == nullptr || origen == getIOSalida())
                     return false;
 
                 origen->conectado();
@@ -107,6 +107,41 @@ auto Condensador::interactuar(int posX, int posY, INTERACCIONES interaccion) -> 
             return true;
         case RatonSalir:
             mover = false;
+            return true;
+        case Rotar:
+            switch(SDL_Rect rect{*imagen.getRect()}; imagen.getRotacion())
+            {
+                case 0:
+                    imagen.setRotacion(90);
+                    imagen.moverRel( -25,  25);
+                    salida.moverLineaOrigenRel(-75, 75);
+                    linea.first = rect.x + 25;
+                    linea.second = rect.y;
+                    break;
+                case 90:
+                    imagen.setRotacion(180);
+                    imagen.moverRel( 25,  -25);
+                    salida.moverLineaOrigenRel(-25, -75);
+                    linea.first = rect.x + 100;
+                    linea.second = rect.y + 25;
+                    break;
+                case 180:
+                    imagen.setRotacion(270);
+                    imagen.moverRel( -25,  25);
+                    salida.moverLineaOrigenRel(25, -25);
+                    linea.first = rect.x + 25;
+                    linea.second = rect.y + 100;
+                    break;
+                case 270:
+                    imagen.setRotacion(0);
+                    imagen.moverRel( 25,  -25);
+                    salida.moverLineaOrigenRel(75, 25);
+                    linea.first = rect.x;
+                    linea.second = rect.y + 25;
+                    break;
+                default:
+                    return false;
+            }
             return true;
         default:
             return false;

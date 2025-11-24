@@ -110,7 +110,7 @@ auto Temporizador::interactuar(const int posX, const int posY, const INTERACCION
         case MovimientoRaton:
             if(mover)
             {
-                imagen.mover(imagen.getRect()->x + posX, imagen.getRect()->y + posY);
+                imagen.moverRel(posX, posY);
 
                 salida.moverLineaOrigenRel(posX, posY);
 
@@ -136,6 +136,41 @@ auto Temporizador::interactuar(const int posX, const int posY, const INTERACCION
         case RatonSalir:
             interactuarAbajo = false;
             mover = false;
+            return true;
+        case Rotar:
+            switch(SDL_Rect rect{*imagen.getRect()}; imagen.getRotacion())
+            {
+                case 0:
+                    imagen.setRotacion(90);
+                    imagen.moverRel( -25,  25);
+                    salida.moverLineaOrigenRel(-75, 75);
+                    linea.first = rect.x + 25;
+                    linea.second = rect.y;
+                    break;
+                case 90:
+                    imagen.setRotacion(180);
+                    imagen.moverRel( 25,  -25);
+                    salida.moverLineaOrigenRel(-25, -75);
+                    linea.first = rect.x + 100;
+                    linea.second = rect.y + 25;
+                    break;
+                case 180:
+                    imagen.setRotacion(270);
+                    imagen.moverRel( -25,  25);
+                    salida.moverLineaOrigenRel(25, -25);
+                    linea.first = rect.x + 25;
+                    linea.second = rect.y + 100;
+                    break;
+                case 270:
+                    imagen.setRotacion(0);
+                    imagen.moverRel( 25,  -25);
+                    salida.moverLineaOrigenRel(75, 25);
+                    linea.first = rect.x;
+                    linea.second = rect.y + 25;
+                    break;
+                default:
+                    return false;
+            }
             return true;
         default:
             return false;

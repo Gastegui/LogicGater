@@ -19,7 +19,7 @@ auto Salida::cambiar(const bool estado) -> void
 
 auto Salida::moverRel(const int x, const int y) -> void
 {
-    img.mover(img.getRect()->x + x, img.getRect()->y + y);
+    img.moverRel(x, y);
     entradaPos.first += x;
     entradaPos.second += y;
 }
@@ -105,7 +105,33 @@ auto Salida::interactuar(const int posX, const int posY, const INTERACCIONES int
         case RatonSalir:
             mover = false;
             return true;
-
+        case Rotar:
+            switch(img.getRotacion())
+            {
+                case 0:
+                    img.setRotacion(90);
+                    entradaPos.first += 25;
+                    entradaPos.second -= 25;
+                    break;
+                case 90:
+                    img.setRotacion(180);
+                    entradaPos.first += 25;
+                    entradaPos.second += 25;
+                    break;
+                case 180:
+                    img.setRotacion(270);
+                    entradaPos.first -= 25;
+                    entradaPos.second += 25;
+                    break;
+                case 270:
+                    img.setRotacion(0);
+                    entradaPos.first -= 25;
+                    entradaPos.second -= 25;
+                    break;
+                default:
+                    return false;
+            }
+            return true;
         default:
             return false;
     }

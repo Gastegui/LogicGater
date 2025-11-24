@@ -9,7 +9,7 @@
 
 auto Entrada::moverRel(const int x, const int y) -> void
 {
-    img.mover(img.getRect()->x + x, img.getRect()->y + y);
+    img.moverRel(x, y);
     salida.moverLineaOrigenRel(x, y);
 }
 
@@ -56,6 +56,29 @@ auto Entrada::interactuar(const int posX, const int posY, const INTERACCIONES in
             interactuarAbajo = false;
             if(mantener)
                 set(false);
+            return true;
+        case Rotar:
+            switch(img.getRotacion())
+            {
+                case 0:
+                    img.setRotacion(90);
+                    salida.moverLineaOrigenRel(-25, 25);
+                    break;
+                case 90:
+                    img.setRotacion(180);
+                    salida.moverLineaOrigenRel(-25, -25);
+                    break;
+                case 180:
+                    img.setRotacion(270);
+                    salida.moverLineaOrigenRel(25, -25);
+                    break;
+                case 270:
+                    img.setRotacion(0);
+                    salida.moverLineaOrigenRel(25, 25);
+                    break;
+                default:
+                    return false;
+            }
             return true;
         default:
             return false;

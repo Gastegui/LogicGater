@@ -24,7 +24,7 @@ class Salida final : public Simulable
 
     IMG img;
 
-    std::pair<int, int> entradaPos{25, 25};
+    std::pair<int, int> entradaPos{0, 25};
 
     bool mover{false};
     Raton* raton;

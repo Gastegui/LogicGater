@@ -24,11 +24,14 @@ class IMG
     SDL_Renderer* renderer{nullptr};
     SDL_Texture* texture{nullptr};
     SDL_Rect rect{};
+    SDL_Rect rectReal{};
     unsigned int id;
     bool esClickable{false};
     Simulable* simulable{nullptr};
     TIPOS_SIMULABLES tipoSimulable{TIPOS_SIMULABLES::Nada};
     TXT* txt{nullptr};
+
+    int rotacion{0};
 
     static auto idGenerator() -> unsigned int
     {
@@ -60,6 +63,7 @@ public:
             SDL_QueryTexture(texture, nullptr, nullptr, &rect.w, &rect.h);
             rect.x = x;
             rect.y = y;
+            rectReal = rect;
         }
     }
 
@@ -70,11 +74,13 @@ public:
         rect.y = y;
         rect.w = w;
         rect.h = h;
+        rectReal = rect; //NOLINT
     }
 
     [[nodiscard]] auto getId() const -> unsigned long { return id; }
     [[nodiscard]] auto getTexture() const -> SDL_Texture* { return texture; }
     [[nodiscard]] auto getRect() -> SDL_Rect* { return &rect; }
+    [[nodiscard]] auto getRectReal() -> SDL_Rect* { return &rectReal; }
     [[nodiscard]] auto getClickable() const -> bool { return esClickable; }
 
     auto setClickable(Simulable* simulable_) -> void
@@ -101,10 +107,12 @@ public:
         return texture == nullptr;
     }
 
-    auto mover(const int x, const int y) -> void
+    auto moverRel(const int x, const int y) -> void
     {
-        rect.x = x;
-        rect.y = y;
+        rect.x += x;
+        rect.y += y;
+        rectReal.x += x;
+        rectReal.y += y;
     }
 
     auto interactuar(const int x, const int y, const INTERACCIONES interaccion) const -> void
@@ -118,7 +126,7 @@ public:
         if(texture != nullptr)
             SDL_DestroyTexture(texture);
 
-        texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, rect.w, rect.h);
+        texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, rectReal.w, rectReal.h);
 
         if(texture == nullptr)
             return false;
@@ -135,6 +143,26 @@ public:
     }
 
     auto setTXT(TXT* txt_) -> void { txt = txt_; }
+
+    auto setRotacion(int rotacion_) -> void 
+    { 
+        rotacion = rotacion_;
+        if(rotacion == 90 || rotacion == 270)
+        {
+            int centroX = rectReal.x + rectReal.w / 2;
+            int centroY = rectReal.y + rectReal.h / 2;
+
+            rect.w = rectReal.h;
+            rect.h = rectReal.w;
+
+            rect.x = centroX - rect.w / 2;
+            rect.y = centroY - rect.h / 2;
+        }
+        else 
+            rect = rectReal;
+    }
+
+    [[nodiscard]] auto getRotacion() const -> int { return rotacion; }
 
 private:
     auto procesarCapa(const Capa& capa) const -> void

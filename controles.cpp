@@ -5,8 +5,6 @@
 #include "controles.h"
 #include "Wrapper/window.h"
 
-#include <iostream>
-
 using enum ACCION;
 
 ACCION Controles::accionAnterior = Nada;

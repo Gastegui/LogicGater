@@ -2,6 +2,8 @@
 // Created by julen on 22/08/24.
 //
 
+#include <SDL_rect.h>
+#include <SDL_render.h>
 #include <ranges>
 #include "window.h"
 #include "image.h"
@@ -64,22 +66,26 @@ auto Window::rendererDraw() const -> void
     imagenes = listaIMG.getLista(ListaIMG::Medio);
     for(IMG* img : *imagenes | std::views::reverse)
     {
-        SDL_Rect rect{*img->getRect()};
+        SDL_Rect rectColision{*img->getRect()};
 
-        if(rect.x < mapaMinX)
-            mapaMinX = rect.x;
-        else if(rect.x + rect.w > mapaMaxX)
-            mapaMaxX = rect.x + rect.w;
-        if(rect.y < mapaMinY)
-            mapaMinY = rect.y;
-        else if(rect.y + rect.h > mapaMaxY)
-            mapaMaxY = rect.y + rect.h;
+        if(rectColision.x < mapaMinX)
+            mapaMinX = rectColision.x;
+        else if(rectColision.x + rectColision.w > mapaMaxX)
+            mapaMaxX = rectColision.x + rectColision.w;
+        if(rectColision.y < mapaMinY)
+            mapaMinY = rectColision.y;
+        else if(rectColision.y + rectColision.h > mapaMaxY)
+            mapaMaxY = rectColision.y + rectColision.h;
 
-        if(rect.x < -esquinaX + width && rect.x + rect.w > -esquinaX && rect.y < -esquinaY + height && rect.y + rect.h > -esquinaY)
+        if(rectColision.x < -esquinaX + width && rectColision.x + rectColision.w > -esquinaX && rectColision.y < -esquinaY + height && rectColision.y + rectColision.h > -esquinaY)
         {
-            rect.x += esquinaX;
-            rect.y += esquinaY;
-            SDL_RenderCopy(renderer, img->getTexture(), nullptr, &rect);
+            SDL_Rect rectReal = *img->getRectReal();
+            rectColision.x += esquinaX;
+            rectColision.y += esquinaY;
+            rectReal.x += esquinaX;
+            rectReal.y += esquinaY;
+
+            SDL_RenderCopyEx(renderer, img->getTexture(), nullptr, &rectReal, img->getRotacion(), nullptr, SDL_FLIP_NONE);
         }
     }
 
@@ -130,12 +136,12 @@ auto Window::rendererDraw() const -> void
     imagenes = listaIMG.getLista(ListaIMG::Medio);
     for(IMG* img : *imagenes)
     {
-        rect = *img->getRect();
+        rect = *img->getRectReal();
         rect.x = static_cast<int>((rect.x - mapaMinX) * factorX + (width - minimapaTamañoObjetivoX));
         rect.y = static_cast<int>((rect.y - mapaMinY) * factorY + (height - minimapaTamañoObjetivoY));
         rect.w = static_cast<int>(rect.w * factorX);
         rect.h = static_cast<int>(rect.h * factorY);
-        SDL_RenderCopy(renderer, img->getTexture(), nullptr, &rect);
+        SDL_RenderCopyEx(renderer, img->getTexture(), nullptr, &rect, img->getRotacion(), nullptr, SDL_FLIP_NONE);
     }
 
     rect.x = static_cast<int>((-esquinaX - mapaMinX) * factorX + (width - minimapaTamañoObjetivoX));
