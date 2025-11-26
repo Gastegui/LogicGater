@@ -40,12 +40,12 @@ public:
 
 class Idiomas
 {
-    TXT& txt;
+    TXT& txt; //NOLINT
     std::map<ID_TEXTO, Texto> textos;
     IDIOMA idioma;
 
     auto setPos(int x, int y) const -> void;
-
+    auto printReal(std::string str) const -> void;
 public:
     Idiomas(TXT& txt_, IDIOMA idioma_)
         :txt{txt_}, idioma{idioma_}
