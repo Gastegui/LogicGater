@@ -39,7 +39,7 @@ auto Window::renderLine(const int x1, const int y1, const int x2, const int y2, 
 auto Window::rendererDraw() const -> void
 {
     // ReSharper disable CppDFANullDereference
-    const std::vector<IMG*>* imagenes{listaIMG.getLista(ListaIMG::Fondo)};
+    const std::vector<IMG*>* imagenes{listasIMG.at(controlador->getEstado()).getLista(ListaIMG::Fondo)};
     const std::vector<ListaLineas::Linea>* lineas{controlador->getListaLineas()->getLista()};
     mapaMinX = -esquinaX;
     mapaMaxX = -esquinaX + width;
@@ -63,7 +63,7 @@ auto Window::rendererDraw() const -> void
     for(IMG* img : *imagenes)
         SDL_RenderCopy(renderer, img->getTexture(), nullptr, img->getRect());
 
-    imagenes = listaIMG.getLista(ListaIMG::Medio);
+    imagenes = listasIMG.at(controlador->getEstado()).getLista(ListaIMG::Medio);
     for(IMG* img : *imagenes | std::views::reverse)
     {
         SDL_Rect rectColision{*img->getRect()};
@@ -116,7 +116,7 @@ auto Window::rendererDraw() const -> void
     }
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
 
-    imagenes = listaIMG.getLista(ListaIMG::Frente);
+    imagenes = listasIMG.at(controlador->getEstado()).getLista(ListaIMG::Frente);
     for(IMG* img : *imagenes)
         SDL_RenderCopy(renderer, img->getTexture(), nullptr, img->getRect());
 
@@ -130,27 +130,30 @@ auto Window::rendererDraw() const -> void
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
     }
 
-    //Minimapa
-    const double factorX = static_cast<double>(minimapaTamañoObjetivoX) / (mapaMaxX - mapaMinX);
-    const double factorY = static_cast<double>(minimapaTamañoObjetivoY) / (mapaMaxY - mapaMinY);
-    imagenes = listaIMG.getLista(ListaIMG::Medio);
-    for(IMG* img : *imagenes)
+    if(controlador->getEstado() == ESTADOS::Normal)
     {
-        rect = *img->getRectReal();
-        rect.x = static_cast<int>((rect.x - mapaMinX) * factorX + (width - minimapaTamañoObjetivoX));
-        rect.y = static_cast<int>((rect.y - mapaMinY) * factorY + (height - minimapaTamañoObjetivoY));
-        rect.w = static_cast<int>(rect.w * factorX);
-        rect.h = static_cast<int>(rect.h * factorY);
-        SDL_RenderCopyEx(renderer, img->getTexture(), nullptr, &rect, img->getRotacion(), nullptr, SDL_FLIP_NONE);
+        //Minimapa
+        const double factorX = static_cast<double>(minimapaTamañoObjetivoX) / (mapaMaxX - mapaMinX);
+        const double factorY = static_cast<double>(minimapaTamañoObjetivoY) / (mapaMaxY - mapaMinY);
+        imagenes = listasIMG.at(controlador->getEstado()).getLista(ListaIMG::Medio);
+        for(IMG* img : *imagenes)
+        {
+            rect = *img->getRectReal();
+            rect.x = static_cast<int>((rect.x - mapaMinX) * factorX + (width - minimapaTamañoObjetivoX));
+            rect.y = static_cast<int>((rect.y - mapaMinY) * factorY + (height - minimapaTamañoObjetivoY));
+            rect.w = static_cast<int>(rect.w * factorX);
+            rect.h = static_cast<int>(rect.h * factorY);
+            SDL_RenderCopyEx(renderer, img->getTexture(), nullptr, &rect, img->getRotacion(), nullptr, SDL_FLIP_NONE);
+        }
+    
+        rect.x = static_cast<int>((-esquinaX - mapaMinX) * factorX + (width - minimapaTamañoObjetivoX));
+        rect.y = static_cast<int>((-esquinaY - mapaMinY) * factorY + (height - minimapaTamañoObjetivoY));
+        rect.w = static_cast<int>(width * factorX);
+        rect.h = static_cast<int>(height * factorY);
+        SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+        SDL_RenderDrawRect(renderer, &rect);
+        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
     }
-
-    rect.x = static_cast<int>((-esquinaX - mapaMinX) * factorX + (width - minimapaTamañoObjetivoX));
-    rect.y = static_cast<int>((-esquinaY - mapaMinY) * factorY + (height - minimapaTamañoObjetivoY));
-    rect.w = static_cast<int>(width * factorX);
-    rect.h = static_cast<int>(height * factorY);
-    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
-    SDL_RenderDrawRect(renderer, &rect);
-    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
 }
 
 auto Window::rendererPresent() const -> void
@@ -189,7 +192,7 @@ auto Window::centrar() -> void
     int minY = std::numeric_limits<int>::max();
     int maxY = std::numeric_limits<int>::min();
 
-    const std::vector<IMG*>* imagenes = listaIMG.getLista(ListaIMG::Medio);
+    const std::vector<IMG*>* imagenes = listasIMG[controlador->getEstado()].getLista(ListaIMG::Medio);
 
     if(imagenes == nullptr)
     {
@@ -215,4 +218,33 @@ auto Window::centrar() -> void
     y -= height / 2;
 
     mover(-x, -y);
+}
+
+auto Window::getListaIMG(const ListaIMG::ALTURA altura) const -> const std::vector<IMG *>*
+{
+    return listasIMG.at(controlador->getEstado()).getLista(altura);
+}
+
+auto Window::añadir(ESTADOS estado, IMG *img, ListaIMG::ALTURA altura) -> bool
+{
+    return listasIMG[estado].añadir(img, altura);
+}
+auto Window::añadir(IMG* img, const ListaIMG::ALTURA altura) -> bool
+{
+    return añadir(controlador->getEstado(), img, altura);
+}
+
+auto Window::borrar(ESTADOS estado, const IMG* img, const ListaIMG::ALTURA altura) -> bool
+{
+    if(listasIMG[estado].quitar(img, altura))
+    {
+        raton.setImgAnteriorNull();
+        return true;
+    }
+    return false;
+
+}
+auto Window::borrar(const IMG* img, const ListaIMG::ALTURA altura) -> bool
+{
+    return borrar(controlador->getEstado(), img, altura);
 }

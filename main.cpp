@@ -5,6 +5,7 @@
 
 #include "./Wrapper/text.h"
 #include "./Wrapper/window.h"
+#include "Wrapper/image.h"
 #include "controlador.h"
 #include "controles.h"
 #include "SistemaGuardado.h"
@@ -70,12 +71,13 @@ auto main() -> int
     constexpr int mensajeDuracion = 5000;
     Uint64 mensajeTiempo = -mensajeDuracion;
 
+    IMG imagenTeclado{"./img/Teclado.png", window.getRenderer(), 500, 100};
+    window.añadir(ESTADOS::Controles, &imagenTeclado, ListaIMG::Frente);
 
-    ESTADOS estado = ESTADOS::Normal;
-    while(estado != ESTADOS::Cerrar && estado != ESTADOS::Error)
+    while(controlador.getEstado() != ESTADOS::Cerrar && controlador.getEstado() != ESTADOS::Error)
     {
         window.limpiar();
-        switch(estado)
+        switch(controlador.getEstado())
         {
             case ESTADOS::Cerrar:
             case ESTADOS::Error:
@@ -121,11 +123,8 @@ auto main() -> int
                             controlador.simular();
                             simulando = false;
                             break;
-                        case ACCION::SimularEmpezar:
-                            simulando = true;
-                            break;
-                        case ACCION::SimularParar:
-                            simulando = false;
+                        case ACCION::SimularEmpezarParar:
+                            simulando = !simulando;
                             break;
                         case ACCION::SimularAcelerar:
                             if(valores.velocidadSimulacion != -5)
@@ -135,22 +134,22 @@ auto main() -> int
                             valores.velocidadSimulacion += 5;
                             break;
                         case ACCION::Cerrar:
-                            estado = ESTADOS::Cerrar;
+                            controlador.setEstado(ESTADOS::Cerrar);
                             simulando = false;
                             break;
                         case ACCION::MostrarControles:
-                            estado = ESTADOS::Controles;
+                            controlador.setEstado(ESTADOS::Controles);
                             simulando = false;
                             break;
                         case ACCION::Guardar:
-                            estado = ESTADOS::Guardar;
+                            controlador.setEstado(ESTADOS::Guardar);
                             simulando = false;
                             Controles::setTextInput();
                             inputStr = "";
                             escribiendo = true;
                             break;
                         case ACCION::Cargar:
-                            estado = ESTADOS::Cargar;
+                            controlador.setEstado(ESTADOS::Cargar);
                             simulando = false;
                             Controles::setTextInput();
                             inputStr = "";
@@ -189,7 +188,7 @@ auto main() -> int
                                         }
                                         break;
                                     case SDL_QUIT:
-                                        estado = ESTADOS::Cerrar;
+                                        controlador.setEstado(ESTADOS::Cerrar);
                                         simulando = false;
                                         break;
                                     case SDL_TEXTINPUT:
@@ -219,7 +218,7 @@ auto main() -> int
                         default:
                             break;
                     }
-                    if(estado != ESTADOS::Cerrar)
+                    if(controlador.getEstado() != ESTADOS::Cerrar)
                         window.getRaton()->manejarRaton();
                 }
 
@@ -274,7 +273,7 @@ auto main() -> int
                                         }
                                         break;
                                     case SDL_QUIT:
-                                        estado = ESTADOS::Cerrar;
+                                        controlador.setEstado(ESTADOS::Cerrar);
                                         break;
                                     case SDL_TEXTINPUT:
                                         inputStr += evento->text.text; // NOLINT(*-pro-bounds-array-to-pointer-decay)
@@ -285,7 +284,7 @@ auto main() -> int
                             }
                             break;
                         case ACCION::CerrarTextInput:
-                            estado = ESTADOS::Normal;
+                            controlador.setEstado(ESTADOS::Normal);
                             Controles::unsetTextInput();
                             escribiendo = false;
                             break;
@@ -308,7 +307,7 @@ auto main() -> int
                     else
                         mensaje = ID_TEXTO::GuardadoNo;
                     mensajeTiempo = SDL_GetTicks64();
-                    estado = ESTADOS::Normal;
+                    controlador.setEstado(ESTADOS::Normal);
                 }
 
                 break;
@@ -338,7 +337,7 @@ auto main() -> int
                                         }
                                         break;
                                     case SDL_QUIT:
-                                        estado = ESTADOS::Cerrar;
+                                        controlador.setEstado(ESTADOS::Cerrar);
                                         break;
                                     case SDL_TEXTINPUT:
                                         inputStr += evento->text.text; // NOLINT(*-pro-bounds-array-to-pointer-decay)
@@ -349,7 +348,7 @@ auto main() -> int
                             }
                             break;
                         case ACCION::CerrarTextInput:
-                            estado = ESTADOS::Normal;
+                            controlador.setEstado(ESTADOS::Normal);
                             Controles::unsetTextInput();
                             escribiendo = false;
                             break;
@@ -379,7 +378,7 @@ auto main() -> int
                         mensaje = ID_TEXTO::CargadoSi;
 
                     mensajeTiempo = SDL_GetTicks64();
-                    estado = ESTADOS::Normal;
+                    controlador.setEstado(ESTADOS::Normal);
                 }
                 break;
             case ESTADOS::Controles:
@@ -389,7 +388,7 @@ auto main() -> int
                     {
                         case ACCION::Cerrar:
                         case ACCION::MostrarControles:
-                            estado = ESTADOS::Normal;
+                            controlador.setEstado(ESTADOS::Normal);
                             break;
                         case ACCION::CambiarIdioma:
                             idiomas.cambiar();
@@ -402,66 +401,19 @@ auto main() -> int
                     }
                 }
 
-                if(estado == ESTADOS::Controles)
+                if(controlador.getEstado() == ESTADOS::Controles)
                 {
-                    //CREACIÓN
-                    idiomas.print(ID_TEXTO::Creacion);
-                    idiomas.print(ID_TEXTO::AND);
-                    idiomas.print(ID_TEXTO::OR);
-                    idiomas.print(ID_TEXTO::XOR);
-                    idiomas.print(ID_TEXTO::Interruptor);
-                    idiomas.print(ID_TEXTO::Boton);
-                    idiomas.print(ID_TEXTO::Salida);
-                    idiomas.print(ID_TEXTO::Temporizador);
-                    idiomas.print(ID_TEXTO::Vacio);
-                    idiomas.print(ID_TEXTO::Vacio);
-                    //SIMULACIÓN
-                    idiomas.print(ID_TEXTO::Simulacion);
-                    idiomas.print(ID_TEXTO::SimularPaso);
-                    idiomas.print(ID_TEXTO::SimularEmpezar);
-                    idiomas.print(ID_TEXTO::SimularParar);
-                    idiomas.print(ID_TEXTO::SimularAcelerar);
-                    idiomas.print(ID_TEXTO::SimularDecelerar);
-                    //MODIFICADORES
-                    idiomas.print(ID_TEXTO::Modificadores);
-                    idiomas.print(ID_TEXTO::CrearConexionEspacio);
-                    idiomas.print(ID_TEXTO::ModoBorrar);
-                    idiomas.print(ID_TEXTO::Vacio);
-                    //RATÓN
-                    idiomas.print(ID_TEXTO::Raton);
-                    idiomas.print(ID_TEXTO::Interactuar);
-                    idiomas.print(ID_TEXTO::CrearConexionRaton);
-                    idiomas.print(ID_TEXTO::Mover);
-                    idiomas.print(ID_TEXTO::TemporizadorArriba);
-                    idiomas.print(ID_TEXTO::TemporizadorAbajo);
-                    //RATÓN (BORRANDO)
-                    idiomas.print(ID_TEXTO::RatonBorrando);
-                    idiomas.print(ID_TEXTO::BorrarElemento);
-                    idiomas.print(ID_TEXTO::BorrarConexion);
-                    idiomas.print(ID_TEXTO::TemporizadorArribaBorrando);
-                    idiomas.print(ID_TEXTO::TemporizadorAbajoBorrando);
-                    idiomas.print(ID_TEXTO::Vacio);
-                    //CUADRÍCULA
-                    idiomas.print(ID_TEXTO::Cuadricula);
-                    idiomas.print(ID_TEXTO::CuadriculaAlternar);
-                    idiomas.print(ID_TEXTO::CuadriculaAumentar);
-                    idiomas.print(ID_TEXTO::CuadriculaDisminuir);
-                    idiomas.print(ID_TEXTO::Vacio);
-                    //OTROS
-                    idiomas.print(ID_TEXTO::Otros);
-                    idiomas.print(ID_TEXTO::BorrarElementosDesconectados);
-                    idiomas.print(ID_TEXTO::CentrarCamara);
-                    idiomas.print(ID_TEXTO::Duplicar);
-                    idiomas.print(ID_TEXTO::Guardar);
-                    idiomas.print(ID_TEXTO::Cargar);
-                    idiomas.print(ID_TEXTO::Cerrar);
-                    idiomas.print(ID_TEXTO::CambiarIdioma);
-                    idiomas.print(ID_TEXTO::AlternarConexionesOcultas);
-                    idiomas.print(ID_TEXTO::OcultarControles);
+                    idiomas.print(ID_TEXTO::ControlesCreacion);
+                    idiomas.print(ID_TEXTO::ControlesSimulacion);
+                    idiomas.print(ID_TEXTO::ControlesModificadores);
+                    idiomas.print(ID_TEXTO::ControlesRaton);
+                    idiomas.print(ID_TEXTO::ControlesRatonBorrando);
+                    idiomas.print(ID_TEXTO::ControlesCuadricula);
+                    idiomas.print(ID_TEXTO::ControlesOtros);
                 }
                 break;
             default:
-                estado = ESTADOS::Error;
+                controlador.setEstado(ESTADOS::Error);
                 std::println(std::cout, "Máquina de estados rota");
         }
 
@@ -481,10 +433,9 @@ auto main() -> int
             }
         }
 
-        window.render(estado == ESTADOS::Normal);
+        window.render(controlador.getEstado() == ESTADOS::Normal || controlador.getEstado() == ESTADOS::Controles);
         SDL_Delay(16);
     }
     //Mix_CloseAudio();
     return 0;
 }
-

@@ -6,6 +6,7 @@
 #define WINDOW_H
 
 #include <SDL2/SDL_image.h>
+#include <map>
 
 #include "image.h"
 #include "../raton.h"
@@ -32,7 +33,7 @@ class Window
     Raton raton{};
     SDL_Surface* windowIcon{nullptr};
     Controlador* controlador{nullptr};
-    ListaIMG listaIMG{};
+    std::map<ESTADOS, ListaIMG> listasIMG;
 
     int minimapaTamañoObjetivoX;
     int minimapaTamañoObjetivoY;
@@ -63,7 +64,7 @@ public:
             SDL_SetRenderTarget(renderer, nullptr);
         }
         minimapaFondo.setClickable();
-        listaIMG.añadir(&minimapaFondo, ListaIMG::Frente);
+        listasIMG[ESTADOS::Normal].añadir(&minimapaFondo, ListaIMG::Frente);
     }
 
     ~Window()
@@ -99,27 +100,15 @@ public:
     auto limpiar() const -> void;
     auto render(bool rendererDraw) const -> void;
 
-    [[nodiscard]] auto getListaIMG(const ListaIMG::ALTURA altura) const -> const std::vector<IMG*>*
-    {
-        return listaIMG.getLista(altura);
-    }
+    [[nodiscard]] auto getListaIMG(ListaIMG::ALTURA altura) const -> const std::vector<IMG *> *;
 
     //No borra la imagen. Eso es trabajo de la clase IMG
-    auto añadir(IMG* img, const ListaIMG::ALTURA altura) -> bool
-    {
-        return listaIMG.añadir(img, altura);
-    }
+    auto añadir(IMG *img, ListaIMG::ALTURA altura) -> bool;
+    auto añadir(ESTADOS estado, IMG *img, ListaIMG::ALTURA altura) -> bool;
 
     //No borra las imagenes. Eso es trabajo de la clase IMG
-    auto borrar(const IMG* img, const ListaIMG::ALTURA altura) -> bool
-    {
-        if(listaIMG.quitar(img, altura))
-        {
-            raton.setImgAnteriorNull();
-            return true;
-        }
-        return false;
-    }
+    auto borrar(const IMG *img, ListaIMG::ALTURA altura) -> bool;
+    auto borrar(ESTADOS estado, const IMG *img, ListaIMG::ALTURA altura) -> bool;
 
     auto moverRel(int x, int y) -> void;
     auto mover(int x, int y) -> void;

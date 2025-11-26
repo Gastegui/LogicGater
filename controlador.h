@@ -11,6 +11,7 @@
 #include "ListaLineas.h"
 #include "Simulables/puerta.h"
 #include "Wrapper/window.h"
+#include "enums.h"
 
 class Puerta;
 class Raton;
@@ -39,6 +40,8 @@ class Controlador
     std::vector<Simulable*>* seleccionados{};
 
     bool conexionesOcultas{false};
+
+    ESTADOS estado{ESTADOS::Normal};
 
 public:
     explicit Controlador(Window* window_, TXT* txt_)
@@ -130,6 +133,9 @@ public:
     }
 
     [[nodiscard]] auto getCantidadSimulables() const -> int { return static_cast<int>(simulables.size()); }
+
+    [[nodiscard]] auto getEstado() const -> ESTADOS { return estado; }
+    auto setEstado(ESTADOS estado_) -> void { estado = estado_; }
 };
 
 #endif //CONTROLADOR_H
