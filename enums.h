@@ -21,34 +21,33 @@
         ConexionArriba,     /* Soltar clic central o espacio */ \
         AlternarBorrando,   /* Backspace arriba */ \
         AlternarBorrando_,  /* Backspace abajo*/ \
-        BorrarSueltos,      /* L */ \
-        CrearAnd,           /* A */ \
-        CrearOr,            /* O */ \
-        CrearXor,           /* X */ \
-        CrearInterruptor,   /* I */ \
-        CrearBoton,         /* B */ \
-        CrearSalida,        /* S */ \
-        CrearTemporizador,  /* T */ \
-        CrearCondensador,   /* N */ \
+        BorrarSueltos,      /* S */ \
+        CrearAnd,           /* 1 */ \
+        CrearOr,            /* 2 */ \
+        CrearXor,           /* 3 */ \
+        CrearInterruptor,   /* 4 */ \
+        CrearBoton,         /* 5 */ \
+        CrearSalida,        /* 6 */ \
+        CrearTemporizador,  /* 7 */ \
+        CrearCondensador,   /* 8 */ \
         SimularPaso,        /* Enter */ \
-        SimularEmpezar,     /* Q */ \
-        SimularParar,       /* W */ \
-        SimularAcelerar,    /* - */ \
-        SimularDecelerar,   /* + */ \
+        SimularEmpezarParar,/* Q */ \
+        SimularAcelerar,    /* W */ \
+        SimularDecelerar,   /* E */ \
         Cerrar,             /* Escape */ \
         Guardar,            /* G */ \
         Cargar,             /* C */ \
-        Cuadricula,         /* E */ \
-        CuadriculaAgrandar, /* R */ \
-        CuadriculaDisminuir,/* F */ \
+        Cuadricula,         /* T */ \
+        CuadriculaAgrandar, /* Y */ \
+        CuadriculaDisminuir,/* U */ \
         MostrarControles,   /* M */ \
         TemporizadorSubir,  /* Rueda arriba */ \
         TemporizadorBajar,  /* Rueda abajo */ \
-        CamaraCentrar,      /* B */ \
+        CamaraCentrar,      /* Z */ \
         DuplicarSeleccion,  /* D */ \
         CambiarIdioma,      /* P */ \
-        AlternarOculto,     /* Alt */ \
-        Rotar,              /* Ctrl */
+        AlternarOculto,     /* A */ \
+        Rotar,              /* R */
 
 enum class ACCION : uint8_t
 {
@@ -202,52 +201,17 @@ enum class ID_TEXTO : uint8_t
     GuardadoSi,
     GuardadoNo,
     CuadriculaActiva,
-    Creacion,
-    AND,
-    OR,
-    XOR,
-    Interruptor,
-    Boton,
-    Salida,
-    Temporizador,
-    Simulacion,
-    SimularPaso,
-    SimularEmpezar,
-    SimularParar,
-    SimularAcelerar,
-    SimularDecelerar,
-    Modificadores,
-    CrearConexionEspacio,
-    ModoBorrar,
-    Raton,
-    Interactuar,
-    CrearConexionRaton,
-    Mover,
-    TemporizadorArriba,
-    TemporizadorAbajo,
-    RatonBorrando,
-    BorrarElemento,
-    BorrarConexion,
-    TemporizadorArribaBorrando,
-    TemporizadorAbajoBorrando,
-    Cuadricula,
-    CuadriculaAlternar,
-    CuadriculaAumentar,
-    CuadriculaDisminuir,
-    Otros,
-    BorrarElementosDesconectados,
-    CentrarCamara,
-    Duplicar,
-    Guardar,
-    Cargar,
-    Cerrar,
-    CambiarIdioma,
-    OcultarControles,
+    ControlesCreacion,
+    ControlesSimulacion,
+    ControlesModificadores,
+    ControlesRaton,
+    ControlesRatonBorrando,
+    ControlesCuadricula,
+    ControlesOtros,
     Cargando,
     IdiomaCambiado,
     ConexionesOcultas,
-    AlternarConexionesOcultas,
-    Elementos,
+    Elementos
 };
 
 #endif //ENUMS_H
