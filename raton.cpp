@@ -6,10 +6,10 @@
 
 #include <algorithm>
 #include "Wrapper/image.h"
-#include "controlador.h"
 #include "controles.h"
-#include "Simulables/entrada.h"
+#include "controlador.h"
 #include "Wrapper/window.h"
+#include "Simulables/entrada.h"
 
 auto Raton::buscarLista(const std::vector<IMG*>* lista, const int posX, const int posY, const bool absoluto) const -> IMG*
 {
@@ -25,7 +25,7 @@ auto Raton::buscarLista(const std::vector<IMG*>* lista, const int posX, const in
             }
             else
             {
-                if(rect->x <= -window->getEsquinaX() + posX && rect->x + rect->w >= -window->getEsquinaX() + posX && rect->y <= -window->getEsquinaY() + posY && rect->y + rect->h >= -window->getEsquinaY() + posY)
+                if(rect->x <= -Window::get().getEsquinaX() + posX && rect->x + rect->w >= -Window::get().getEsquinaX() + posX && rect->y <= -Window::get().getEsquinaY() + posY && rect->y + rect->h >= -Window::get().getEsquinaY() + posY)
                     return img;
             }
         }
@@ -41,7 +41,7 @@ auto Raton::interactuar(IMG* actual) -> void
     {
         if(accion == ACCION::InteractuarArriba)
         {
-            controlador->borrar(actual->getSimulable());
+            Controlador::get().borrar(actual->getSimulable());
             borrando = false;
             return;
         }
@@ -50,7 +50,7 @@ auto Raton::interactuar(IMG* actual) -> void
     if(imgAnterior == nullptr) //El raton a entrado a una imagen desde sin estar antes en otra
     {
         imgAnterior = actual;
-        actual->interactuar(-window->getEsquinaX() + posX - actual->getRect()->x, -window->getEsquinaY() + posY - actual->getRect()->y, INTERACCIONES::RatonEntrar);
+        actual->interactuar(-Window::get().getEsquinaX() + posX - actual->getRect()->x, -Window::get().getEsquinaY() + posY - actual->getRect()->y, INTERACCIONES::RatonEntrar);
     }
     else
     {
@@ -62,13 +62,13 @@ auto Raton::interactuar(IMG* actual) -> void
                 actual->interactuar(evento->motion.xrel, evento->motion.yrel, INTERACCIONES::MovimientoRaton);
             }
             else
-                actual->interactuar(-window->getEsquinaX() + posX - actual->getRect()->x, -window->getEsquinaY() + posY - actual->getRect()->y, static_cast<INTERACCIONES>(accion));
+                actual->interactuar(-Window::get().getEsquinaX() + posX - actual->getRect()->x, -Window::get().getEsquinaY() + posY - actual->getRect()->y, static_cast<INTERACCIONES>(accion));
         }
         else //Se salta de una imagen a otra directamente
         {
             imgAnterior->interactuar(-1, -1, INTERACCIONES::RatonSalir);
             imgAnterior = actual;
-            actual->interactuar(-window->getEsquinaX() + posX - actual->getRect()->x, -window->getEsquinaY() + posY - actual->getRect()->y, INTERACCIONES::RatonEntrar);
+            actual->interactuar(-Window::get().getEsquinaX() + posX - actual->getRect()->x, -Window::get().getEsquinaY() + posY - actual->getRect()->y, INTERACCIONES::RatonEntrar);
         }
     }
 }
@@ -80,36 +80,29 @@ auto Raton::interactuarConexion(IMG* actual) -> bool
         if(Controles::getUltimaAccion() == ACCION::ConexionArriba)
         {
             if(actual->getSimulable() != nullptr)
-                actual->getSimulable()->interactuar(-window->getEsquinaX() + posX - actual->getRect()->x, -window->getEsquinaY() + posY - actual->getRect()->y, INTERACCIONES::ConexionBorrar);
+                actual->getSimulable()->interactuar(-Window::get().getEsquinaX() + posX - actual->getRect()->x, -Window::get().getEsquinaY() + posY - actual->getRect()->y, INTERACCIONES::ConexionBorrar);
 
             borrando = false;
             return true;
         }
     }
 
-    if(controlador->getConectando())
+    if(Controlador::get().getConectando())
     {
         if(Controles::getUltimaAccion() == ACCION::ConexionArriba && actual->getSimulable() != nullptr)
         {
-            if(!actual->getSimulable()->interactuar(-window->getEsquinaX() + posX - actual->getRect()->x, -window->getEsquinaY() + posY - actual->getRect()->y, INTERACCIONES::ConexionArriba))
-                controlador->desmarcarOrigen(); //Si no se puede conectar, desmarcar origen
+            if(!actual->getSimulable()->interactuar(-Window::get().getEsquinaX() + posX - actual->getRect()->x, -Window::get().getEsquinaY() + posY - actual->getRect()->y, INTERACCIONES::ConexionArriba))
+                Controlador::get().desmarcarOrigen(); //Si no se puede conectar, desmarcar origen
 
             return true;
         }
     }
     else if(Controles::getUltimaAccion() == ACCION::ConexionAbajo && actual->getSimulable() != nullptr)
     {
-        return actual->getSimulable()->interactuar(-window->getEsquinaX() + posX - actual->getRect()->x, -window->getEsquinaY() + posY - actual->getRect()->y, INTERACCIONES::ConexionAbajo);
+        return actual->getSimulable()->interactuar(-Window::get().getEsquinaX() + posX - actual->getRect()->x, -Window::get().getEsquinaY() + posY - actual->getRect()->y, INTERACCIONES::ConexionAbajo);
     }
 
     return false;
-}
-
-auto Raton::setControlador(Controlador* controlador_) -> void
-{
-    controlador = controlador_;
-    window = controlador->getWindow();
-    controlador->setSeleccionados(&seleccionados);
 }
 
 auto Raton::manejarRaton() -> void
@@ -120,7 +113,7 @@ auto Raton::manejarRaton() -> void
 
     if(posX < 10)
     {
-        window->moverRel(1, 0);
+        Window::get().moverRel(1, 0);
         if(!seleccionados.empty())
         {
             for (Simulable* seleccionado : seleccionados)
@@ -131,7 +124,7 @@ auto Raton::manejarRaton() -> void
     }
     else if(posX > 1910)
     {
-        window->moverRel(-1, 0);
+        Window::get().moverRel(-1, 0);
         if(!seleccionados.empty())
         {
             for (Simulable* seleccionado : seleccionados)
@@ -142,7 +135,7 @@ auto Raton::manejarRaton() -> void
     }
     if(posY < 10)
     {
-        window->moverRel(0, 1);
+        Window::get().moverRel(0, 1);
         if(!seleccionados.empty())
         {
             for (Simulable* seleccionado : seleccionados)
@@ -153,7 +146,7 @@ auto Raton::manejarRaton() -> void
     }
     else if(posY > 1070)
     {
-        window->moverRel(0, -1);
+        Window::get().moverRel(0, -1);
         if(!seleccionados.empty())
         {
             for (Simulable* seleccionado : seleccionados)
@@ -169,8 +162,8 @@ auto Raton::manejarRaton() -> void
         {
             case ACCION::MovimientoRaton:
                 {
-                    const int posXmapa = -window->getEsquinaX() + posX;
-                    const int posYmapa = -window->getEsquinaY() + posY;
+                    const int posXmapa = -Window::get().getEsquinaX() + posX;
+                    const int posYmapa = -Window::get().getEsquinaY() + posY;
 
                     if(posXmapa > seleccionXOriginal)
                     {
@@ -193,14 +186,14 @@ auto Raton::manejarRaton() -> void
                         seleccion.y = posYmapa;
                         seleccion.h = seleccionYOriginal - seleccion.y;
                     }
-                    window->setSeleccion(seleccion);
-                    controlador->seleccionar(seleccion);
+                    Window::get().setSeleccion(seleccion);
+                    Controlador::get().seleccionar(seleccion);
                 }
                 break;
             case ACCION::InteractuarArriba:
                 seleccionando = false;
                 seleccion = {.x = 0, .y = 0, .w = 0, .h = 0};
-                window->setSeleccion(seleccion);
+                Window::get().setSeleccion(seleccion);
                 break;
             default:
                 break;
@@ -217,14 +210,14 @@ auto Raton::manejarRaton() -> void
         else if(accion == ACCION::MovimientoRaton)
         {
             const SDL_Event* evento = Controles::getEvent();
-            window->moverRel(evento->motion.xrel, evento->motion.yrel);
+            Window::get().moverRel(evento->motion.xrel, evento->motion.yrel);
             return;
         }
     }
 
     if(!seleccionados.empty())
     {
-        actual = buscarLista(controlador->getListaIMG(ListaIMG::Medio), posX, posY);
+        actual = buscarLista(Window::get().getListaIMG(ListaIMG::Medio), posX, posY);
         const bool imagen = actual != nullptr && std::ranges::find(seleccionados, actual->getSimulable()) != seleccionados.end();
         switch(Controles::getUltimaAccion())
         {
@@ -255,15 +248,15 @@ auto Raton::manejarRaton() -> void
                 moviendoSeleccion = false;
                 break;
             case ACCION::InteractuarArriba:
-                controlador->desseleccionar();
+                Controlador::get().desseleccionar();
                 moviendoSeleccion = false;
                 break;
             case ACCION::InteractuarAbajo:
-                controlador->desseleccionar();
+                Controlador::get().desseleccionar();
                 moviendoSeleccion = false;
                 seleccionando = true;
-                seleccion.x = -window->getEsquinaX() + posX;
-                seleccion.y = -window->getEsquinaY() + posY;
+                seleccion.x = -Window::get().getEsquinaX() + posX;
+                seleccion.y = -Window::get().getEsquinaY() + posY;
                 seleccionXOriginal = seleccion.x;
                 seleccionYOriginal = seleccion.y;
                 break;
@@ -286,7 +279,7 @@ auto Raton::manejarRaton() -> void
         {
             const SDL_Event* evento = Controles::getEvent();
             //Si la cuadrícula no está activa, se le puede pasar directo el movimiento al elemento
-            if(!controlador->getCuadriculaActiva())
+            if(!Controlador::get().getCuadriculaActiva())
                 moviendoImg->interactuar(evento->motion.xrel, evento->motion.yrel, INTERACCIONES::MovimientoRaton);
             else //Pero si está activa hay que calcular cuanto moverlo
             {
@@ -297,7 +290,7 @@ auto Raton::manejarRaton() -> void
                     else
                         cuadriculaX -= 1;
 
-                    if((cuadriculaX + moviendoImg->getRect()->x) % controlador->getCuadriculaTamaño() == 0)
+                    if((cuadriculaX + moviendoImg->getRect()->x) % Controlador::get().getCuadriculaTamaño() == 0)
                     {
                         moviendoImg->interactuar(cuadriculaX, 0, INTERACCIONES::MovimientoRaton);
                         cuadriculaX = 0;
@@ -310,7 +303,7 @@ auto Raton::manejarRaton() -> void
                     else
                         cuadriculaY -= 1;
 
-                    if((cuadriculaY + moviendoImg->getRect()->y) % controlador->getCuadriculaTamaño() == 0)
+                    if((cuadriculaY + moviendoImg->getRect()->y) % Controlador::get().getCuadriculaTamaño() == 0)
                     {
                         moviendoImg->interactuar(0, cuadriculaY, INTERACCIONES::MovimientoRaton);
                         cuadriculaY = 0;
@@ -321,20 +314,20 @@ auto Raton::manejarRaton() -> void
         }
     }
 
-    lista = controlador->getListaIMG(ListaIMG::Frente);
+    lista = Window::get().getListaIMG(ListaIMG::Frente);
     actual = buscarLista(lista, posX, posY, true);
     if(actual != nullptr)
     {
-        if(window->getImgMinimapa() == actual && Controles::getUltimaAccion() == ACCION::InteractuarArriba)
+        if(Window::get().getImgMinimapa() == actual && Controles::getUltimaAccion() == ACCION::InteractuarArriba)
         {
-            window->mover(-interpolacionLinear(posX - actual->getRect()->x, 0, window->getMinimapaTamañoX(), window->getMapaMinX(), window->getMapaMaxX()),
-                          -interpolacionLinear(posY - actual->getRect()->y, 0, window->getMinimapaTamañoY(), window->getMapaMinY(), window->getMapaMaxY()));
+            Window::get().mover(-interpolacionLinear(posX - actual->getRect()->x, 0, Window::get().getMinimapaTamañoX(), Window::get().getMapaMinX(), Window::get().getMapaMaxX()),
+                          -interpolacionLinear(posY - actual->getRect()->y, 0, Window::get().getMinimapaTamañoY(), Window::get().getMapaMinY(), Window::get().getMapaMaxY()));
         }
 
         return;
     }
 
-    lista = controlador->getListaIMG(ListaIMG::Medio);
+    lista = Window::get().getListaIMG(ListaIMG::Medio);
     actual = buscarLista(lista, posX, posY);
     if(actual != nullptr)
     {
@@ -345,12 +338,12 @@ auto Raton::manejarRaton() -> void
     }
 
     //Por si se ha soltado la rueda en algun lugar que no sea clickable y conectable
-    if(controlador->getConectando() && Controles::getUltimaAccion() == ACCION::ConexionArriba)
+    if(Controlador::get().getConectando() && Controles::getUltimaAccion() == ACCION::ConexionArriba)
     {
-        controlador->desmarcarOrigen();
+        Controlador::get().desmarcarOrigen();
     }
 
-    lista = controlador->getListaIMG(ListaIMG::Fondo);
+    lista = Window::get().getListaIMG(ListaIMG::Fondo);
     actual = buscarLista(lista, posX, posY);
     if(actual != nullptr)
     {
@@ -372,8 +365,8 @@ auto Raton::manejarRaton() -> void
             break;
         case ACCION::InteractuarAbajo:
             seleccionando = true;
-            seleccion.x = -window->getEsquinaX() + posX;
-            seleccion.y = -window->getEsquinaY() + posY;
+            seleccion.x = -Window::get().getEsquinaX() + posX;
+            seleccion.y = -Window::get().getEsquinaY() + posY;
             seleccionXOriginal = seleccion.x;
             seleccionYOriginal = seleccion.y;
             break;
@@ -387,12 +380,12 @@ auto Raton::setBorrando(const bool borrando_) -> void
     if(seleccionados.empty() && !seleccionando)
     {
         borrando = borrando_;
-        controlador->desmarcarOrigen();
+        Controlador::get().desmarcarOrigen();
     }
     else if(!moviendoSeleccion && !seleccionando)
     {
         for(Simulable* simulable : seleccionados)
-            controlador->borrar(simulable);
+            Controlador::get().borrar(simulable);
         seleccionados.clear();
     }
 }

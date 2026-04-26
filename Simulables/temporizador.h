@@ -15,8 +15,6 @@ class Raton;
 class Temporizador final : public Simulable
 {
     friend class SistemaGuardado;
-    Controlador* controlador;
-    Raton* raton;
 
     bool entradaNegada;
     bool salidaNegada;
@@ -54,13 +52,12 @@ class Temporizador final : public Simulable
     auto cambiar() -> bool;
 
 public:
-    Temporizador(SDL_Renderer* renderer, Controlador* controlador_, Raton* raton_, const int tiempo_, const int x_, const int y_, const bool entradaNegada_, const bool salidaNegada_, TXT* txt_)
-        : Temporizador(renderer, controlador_, raton_, tiempo_, x_, y_, entradaNegada_, salidaNegada_, txt_, idGenerator()) {}
+    Temporizador(SDL_Renderer* renderer, const int tiempo_, const int x_, const int y_, const bool entradaNegada_, const bool salidaNegada_)
+        : Temporizador(renderer, tiempo_, x_, y_, entradaNegada_, salidaNegada_, idGenerator()) {}
 
-    Temporizador(SDL_Renderer* renderer, Controlador* controlador_, Raton* raton_, const int tiempo_, const int x_, const int y_, const bool entradaNegada_, const bool salidaNegada_, TXT* txt_, const unsigned int id_)
-        : Simulable(id_), controlador{controlador_}, raton{raton_}, entradaNegada{entradaNegada_}, salidaNegada{salidaNegada_}, salida{this, x_ + 100, y_ + 25}, x{x_}, y{y_}, ciclosTotales{tiempo_}, imagen(renderer, x_, y_, 100, 50)
+    Temporizador(SDL_Renderer* renderer, const int tiempo_, const int x_, const int y_, const bool entradaNegada_, const bool salidaNegada_, const unsigned int id_)
+        : Simulable(id_), entradaNegada{entradaNegada_}, salidaNegada{salidaNegada_}, salida{this, x_ + 100, y_ + 25}, x{x_}, y{y_}, ciclosTotales{tiempo_}, imagen(renderer, x_, y_, 100, 50)
     {
-        imagen.setTXT(txt_);
         cambiar();
         imagen.setClickable(this);
         linea.first += x_;

@@ -40,9 +40,9 @@ auto Texto::getTextoStr(IDIOMA idioma) const -> std::string
 auto Idiomas::setPos(const int x, const int y) const -> void
 {
     if(x != -1)
-        txt.setX(x);
+        TXT::get().setX(x);
     if(y != -1)
-        txt.setY(y);
+        TXT::get().setY(y);
 }
 
 auto Idiomas::printReal(std::string string) const -> void
@@ -78,13 +78,13 @@ auto Idiomas::printReal(std::string string) const -> void
                 }
             }
             if(str.empty())
-                txt.write(" ");
+                TXT::get().write(" ");
             else
-                txt.write(str.c_str());
+                TXT::get().write(str.c_str());
         }
     }
     else 
-        txt.write(string.c_str());
+        TXT::get().write(string.c_str());
 
 }
 

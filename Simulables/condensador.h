@@ -28,8 +28,6 @@ class Condensador final : public Simulable
     std::vector<IO*> entradas;
     IO salida;
     IMG imagen;
-    Controlador* controlador;
-    Raton* raton;
     Puerta::TIPO tipo;
 
     bool siguiente{false};
@@ -52,12 +50,12 @@ class Condensador final : public Simulable
 
 public:
 
-    Condensador(SDL_Renderer* renderer, Controlador* controlador_, Raton* raton_, Puerta::TIPO tipo_, int x_, int y_)
-        :Condensador(renderer, controlador_, raton_, tipo_, x_, y_, idGenerator())
+    Condensador(SDL_Renderer* renderer, Puerta::TIPO tipo_, int x_, int y_)
+        :Condensador(renderer, tipo_, x_, y_, idGenerator())
     {}
 
-    Condensador(SDL_Renderer* renderer, Controlador* controlador_, Raton* raton_, Puerta::TIPO tipo_, int x_, int y_, unsigned int id_)
-        :Simulable(id_), controlador(controlador_), raton(raton_), tipo(tipo_), salida(this, 100 + x_, 25 + y_), imagen{renderer, x_, y_, 100, 50}
+    Condensador(SDL_Renderer* renderer, Puerta::TIPO tipo_, int x_, int y_, unsigned int id_)
+        :Simulable(id_), tipo(tipo_), salida(this, 100 + x_, 25 + y_), imagen{renderer, x_, y_, 100, 50}
     {
         cambiar();
         imagen.setClickable(this);

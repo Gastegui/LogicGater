@@ -17,6 +17,7 @@ add_executable(LogicGater main.cpp
         Wrapper/text.h
         Wrapper/text.cpp
         Wrapper/image.h
+        Wrapper/image.cpp
         ListaLineas.cpp
         ListaLineas.h
         Simulables/puerta.cpp
@@ -45,5 +46,8 @@ add_executable(LogicGater main.cpp
         Idiomas.h
         Simulables/condensador.cpp
         Simulables/condensador.h)
+
+target_compile_definitions(LogicGater PRIVATE WINDOW_WIDTH=1920 WINDOW_HEIGHT=1080)
+
 
 target_link_libraries(LogicGater ${SDL2_LIBRARIES} SDL2_ttf SDL2_mixer SDL2_image)

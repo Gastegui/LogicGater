@@ -64,27 +64,27 @@ auto Condensador::interactuar(int posX, int posY, INTERACCIONES interaccion) -> 
     switch(interaccion)
     {
         case ConexionAbajo:
-            controlador->marcarOrigen(getIOSalida());
+            Controlador::get().marcarOrigen(getIOSalida());
             return true;
         case ConexionArriba:
             {
-                IO* origen = controlador->getOrigen();
+                IO* origen = Controlador::get().getOrigen();
                 if(origen == nullptr || origen == getIOSalida())
                     return false;
 
                 origen->conectado();
                 entradas.push_back(origen);
 
-                controlador->añadirConexion(this, 1);
-                controlador->desmarcarOrigen();
+                Controlador::get().añadirConexion(this, 1);
+                Controlador::get().desmarcarOrigen();
             }
             return true;
         case ConexionBorrar:
             if(posX > getImg()->getRect()->w / 2)
-                controlador->borrarConexiones(&salida);
+                Controlador::get().borrarConexiones(&salida);
             else
                 for(IO* io : entradas)
-                    controlador->borrarConexion(this, io, 1);
+                    Controlador::get().borrarConexion(this, io, 1);
             return true;
         case InteractuarArriba:
             if(tipo == Puerta::AND)
@@ -95,11 +95,11 @@ auto Condensador::interactuar(int posX, int posY, INTERACCIONES interaccion) -> 
             return true;
         case MoverAbajo:
             mover = true;
-            raton->setMoviendoImg(&imagen);
+            Raton::get().setMoviendoImg(&imagen);
             return true;
         case MoverArriba:
             mover = false;
-            raton->setMoviendoImg(nullptr);
+            Raton::get().setMoviendoImg(nullptr);
             return true;
         case MovimientoRaton:
             if(mover)

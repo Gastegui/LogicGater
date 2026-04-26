@@ -18,7 +18,6 @@ class SistemaGuardado;
 class Entrada final : public Simulable
 {
     friend class SistemaGuardado;
-    Controlador* controlador;
 
     IO salida;
     bool mantener;
@@ -28,7 +27,6 @@ class Entrada final : public Simulable
     bool seleccionado{false};
 
     //std::pair<int, int> linea{25, 25};
-    Raton* raton;
 
     static auto idGenerator() -> unsigned int
     {
@@ -65,11 +63,11 @@ class Entrada final : public Simulable
     }
 
 public:
-    Entrada(SDL_Renderer* renderer, Controlador* controlador_, const int x, const int y, Raton* raton_, const bool mantener_ = false)
-        : Entrada(renderer, controlador_, x, y, raton_, idGenerator(), mantener_) {}
+    Entrada(SDL_Renderer* renderer, const int x, const int y, const bool mantener_ = false)
+        : Entrada(renderer, x, y, idGenerator(), mantener_) {}
 
-    Entrada(SDL_Renderer* renderer, Controlador* controlador_, const int x, const int y, Raton* raton_, const unsigned int id_, const bool mantener_ = false)
-        : Simulable{id_}, controlador{controlador_}, salida{this, x + 50, y + 25}, mantener{mantener_}, img{getImgPath().c_str(), renderer, x, y}, raton{raton_}
+    Entrada(SDL_Renderer* renderer, const int x, const int y, const unsigned int id_, const bool mantener_ = false)
+        : Simulable{id_}, salida{this, x + 50, y + 25}, mantener{mantener_}, img{getImgPath().c_str(), renderer, x, y}
     {
         img.setClickable(this);
     }

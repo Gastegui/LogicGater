@@ -10,7 +10,6 @@
 #include "SDL_image.h"
 #include "../enums.h"
 #include "../Simulables/simulable.h"
-#include "text.h"
 
 class Puerta;
 class Entrada;
@@ -19,25 +18,6 @@ class SistemaGuardado;
 
 class IMG
 {
-    friend class SistemaGuardado;
-
-    SDL_Renderer* renderer{nullptr};
-    SDL_Texture* texture{nullptr};
-    SDL_Rect rect{};
-    SDL_Rect rectReal{};
-    unsigned int id;
-    bool esClickable{false};
-    Simulable* simulable{nullptr};
-    TIPOS_SIMULABLES tipoSimulable{TIPOS_SIMULABLES::Nada};
-    TXT* txt{nullptr};
-
-    int rotacion{0};
-
-    static auto idGenerator() -> unsigned int
-    {
-        static unsigned int id = 1 + getOffset(ID_TIPOS::IMG);
-        return id++;
-    }
 
 public:
     struct Capa
@@ -48,6 +28,29 @@ public:
         int textoY;
     };
 
+private:
+    friend class SistemaGuardado;
+
+    SDL_Renderer* renderer{nullptr};
+    SDL_Texture* texture{nullptr};
+    SDL_Rect rect{};
+    SDL_Rect rectReal{};
+    unsigned int id;
+    bool esClickable{false};
+    Simulable* simulable{nullptr};
+    TIPOS_SIMULABLES tipoSimulable{TIPOS_SIMULABLES::Nada};
+
+    int rotacion{0};
+
+    static auto idGenerator() -> unsigned int
+    {
+        static unsigned int id = 1 + getOffset(ID_TIPOS::IMG);
+        return id++;
+    }
+
+    auto procesarCapa(const Capa &capa) const -> void;
+    
+public:
     IMG(const char* path, SDL_Renderer* renderer)
         : IMG{path, renderer, 0, 0} {}
 
@@ -142,47 +145,11 @@ public:
         return true;
     }
 
-    auto setTXT(TXT* txt_) -> void { txt = txt_; }
-
-    auto setRotacion(int rotacion_) -> void 
-    { 
-        rotacion = rotacion_;
-        if(rotacion == 90 || rotacion == 270)
-        {
-            int centroX = rectReal.x + rectReal.w / 2;
-            int centroY = rectReal.y + rectReal.h / 2;
-
-            rect.w = rectReal.h;
-            rect.h = rectReal.w;
-
-            rect.x = centroX - rect.w / 2;
-            rect.y = centroY - rect.h / 2;
-        }
-        else 
-            rect = rectReal;
-    }
+    auto setRotacion(int rotacion_) -> void;
 
     [[nodiscard]] auto getRotacion() const -> int { return rotacion; }
 
 private:
-    auto procesarCapa(const Capa& capa) const -> void
-    {
-        if(!capa.img.empty())
-        {
-            SDL_Texture* tmp = IMG_LoadTexture(renderer, capa.img.c_str());
-
-            if(tmp == nullptr)
-                std::println(std::cerr, "No se h podido cargar la imagen: {} Error: {}", capa.img, SDL_GetError());
-
-            SDL_SetTextureBlendMode(tmp, SDL_BLENDMODE_BLEND);
-            SDL_RenderCopy(renderer, tmp, nullptr, nullptr);
-            SDL_DestroyTexture(tmp); // No olvides liberar la memoria
-        }
-        else
-        {
-            txt->write(capa.textoX, capa.textoY, capa.texto.c_str());
-        }
-    }
 };
 
 #endif //IMAGE_H

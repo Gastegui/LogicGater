@@ -4,7 +4,7 @@
 
 #ifndef SISTEMAGUARDADO_H
 #define SISTEMAGUARDADO_H
-#include <string_view>
+#include <string>
 
 class Controlador;
 class Window;
@@ -18,9 +18,9 @@ public:
         int cuadriculaTamaño = 50;
     };
 
-    static auto guardar(Controlador* controlador, const Window* window, const Valores* valores, const std::string& archivo) -> bool;
+    static auto guardar(const Valores* valores, const std::string& archivo) -> bool;
 
-    static auto cargar(Controlador* controlador, Window* window, Valores* valores, const std::string& archivo) -> int;
+    static auto cargar(Valores* valores, const std::string& archivo) -> int;
 };
 
 

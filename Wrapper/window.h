@@ -6,6 +6,7 @@
 #define WINDOW_H
 
 #include <SDL2/SDL_image.h>
+#include <SDL_render.h>
 #include <map>
 
 #include "image.h"
@@ -28,11 +29,9 @@ class Window
     const int width; // NOLINT(*-avoid-const-or-ref-data-members)
     const int height; // NOLINT(*-avoid-const-or-ref-data-members)
 
-    SDL_Window* window{nullptr};
+    SDL_Window* sdl_window{nullptr};
     SDL_Renderer* renderer{nullptr};
-    Raton raton{};
     SDL_Surface* windowIcon{nullptr};
-    Controlador* controlador{nullptr};
     std::map<ESTADOS, ListaIMG> listasIMG;
 
     int minimapaTamañoObjetivoX;
@@ -50,17 +49,18 @@ class Window
     auto rendererPresent() const -> void;
 
     auto renderLine(int x1, int y1, int x2, int y2, const ListaLineas::Linea *linea) const -> void;
+    [[nodiscard]] auto getRendererPriv() const -> SDL_Renderer* { return renderer; }
 
 public:
-    explicit Window(const int witdh_, const int height_, const char* img)
-        : width{witdh_}, height{height_}, window{SDL_CreateWindow("LogicGater", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, SDL_WINDOW_FULLSCREEN)}, renderer{SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC)}, minimapaTamañoObjetivoX{static_cast<int>(width * 0.2)}, minimapaTamañoObjetivoY{static_cast<int>(height * 0.2)}, minimapaFondo{"./img/minimapa.png", renderer, width - minimapaTamañoObjetivoX, height - minimapaTamañoObjetivoY}
+    explicit Window(const int witdh_, const int height_)
+        : width{witdh_}, height{height_}, sdl_window{SDL_CreateWindow("LogicGater", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, SDL_WINDOW_FULLSCREEN)}, renderer{SDL_CreateRenderer(sdl_window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC)}, minimapaTamañoObjetivoX{static_cast<int>(width * 0.2)}, minimapaTamañoObjetivoY{static_cast<int>(height * 0.2)}, minimapaFondo{"./img/minimapa.png", renderer, width - minimapaTamañoObjetivoX, height - minimapaTamañoObjetivoY}
     {
         // ReSharper disable once CppDFAConstantConditions
-        if(window != nullptr)
+        if(sdl_window != nullptr)
         {
-            windowIcon = IMG_Load(img);
-            if(windowIcon != nullptr)
-                SDL_SetWindowIcon(window, windowIcon);
+            //windowIcon = IMG_Load(img);
+            //if(windowIcon != nullptr)
+            //    SDL_SetWindowIcon(window, windowIcon);
             SDL_SetRenderTarget(renderer, nullptr);
         }
         minimapaFondo.setClickable();
@@ -71,8 +71,8 @@ public:
     {
         if(renderer != nullptr)
             SDL_DestroyRenderer(renderer);
-        if(window != nullptr)
-            SDL_DestroyWindow(window);
+        if(sdl_window != nullptr)
+            SDL_DestroyWindow(sdl_window);
         if(windowIcon != nullptr)
             SDL_FreeSurface(windowIcon);
     }
@@ -82,19 +82,9 @@ public:
     Window(Window&&) = delete;
     auto operator=(Window&&) -> Window& = delete;
 
-    [[nodiscard]] auto getRenderer() const -> SDL_Renderer* { return renderer; }
-    [[nodiscard]] auto getWindow() const -> SDL_Window* { return window; }
-    [[nodiscard]] auto getRaton() -> Raton* { return &raton; }
-
-    auto setControlador(Controlador* controlador_) -> void
-    {
-        controlador = controlador_;
-        raton.setControlador(controlador_);
-    }
-
     auto operator!() const -> bool
     {
-        return window == nullptr;
+        return sdl_window == nullptr;
     }
 
     auto limpiar() const -> void;
@@ -128,6 +118,17 @@ public:
     auto setSeleccion(const SDL_Rect rect) const -> void
     {
         seleccion = rect;
+    }
+
+    [[nodiscard]] auto static getRenderer() -> SDL_Renderer*
+    {
+        return get().getRendererPriv();
+    }
+
+    [[nodiscard]] auto static get() -> Window&
+    {
+        static Window window = Window(WINDOW_WIDTH, WINDOW_HEIGHT);
+        return window; 
     }
 };
 

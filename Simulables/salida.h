@@ -18,7 +18,6 @@ class SistemaGuardado;
 class Salida final : public Simulable
 {
     friend class SistemaGuardado;
-    Controlador* controlador;
 
     IO* entrada{};
 
@@ -27,7 +26,6 @@ class Salida final : public Simulable
     std::pair<int, int> entradaPos{0, 25};
 
     bool mover{false};
-    Raton* raton;
 
     bool ultimoEstado{false};
     bool seleccionado{false};
@@ -47,11 +45,11 @@ class Salida final : public Simulable
     auto cambiar(bool estado) -> void;
 
 public:
-    Salida(SDL_Renderer* renderer, Controlador* controlador_, const int x, const int y, Raton* raton_)
-        : Salida(renderer, controlador_, x, y, raton_, idGenerator()) {}
+    Salida(SDL_Renderer* renderer, const int x, const int y)
+        : Salida(renderer, x, y, idGenerator()) {}
 
-    Salida(SDL_Renderer* renderer, Controlador* controlador_, const int x, const int y, Raton* raton_, const unsigned int id_)
-        : Simulable{id_}, controlador{controlador_}, img{"./img/salida/apagado.png", renderer, x, y}, raton{raton_}
+    Salida(SDL_Renderer* renderer, const int x, const int y, const unsigned int id_)
+        : Simulable{id_}, img{"./img/salida/apagado.png", renderer, x, y}
     {
         img.setClickable(this);
         entradaPos.first += x;

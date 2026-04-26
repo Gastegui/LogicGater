@@ -17,7 +17,6 @@ class Controlador;
 class Puerta final : public Simulable
 {
     friend class SistemaGuardado;
-    Controlador* controlador;
     bool arribaNegado;
     bool abajoNegado;
     bool salidaNegada;
@@ -49,8 +48,6 @@ class Puerta final : public Simulable
 
     bool mover{false};
 
-    Raton* raton;
-
 public:
     enum TIPO : uint8_t
     {
@@ -64,11 +61,11 @@ private:
     IMG imagen;
 
 public:
-    Puerta(SDL_Renderer* renderer, Controlador* controlador_, const TIPO tipo_, const int x_, const int y_, const bool arribaNegado_, const bool abajoNegado_, const bool salidaNegada_, Raton* raton_)
-        : Puerta(renderer, controlador_, tipo_, x_, y_, arribaNegado_, abajoNegado_, salidaNegada_, raton_, idGenerator()) {}
+    Puerta(SDL_Renderer* renderer, const TIPO tipo_, const int x_, const int y_, const bool arribaNegado_, const bool abajoNegado_, const bool salidaNegada_)
+        : Puerta(renderer, tipo_, x_, y_, arribaNegado_, abajoNegado_, salidaNegada_, idGenerator()) {}
 
-    Puerta(SDL_Renderer* renderer, Controlador* controlador_, const TIPO tipo_, const int x_, const int y_, const bool arribaNegado_, const bool abajoNegado_, const bool salidaNegada_, Raton* raton_, const unsigned int id_)
-        : Simulable(id_), controlador(controlador_), arribaNegado{arribaNegado_}, abajoNegado{abajoNegado_}, salidaNegada{salidaNegada_}, salida(this, 100 + x_, 25 + y_), raton{raton_}, tipo{tipo_}, imagen{renderer, x_, y_, 100, 50}
+    Puerta(SDL_Renderer* renderer, const TIPO tipo_, const int x_, const int y_, const bool arribaNegado_, const bool abajoNegado_, const bool salidaNegada_, const unsigned int id_)
+        : Simulable(id_), arribaNegado{arribaNegado_}, abajoNegado{abajoNegado_}, salidaNegada{salidaNegada_}, salida(this, 100 + x_, 25 + y_), tipo{tipo_}, imagen{renderer, x_, y_, 100, 50}
     {
         imagen.crearImagen<IMG::Capa>(
             IMG::Capa{.img = arribaNegado_ ? "./img/puertas/entrada_arriba_negada.png" : "./img/puertas/entrada_arriba_normal.png"},

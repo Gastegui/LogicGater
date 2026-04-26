@@ -32,31 +32,18 @@ auto main() -> int
     }
     std::atexit(TTF_Quit);
 
-    Window window{1920, 1080, "/home/julen/Descargas/windows_xp_bliss-wide.png"};
+    Window& window = Window::get();
+    TXT& txt = TXT::get();
+    Controlador& controlador = Controlador::get();
+    Raton& raton = Raton::get();
 
-    TXT txt{"ttf/8bitOperatorPlusSC-Regular.ttf", 20, SDL_Color{255, 255, 255, 255}, window.getRenderer()};
-    if(!txt)
-    {
-        std::println(std::cerr, "Error al inicializar el texto. Error {}", SDL_GetError());
-        return 1;
-    }
-
-    Controlador controlador{&window, &txt};
-    window.setControlador(&controlador);
-
-    if(!window)
-    {
-        std::println(std::cerr, "Error al inicializar la ventana. Error {}", SDL_GetError());
-        return 1;
-    }
-
-    Idiomas idiomas{txt, IDIOMA::ES};
+    Idiomas idiomas{IDIOMA::ES};
 
     window.render(true);
 
     SDL_Event event;
     // ReSharper disable CppDFALocalValueEscapesFunction
-    Controles::init(&event, &window);
+    Controles::init(&event);
     // ReSharper restore CppDFALocalValueEscapesFunction
     bool simulando = false;
 
@@ -71,7 +58,7 @@ auto main() -> int
     constexpr int mensajeDuracion = 5000;
     Uint64 mensajeTiempo = -mensajeDuracion;
 
-    IMG imagenTeclado{"./img/Teclado.png", window.getRenderer(), 500, 100};
+    IMG imagenTeclado{"./img/Teclado.png", Window::getRenderer(), 500, 100};
     window.añadir(ESTADOS::Controles, &imagenTeclado, ListaIMG::Frente);
 
     while(controlador.getEstado() != ESTADOS::Cerrar && controlador.getEstado() != ESTADOS::Error)
@@ -117,7 +104,7 @@ auto main() -> int
                             controlador.crear(-1, -1, Puerta::OR);
                             break;
                         case ACCION::AlternarBorrando:
-                            window.getRaton()->setBorrando(!window.getRaton()->getBorrando());
+                            raton.setBorrando(!raton.getBorrando());
                             break;
                         case ACCION::SimularPaso:
                             controlador.simular();
@@ -218,8 +205,9 @@ auto main() -> int
                         default:
                             break;
                     }
-                    if(controlador.getEstado() != ESTADOS::Cerrar)
-                        window.getRaton()->manejarRaton();
+                    if(controlador.getEstado() != ESTADOS::Normal)
+                        break;
+                    raton.manejarRaton();
                 }
 
                 if(simulando)
@@ -302,7 +290,7 @@ auto main() -> int
                 }
                 else
                 {
-                    if(SistemaGuardado::guardar(&controlador, &window, &valores, inputStr))
+                    if(SistemaGuardado::guardar(&valores, inputStr))
                         mensaje = ID_TEXTO::GuardadoSi;
                     else
                         mensaje = ID_TEXTO::GuardadoNo;
@@ -369,7 +357,7 @@ auto main() -> int
                     window.limpiar();
                     idiomas.print(ID_TEXTO::Cargando);
                     window.render(false);
-                    const int ret = SistemaGuardado::cargar(&controlador, &window, &valores, inputStr);
+                    const int ret = SistemaGuardado::cargar(&valores, inputStr);
                     if(ret == -1)
                         mensaje = ID_TEXTO::CargadoNo;
                     else if(ret == -2)

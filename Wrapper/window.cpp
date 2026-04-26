@@ -32,29 +32,29 @@ auto Window::renderLine(const int x1, const int y1, const int x2, const int y2, 
         else
             SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
     }
-    if(!linea->oculta || (linea->oculta && controlador->getConexionesOcultas()))
+    if(!linea->oculta || (linea->oculta && Controlador::get().getConexionesOcultas()))
         SDL_RenderDrawLine(renderer, x1, y1, x2, y2);
 }
 
 auto Window::rendererDraw() const -> void
 {
     // ReSharper disable CppDFANullDereference
-    const std::vector<IMG*>* imagenes{listasIMG.at(controlador->getEstado()).getLista(ListaIMG::Fondo)};
-    const std::vector<ListaLineas::Linea>* lineas{controlador->getListaLineas()->getLista()};
+    const std::vector<IMG*>* imagenes{listasIMG.at(Controlador::get().getEstado()).getLista(ListaIMG::Fondo)};
+    const std::vector<ListaLineas::Linea>* lineas{Controlador::get().getListaLineas()->getLista()};
     mapaMinX = -esquinaX;
     mapaMaxX = -esquinaX + width;
     mapaMinY = -esquinaY;
     mapaMaxY = -esquinaY + height;
 
-    if(controlador->getCuadriculaActiva())
+    if(Controlador::get().getCuadriculaActiva())
     {
         SDL_SetRenderDrawColor(renderer, 50, 50, 50, 255);
         for(int i = -esquinaX; i < -esquinaX + width; i++)
-            if(i % controlador->getCuadriculaTamaño() == 0)
+            if(i % Controlador::get().getCuadriculaTamaño() == 0)
                 SDL_RenderDrawLine(renderer, esquinaX + i, 0, esquinaX + i, esquinaX + i + height);
 
         for(int i = -esquinaY; i < -esquinaY + height; i++)
-            if(i % controlador->getCuadriculaTamaño() == 0)
+            if(i % Controlador::get().getCuadriculaTamaño() == 0)
                 SDL_RenderDrawLine(renderer, 0, esquinaY + i, esquinaY + i + width, esquinaY + i);
 
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
@@ -63,7 +63,7 @@ auto Window::rendererDraw() const -> void
     for(IMG* img : *imagenes)
         SDL_RenderCopy(renderer, img->getTexture(), nullptr, img->getRect());
 
-    imagenes = listasIMG.at(controlador->getEstado()).getLista(ListaIMG::Medio);
+    imagenes = listasIMG.at(Controlador::get().getEstado()).getLista(ListaIMG::Medio);
     for(IMG* img : *imagenes | std::views::reverse)
     {
         SDL_Rect rectColision{*img->getRect()};
@@ -116,7 +116,7 @@ auto Window::rendererDraw() const -> void
     }
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
 
-    imagenes = listasIMG.at(controlador->getEstado()).getLista(ListaIMG::Frente);
+    imagenes = listasIMG.at(Controlador::get().getEstado()).getLista(ListaIMG::Frente);
     for(IMG* img : *imagenes)
         SDL_RenderCopy(renderer, img->getTexture(), nullptr, img->getRect());
 
@@ -130,12 +130,12 @@ auto Window::rendererDraw() const -> void
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
     }
 
-    if(controlador->getEstado() == ESTADOS::Normal)
+    if(Controlador::get().getEstado() == ESTADOS::Normal)
     {
         //Minimapa
         const double factorX = static_cast<double>(minimapaTamañoObjetivoX) / (mapaMaxX - mapaMinX);
         const double factorY = static_cast<double>(minimapaTamañoObjetivoY) / (mapaMaxY - mapaMinY);
-        imagenes = listasIMG.at(controlador->getEstado()).getLista(ListaIMG::Medio);
+        imagenes = listasIMG.at(Controlador::get().getEstado()).getLista(ListaIMG::Medio);
         for(IMG* img : *imagenes)
         {
             rect = *img->getRectReal();
@@ -192,7 +192,7 @@ auto Window::centrar() -> void
     int minY = std::numeric_limits<int>::max();
     int maxY = std::numeric_limits<int>::min();
 
-    const std::vector<IMG*>* imagenes = listasIMG[controlador->getEstado()].getLista(ListaIMG::Medio);
+    const std::vector<IMG*>* imagenes = listasIMG[Controlador::get().getEstado()].getLista(ListaIMG::Medio);
 
     if(imagenes == nullptr)
     {
@@ -222,7 +222,7 @@ auto Window::centrar() -> void
 
 auto Window::getListaIMG(const ListaIMG::ALTURA altura) const -> const std::vector<IMG *>*
 {
-    return listasIMG.at(controlador->getEstado()).getLista(altura);
+    return listasIMG.at(Controlador::get().getEstado()).getLista(altura);
 }
 
 auto Window::añadir(ESTADOS estado, IMG *img, ListaIMG::ALTURA altura) -> bool
@@ -231,14 +231,14 @@ auto Window::añadir(ESTADOS estado, IMG *img, ListaIMG::ALTURA altura) -> bool
 }
 auto Window::añadir(IMG* img, const ListaIMG::ALTURA altura) -> bool
 {
-    return añadir(controlador->getEstado(), img, altura);
+    return añadir(Controlador::get().getEstado(), img, altura);
 }
 
 auto Window::borrar(ESTADOS estado, const IMG* img, const ListaIMG::ALTURA altura) -> bool
 {
     if(listasIMG[estado].quitar(img, altura))
     {
-        raton.setImgAnteriorNull();
+        Raton::get().setImgAnteriorNull();
         return true;
     }
     return false;
@@ -246,5 +246,5 @@ auto Window::borrar(ESTADOS estado, const IMG* img, const ListaIMG::ALTURA altur
 }
 auto Window::borrar(const IMG* img, const ListaIMG::ALTURA altura) -> bool
 {
-    return borrar(controlador->getEstado(), img, altura);
+    return borrar(Controlador::get().getEstado(), img, altura);
 }

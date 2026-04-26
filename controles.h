@@ -18,14 +18,12 @@ class Controles
     static ACCION accionAnterior;
     static SDL_Event* evento;
     static std::map<std::string, ACCION> acciones;
-    static Window* window;
     static bool escribiendo;
 
 public:
-    static auto init(SDL_Event* evento_, Window* window_) -> void
+    static auto init(SDL_Event* evento_) -> void
     {
         evento = evento_;
-        window = window_;
 
         accionAnterior = ACCION::Nada;
         //Primer caracter p: pulsar s: soltar

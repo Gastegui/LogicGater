@@ -17,7 +17,7 @@
 #include "Simulables/salida.h"
 #include "Simulables/temporizador.h"
 
-auto SistemaGuardado::guardar(Controlador* controlador, const Window* window, const Valores* valores, const std::string& archivo) -> bool
+auto SistemaGuardado::guardar(const Valores* valores, const std::string& archivo) -> bool
 {
     std::ofstream outf{archivo.c_str()};
 
@@ -27,16 +27,16 @@ auto SistemaGuardado::guardar(Controlador* controlador, const Window* window, co
         return false;
     }
 
-    const int esquinaX{window->getEsquinaX()};
-    const int esquinaY{window->getEsquinaY()};
-    const std::vector<ListaLineas::Linea>*  listaLineas{controlador->getListaLineas()->getLista()};
+    const int esquinaX{Window::get().getEsquinaX()};
+    const int esquinaY{Window::get().getEsquinaY()};
+    const std::vector<ListaLineas::Linea>*  listaLineas{Controlador::get().getListaLineas()->getLista()};
 
     outf << "-Elementos\n";
     const Puerta* puerta{};
     const Salida* salida{};
     const Entrada* entrada{};
     const Temporizador* temp{};
-    for(const auto& value : controlador->simulables | std::views::values)
+    for(const auto& value : Controlador::get().simulables | std::views::values)
     {
         if((puerta = dynamic_cast<Puerta*>(value.get())) != nullptr) // NOLINT(*-assignment-in-if-condition)
             outf << "Puerta: id: " << puerta->getId() << " tipo: " << puerta->tipo << " arribaNegado: " << puerta->arribaNegado << " abajoNegado: " << puerta->abajoNegado << " salidaNegada: " << puerta->salidaNegada << " x: " << puerta->imagen.rect.x << " y: " << puerta->imagen.rect.y << "\n";
@@ -62,7 +62,7 @@ auto SistemaGuardado::guardar(Controlador* controlador, const Window* window, co
 }
 
 
-auto SistemaGuardado::cargar(Controlador* controlador, Window* window, Valores* valores, const std::string& archivo) -> int
+auto SistemaGuardado::cargar(Valores* valores, const std::string& archivo) -> int
 {
     std::ifstream inf{archivo.c_str()};
 
@@ -72,7 +72,7 @@ auto SistemaGuardado::cargar(Controlador* controlador, Window* window, Valores* 
         return -1;
     }
 
-    if(controlador->getSimulablesLenght() != 0)
+    if(Controlador::get().getSimulablesLenght() != 0)
         return -2;
 
     using namespace std::literals::string_literals;
@@ -141,7 +141,7 @@ auto SistemaGuardado::cargar(Controlador* controlador, Window* window, Valores* 
             iss >> puertaX;
             iss >> tmp; //y:
             iss >> puertaY;
-            controlador->crear(puertaTipo == 0 ? Puerta::AND : puertaTipo == 1 ? Puerta::OR : Puerta::XOR, puertaX, puertaY, puertaArribaNegado, puertaAbajoNegado, puertaSalidaNegada, puertaId);
+            Controlador::get().crear(puertaTipo == 0 ? Puerta::AND : puertaTipo == 1 ? Puerta::OR : Puerta::XOR, puertaX, puertaY, puertaArribaNegado, puertaAbajoNegado, puertaSalidaNegada, puertaId);
         }
         else if(tmp == "Entrada:"s)
         {
@@ -153,7 +153,7 @@ auto SistemaGuardado::cargar(Controlador* controlador, Window* window, Valores* 
             iss >> entradaX;
             iss >> tmp; //y:
             iss >> entradaY;
-            controlador->crear(entradaMantener, entradaX, entradaY, entradaId);
+            Controlador::get().crear(entradaMantener, entradaX, entradaY, entradaId);
         }
         else if(tmp == "Salida:"s)
         {
@@ -163,7 +163,7 @@ auto SistemaGuardado::cargar(Controlador* controlador, Window* window, Valores* 
             iss >> salidaX;
             iss >> tmp; //y:
             iss >> salidaY;
-            controlador->crear(salidaX, salidaY, salidaId);
+            Controlador::get().crear(salidaX, salidaY, salidaId);
         }
         else if(tmp == "Temporizador:"s)
         {
@@ -179,7 +179,7 @@ auto SistemaGuardado::cargar(Controlador* controlador, Window* window, Valores* 
             iss >> tempSalidaNegada;
             iss >> tmp; //ciclosTotales:
             iss >> tempCiclos;
-            controlador->crear(tempX, tempY, tempCiclos, tempEntradaNegada, tempSalidaNegada, tempId);
+            Controlador::get().crear(tempX, tempY, tempCiclos, tempEntradaNegada, tempSalidaNegada, tempId);
         }
         else if(tmp == "Conexion:"s)
         {
@@ -190,8 +190,8 @@ auto SistemaGuardado::cargar(Controlador* controlador, Window* window, Valores* 
             iss >> tmp; //destino_conexion:
             iss >> simulableConexion;
 
-            Simulable* destino = controlador->getSimulable(simulableDestino);
-            controlador->marcarOrigen(controlador->getSimulable(simulableOrigen)->getIOSalida());
+            Simulable* destino = Controlador::get().getSimulable(simulableDestino);
+            Controlador::get().marcarOrigen(Controlador::get().getSimulable(simulableOrigen)->getIOSalida());
             destino->interactuar(destino->getLinea(simulableConexion)->first - destino->getImg()->getRect()->x, destino->getLinea(simulableConexion)->second - destino->getImg()->getRect()->y, INTERACCIONES::ConexionArriba);
         }
         else if(tmp == "Coordenadas:"s)
@@ -200,7 +200,7 @@ auto SistemaGuardado::cargar(Controlador* controlador, Window* window, Valores* 
             iss >> coordenadaX;
             iss >> tmp; //y:
             iss >> coordenadaY;
-            window->mover(coordenadaX, coordenadaY);
+            Window::get().mover(coordenadaX, coordenadaY);
         }
         else if(tmp == "VelocidadSimulacion:"s)
             iss >> valores->velocidadSimulacion;

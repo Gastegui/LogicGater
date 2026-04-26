@@ -3,6 +3,7 @@
 //
 
 #include "text.h"
+#include "window.h"
 
 
 auto operator<<(TXT& anterior, const char* str) -> TXT&
@@ -26,7 +27,7 @@ auto TXT::write(const char* text) -> void
     }
     SDL_Rect rect;
     SDL_Surface* surface = TTF_RenderUTF8_Blended(font, text, color);
-    SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);
+    SDL_Texture* texture = SDL_CreateTextureFromSurface(Window::getRenderer(), surface);
 
     rect.x = x;
     rect.y = y;
@@ -45,7 +46,7 @@ auto TXT::write(const char* text) -> void
 
     y += alturaSalto;
 
-    SDL_RenderCopy(renderer, texture, nullptr, &rect);
+    SDL_RenderCopy(Window::getRenderer(), texture, nullptr, &rect);
     SDL_FreeSurface(surface);
     SDL_DestroyTexture(texture);
 }

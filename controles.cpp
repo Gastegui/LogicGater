@@ -10,7 +10,6 @@ using enum ACCION;
 ACCION Controles::accionAnterior = Nada;
 SDL_Event* Controles::evento = nullptr;
 std::map<std::string, ACCION> Controles::acciones;
-Window* Controles::window = nullptr;
 bool Controles::escribiendo = false;
 
 auto Controles::getNuevaAccion(const SDL_Event* evento) -> ACCION
@@ -105,7 +104,7 @@ auto Controles::getNuevaAccion(const SDL_Event* evento) -> ACCION
         return accionAnterior;
     }
 
-    if(window != nullptr && window->getRaton()->getBorrando() && accionAnterior != AlternarBorrando && accionAnterior != AlternarBorrando_ && accionAnterior != InteractuarArriba && accionAnterior != InteractuarAbajo && accionAnterior != ConexionArriba && accionAnterior != ConexionAbajo && accionAnterior != MovimientoRaton && accionAnterior != DuplicarSeleccion)
-        window->getRaton()->setBorrando(false);
+    if(Raton::get().getBorrando() && accionAnterior != AlternarBorrando && accionAnterior != AlternarBorrando_ && accionAnterior != InteractuarArriba && accionAnterior != InteractuarAbajo && accionAnterior != ConexionArriba && accionAnterior != ConexionAbajo && accionAnterior != MovimientoRaton && accionAnterior != DuplicarSeleccion)
+        Raton::get().setBorrando(false);
     return accionAnterior;
 }

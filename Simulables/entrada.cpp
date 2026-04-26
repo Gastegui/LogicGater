@@ -19,19 +19,19 @@ auto Entrada::interactuar(const int posX, const int posY, const INTERACCIONES in
     switch(interaccion)
     {
         case ConexionAbajo:
-            controlador->marcarOrigen(getSalida());
+            Controlador::get().marcarOrigen(getSalida());
             return true;
         case ConexionBorrar:
-            controlador->borrarConexiones(&salida);
+            Controlador::get().borrarConexiones(&salida);
             return true;
 
         case MoverAbajo:
             mover = true;
-            raton->setMoviendoImg(&img);
+            Raton::get().setMoviendoImg(&img);
             return true;
         case MoverArriba:
             mover = false;
-            raton->setMoviendoImg(nullptr);
+            Raton::get().setMoviendoImg(nullptr);
             return true;
         case MovimientoRaton:
             if(mover)

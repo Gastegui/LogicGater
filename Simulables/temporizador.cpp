@@ -65,29 +65,29 @@ auto Temporizador::interactuar(const int posX, const int posY, const INTERACCION
     switch(interaccion)
     {
         case ConexionAbajo:
-            controlador->marcarOrigen(&salida);
+            Controlador::get().marcarOrigen(&salida);
             return true;
         case ConexionArriba:
             {
-                IO* origen = controlador->getOrigen();
+                IO* origen = Controlador::get().getOrigen();
                 if(origen == nullptr || entrada != nullptr)
                     return false;
 
                 entrada = origen;
                 origen->conectado();
 
-                controlador->añadirConexion(this, 1);
-                controlador->desmarcarOrigen();
+                Controlador::get().añadirConexion(this, 1);
+                Controlador::get().desmarcarOrigen();
             }
             return true;
         case ConexionBorrar:
             if(posX > getImg()->getRect()->w / 2)
-                controlador->borrarConexiones(&salida);
+                Controlador::get().borrarConexiones(&salida);
             else
             {
                 if(entrada == nullptr)
                     return false;
-                controlador->borrarConexion(this, entrada, 1);
+                Controlador::get().borrarConexion(this, entrada, 1);
             }
             return true;
         case TemporizadorSubir:
@@ -101,11 +101,11 @@ auto Temporizador::interactuar(const int posX, const int posY, const INTERACCION
             return true;
         case MoverAbajo:
             mover = true;
-            raton->setMoviendoImg(&imagen);
+            Raton::get().setMoviendoImg(&imagen);
             return true;
         case MoverArriba:
             mover = false;
-            raton->setMoviendoImg(nullptr);
+            Raton::get().setMoviendoImg(nullptr);
             return true;
         case MovimientoRaton:
             if(mover)

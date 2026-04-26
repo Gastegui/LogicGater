@@ -77,26 +77,26 @@ auto Salida::interactuar(const int posX, const int posY, const INTERACCIONES int
     {
         case ConexionArriba:
             {
-                IO* origen = controlador->getOrigen();
+                IO* origen = Controlador::get().getOrigen();
                 if(origen == nullptr || getEntrada() != nullptr)
                     return false;
 
                 setEntrada(origen);
                 origen->conectado();
-                controlador->añadirConexion(this, 1);
-                controlador->desmarcarOrigen();
+                Controlador::get().añadirConexion(this, 1);
+                Controlador::get().desmarcarOrigen();
                 return true;
             }
         case ConexionBorrar:
-            controlador->borrarConexion(this, entrada, 1);
+            Controlador::get().borrarConexion(this, entrada, 1);
             return true;
         case MoverAbajo:
             mover = true;
-            raton->setMoviendoImg(&img);
+            Raton::get().setMoviendoImg(&img);
             return true;
         case MoverArriba:
             mover = false;
-            raton->setMoviendoImg(nullptr);
+            Raton::get().setMoviendoImg(nullptr);
             return true;
         case MovimientoRaton:
             if(mover)

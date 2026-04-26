@@ -11,17 +11,12 @@
 
 class Simulable;
 class IMG;
-class Controlador;
-class Window;
 
 class Raton
 {
     int posX{0};
     int posY{0};
     IMG* imgAnterior{nullptr};
-
-    Controlador* controlador{nullptr};
-    Window* window{nullptr};
 
     bool borrando{false};
     bool moviendoPantalla{false};
@@ -46,8 +41,12 @@ class Raton
         return static_cast<int>(c + (x - a) / (b - a) * (d - c));
     }
 
+    auto getSeleccionadosPriv() -> std::vector<Simulable*>&
+    {
+        return seleccionados;
+    }
+
 public:
-    auto setControlador(Controlador* controlador_) -> void;
 
     auto setBorrando(bool borrando_) -> void;
     [[nodiscard]] auto getBorrando() const -> bool { return borrando; }
@@ -55,6 +54,17 @@ public:
 
     auto manejarRaton() -> void;
     auto setMoviendoImg(IMG* img) -> void { moviendoImg = img; }
+
+    [[nodiscard]] auto static getSeleccionados() -> std::vector<Simulable*>&
+    {
+        return get().getSeleccionadosPriv();
+    }
+
+    [[nodiscard]] auto static get() -> Raton&
+    {
+        static Raton raton = Raton();
+        return raton;
+    }
 };
 
 

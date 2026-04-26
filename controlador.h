@@ -24,11 +24,6 @@ class Controlador
 {
     friend class SistemaGuardado;
 
-
-    Window* window{nullptr};
-    SDL_Renderer* renderer{nullptr};
-    TXT* txt;
-
     IO* origen{nullptr};
 
     bool cuadricula{false};
@@ -37,28 +32,23 @@ class Controlador
     std::map<unsigned int, std::unique_ptr<Simulable>> simulables;
 
     ListaLineas listaLineas;
-    std::vector<Simulable*>* seleccionados{};
 
     bool conexionesOcultas{false};
 
     ESTADOS estado{ESTADOS::Normal};
 
-public:
-    explicit Controlador(Window* window_, TXT* txt_)
-        : window{window_}, renderer{window_->getRenderer()}, txt{txt_} {}
+    SDL_Renderer* renderer;
 
+public:
+    explicit Controlador()
+        :renderer{Window::getRenderer()} {}
+    
     ~Controlador() = default;
     Controlador(const Controlador&) = delete;
     auto operator=(const Controlador&) -> Controlador& = delete;
     Controlador(Controlador&&) = delete;
     auto operator=(Controlador&&) -> Controlador& = delete;
 
-    [[nodiscard]] auto getListaIMG(const ListaIMG::ALTURA altura) const -> const std::vector<IMG*>*
-    {
-        return window->getListaIMG(altura);
-    }
-
-    [[nodiscard]] auto getWindow() const -> Window* { return window; }
     [[nodiscard]] auto getListaLineas() -> ListaLineas* { return &listaLineas; }
 
     //Crea una puerta
@@ -76,17 +66,7 @@ public:
     //Crea un condensador
     auto crear(int x, int y, Puerta::TIPO tipo, unsigned int id = 0) -> unsigned int;
 
-    auto borrar(Simulable* simulable) -> void
-    {
-        if(!simulables.contains(simulable->getId()))
-            return;
-        borrarConexiones(simulable);
-
-        window->borrar(simulable->getImg(), ListaIMG::Medio);
-        simulables.erase(simulable->getId());
-
-        //delete simulable;
-    }
+    auto borrar(Simulable *simulable) -> void;
 
     auto añadirConexion(Simulable* simulableDestino, const int conexion) -> void { listaLineas.añadir(simulableDestino, origen, conexion, conexionesOcultas); }
     auto borrarConexiones(const IO* io) -> void { listaLineas.borrar(io); }
@@ -120,7 +100,6 @@ public:
     [[nodiscard]] auto getCuadriculaTamaño() const -> int { return cuadriculaTamaño; }
     [[nodiscard]] auto getSimulablesLenght() const -> unsigned long { return simulables.size(); }
 
-    auto setSeleccionados(std::vector<Simulable*>* seleccionados_) -> void { seleccionados = seleccionados_; }
     auto seleccionar(SDL_Rect region) const -> void;
     auto desseleccionar() const -> void;
 
@@ -136,6 +115,14 @@ public:
 
     [[nodiscard]] auto getEstado() const -> ESTADOS { return estado; }
     auto setEstado(ESTADOS estado_) -> void { estado = estado_; }
+    
+    [[nodiscard]] auto static get() -> Controlador&
+    {
+        static Controlador controlador = Controlador{};
+        return controlador;
+    }
+
 };
+
 
 #endif //CONTROLADOR_H
