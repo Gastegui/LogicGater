@@ -194,7 +194,7 @@ auto Window::centrar() -> void
 
     const std::vector<IMG*>* imagenes = listasIMG[Controlador::get().getEstado()].getLista(ListaIMG::Medio);
 
-    if(imagenes == nullptr)
+    if(imagenes == nullptr || imagenes->size() == 0)
     {
         mover(0, 0);
         return;
