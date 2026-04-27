@@ -25,11 +25,11 @@ auto Puerta::simular() -> void
     if(abajoNegado)
         b = !b;
 
-    if(tipo == AND)
+    if(tipo == TIPOS_PUERTA::AND)
         ret = a && b;
-    else if(tipo == OR)
+    else if(tipo == TIPOS_PUERTA::OR)
         ret = a || b;
-    else if(tipo == XOR)
+    else if(tipo == TIPOS_PUERTA::XOR)
         ret = a != b;
 
     if(salidaNegada)
@@ -72,11 +72,11 @@ auto Puerta::simularAntiguo() -> bool
     if(abajoNegado)
         b = !b;
 
-    if(tipo == AND)
+    if(tipo == TIPOS_PUERTA::AND)
         ret = a && b;
-    else if(tipo == OR)
+    else if(tipo == TIPOS_PUERTA::OR)
         ret = a || b;
-    else if(tipo == XOR)
+    else if(tipo == TIPOS_PUERTA::XOR)
         ret = a != b;
 
     if(salidaNegada)
@@ -195,7 +195,7 @@ auto Puerta::interactuar(const int posX, const int posY, const INTERACCIONES int
             }
             else
             {
-                tipo = tipo == AND ? OR : tipo == OR ? XOR : AND;
+                tipo = tipo == TIPOS_PUERTA::AND ? TIPOS_PUERTA::OR : tipo == TIPOS_PUERTA::OR ? TIPOS_PUERTA::XOR : TIPOS_PUERTA::AND;
                 cambiar();
             }
             return true;

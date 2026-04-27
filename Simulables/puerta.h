@@ -48,29 +48,22 @@ class Puerta final : public Simulable
 
     bool mover{false};
 
-public:
-    enum TIPO : uint8_t
-    {
-        AND,
-        OR,
-        XOR
-    };
-
+    
 private:
-    TIPO tipo{};
+    TIPOS_PUERTA tipo{};
     IMG imagen;
 
 public:
-    Puerta(SDL_Renderer* renderer, const TIPO tipo_, const int x_, const int y_, const bool arribaNegado_, const bool abajoNegado_, const bool salidaNegada_)
+    Puerta(SDL_Renderer* renderer, const TIPOS_PUERTA tipo_, const int x_, const int y_, const bool arribaNegado_, const bool abajoNegado_, const bool salidaNegada_)
         : Puerta(renderer, tipo_, x_, y_, arribaNegado_, abajoNegado_, salidaNegada_, idGenerator()) {}
 
-    Puerta(SDL_Renderer* renderer, const TIPO tipo_, const int x_, const int y_, const bool arribaNegado_, const bool abajoNegado_, const bool salidaNegada_, const unsigned int id_)
+    Puerta(SDL_Renderer* renderer, const TIPOS_PUERTA tipo_, const int x_, const int y_, const bool arribaNegado_, const bool abajoNegado_, const bool salidaNegada_, const unsigned int id_)
         : Simulable(id_), arribaNegado{arribaNegado_}, abajoNegado{abajoNegado_}, salidaNegada{salidaNegada_}, salida(this, 100 + x_, 25 + y_), tipo{tipo_}, imagen{renderer, x_, y_, 100, 50}
     {
         imagen.crearImagen<IMG::Capa>(
             IMG::Capa{.img = arribaNegado_ ? "./img/puertas/entrada_arriba_negada.png" : "./img/puertas/entrada_arriba_normal.png"},
             IMG::Capa{.img = abajoNegado_ ? "./img/puertas/entrada_abajo_negada.png" : "./img/puertas/entrada_abajo_normal.png"},
-            IMG::Capa{.img = tipo_ == AND ? "./img/puertas/and.png" : tipo_ == OR ? "./img/puertas/or.png" : "./img/puertas/xor.png"},
+            IMG::Capa{.img = tipo_ == TIPOS_PUERTA::AND ? "./img/puertas/and.png" : tipo_ == TIPOS_PUERTA::OR ? "./img/puertas/or.png" : "./img/puertas/xor.png"},
             IMG::Capa{.img = salidaNegada_ ? "./img/puertas/salida_negada.png" : "./img/puertas/salida_normal.png"},
             IMG::Capa{.img = seleccionado ? "./img/puertas/seleccionado.png" : "./img/puertas/no_seleccionado.png"}
         );
@@ -86,14 +79,14 @@ public:
     [[nodiscard]] auto getArribaNegado() const -> bool { return arribaNegado; }
     [[nodiscard]] auto getAbajoNegado() const -> bool { return abajoNegado; }
     [[nodiscard]] auto getSalidaNegada() const -> bool { return salidaNegada; }
-    [[nodiscard]] auto getTipoPuerta() const -> TIPO { return tipo; }
+    [[nodiscard]] auto getTipoPuerta() const -> TIPOS_PUERTA { return tipo; }
 
     auto cambiar() -> bool
     {
         return imagen.crearImagen<IMG::Capa>(
             IMG::Capa{.img = arribaNegado ? "./img/puertas/entrada_arriba_negada.png" : "./img/puertas/entrada_arriba_normal.png"},
             IMG::Capa{.img = abajoNegado ? "./img/puertas/entrada_abajo_negada.png" : "./img/puertas/entrada_abajo_normal.png"},
-            IMG::Capa{.img = tipo == AND ? "./img/puertas/and.png" : tipo == OR ? "./img/puertas/or.png" : "./img/puertas/xor.png"},
+            IMG::Capa{.img = tipo == TIPOS_PUERTA::AND ? "./img/puertas/and.png" : tipo == TIPOS_PUERTA::OR ? "./img/puertas/or.png" : "./img/puertas/xor.png"},
             IMG::Capa{.img = salidaNegada ? "./img/puertas/salida_negada.png" : "./img/puertas/salida_normal.png"},
             IMG::Capa{.img = seleccionado ? "./img/puertas/seleccionado.png" : "./img/puertas/no_seleccionado.png"}
         );

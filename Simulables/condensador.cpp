@@ -21,7 +21,7 @@ auto Condensador::simular() -> void
     if(entradas.empty())
         return;
 
-    if(tipo == Puerta::AND)
+    if(tipo == TIPOS_PUERTA::AND)
     {
         siguiente = true;
         for(const IO* io : entradas)
@@ -33,7 +33,7 @@ auto Condensador::simular() -> void
             }
         }
     }
-    else 
+    else if(tipo == TIPOS_PUERTA::OR)
     {
         for(const IO* io : entradas)
         {
@@ -42,6 +42,14 @@ auto Condensador::simular() -> void
                 siguiente = true;
                 break;
             }
+        }
+    }
+    else 
+    {
+        for(const IO* io : entradas)
+        {
+            if(io->get())
+                siguiente = !siguiente;
         }
     }
 }
@@ -87,10 +95,12 @@ auto Condensador::interactuar(int posX, int posY, INTERACCIONES interaccion) -> 
                     Controlador::get().borrarConexion(this, io, 1);
             return true;
         case InteractuarArriba:
-            if(tipo == Puerta::AND)
-                tipo = Puerta::OR;
+            if(tipo == TIPOS_PUERTA::AND)
+                tipo = TIPOS_PUERTA::OR;
+            else if(tipo == TIPOS_PUERTA::OR)
+                tipo = TIPOS_PUERTA::XOR;
             else
-                tipo = Puerta::AND;
+                tipo = TIPOS_PUERTA::AND;
             cambiar();
             return true;
         case MoverAbajo:

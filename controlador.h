@@ -52,7 +52,7 @@ public:
     [[nodiscard]] auto getListaLineas() -> ListaLineas* { return &listaLineas; }
 
     //Crea una puerta
-    auto crear(Puerta::TIPO tipo, int x, int y, bool arribaNegado = false, bool abajoNegado = false, bool salidaNegada = false, unsigned int id = 0) -> unsigned int;
+    auto crear(TIPOS_PUERTA tipo, int x, int y, bool arribaNegado = false, bool abajoNegado = false, bool salidaNegada = false, unsigned int id = 0) -> unsigned int;
 
     //Crea una entrada
     auto crear(bool mantener, int x, int y, unsigned int id = 0) -> unsigned int;
@@ -64,7 +64,7 @@ public:
     auto crear(int x, int y, int tiempo, bool entradaNegada = false, bool salidaNegada = false, unsigned int id = 0) -> unsigned int;
 
     //Crea un condensador
-    auto crear(int x, int y, Puerta::TIPO tipo, unsigned int id = 0) -> unsigned int;
+    auto crear(int x, int y, TIPOS_PUERTA tipo, unsigned int id = 0) -> unsigned int;
 
     auto borrar(Simulable *simulable) -> void;
 

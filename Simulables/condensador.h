@@ -13,6 +13,8 @@
 
 class Condensador final : public Simulable
 {
+    friend class SistemaGuardado;
+
     static auto idGenerator() -> unsigned int
     {
         static unsigned int id = 1 + getOffset(ID_TIPOS::Condensador);
@@ -28,7 +30,7 @@ class Condensador final : public Simulable
     std::vector<IO*> entradas;
     IO salida;
     IMG imagen;
-    Puerta::TIPO tipo;
+    TIPOS_PUERTA tipo;
 
     bool siguiente{false};
     bool seleccionado{false};
@@ -41,7 +43,7 @@ class Condensador final : public Simulable
     {
         return imagen.crearImagen<IMG::Capa>(
             IMG::Capa{.img = "./img/condensador/base.png"},
-            IMG::Capa{.img = tipo == Puerta::AND ? "./img/condensador/and.png" : "./img/condensador/or.png"},
+            IMG::Capa{.img = tipo == TIPOS_PUERTA::AND ? "./img/condensador/and.png" : tipo == TIPOS_PUERTA::OR ? "./img/condensador/or.png" : "./img/condensador/xor.png"},
             IMG::Capa{.img = seleccionado ? "./img/condensador/seleccionado.png" : "./img/condensador/no_seleccionado.png"}
         );
     }
@@ -50,11 +52,11 @@ class Condensador final : public Simulable
 
 public:
 
-    Condensador(SDL_Renderer* renderer, Puerta::TIPO tipo_, int x_, int y_)
+    Condensador(SDL_Renderer* renderer, TIPOS_PUERTA tipo_, int x_, int y_)
         :Condensador(renderer, tipo_, x_, y_, idGenerator())
     {}
 
-    Condensador(SDL_Renderer* renderer, Puerta::TIPO tipo_, int x_, int y_, unsigned int id_)
+    Condensador(SDL_Renderer* renderer, TIPOS_PUERTA tipo_, int x_, int y_, unsigned int id_)
         :Simulable(id_), tipo(tipo_), salida(this, 100 + x_, 25 + y_), imagen{renderer, x_, y_, 100, 50}
     {
         cambiar();
@@ -80,7 +82,7 @@ public:
     [[nodiscard]] auto getLinea(int /*conexion*/) -> std::pair<int, int>* override { return &linea; }
     [[nodiscard]] auto getDesconectado() const -> bool override { return entradas.empty() && salida.getConexiones() == 0; }
     [[nodiscard]] auto getConexion(IO *io) const -> int override { return std::ranges::find(entradas.begin(),entradas.end(), io) == entradas.end() ? 0 : 1; }
-    [[nodiscard]] auto getTipoPuerta() const -> Puerta::TIPO { return tipo; }
+    [[nodiscard]] auto getTipoPuerta() const -> TIPOS_PUERTA { return tipo; }
 };
 
 

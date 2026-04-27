@@ -168,6 +168,12 @@ constexpr static auto toString(const TIPOS_SIMULABLES tipo) -> std::string
     }
 }
 
+enum class TIPOS_PUERTA : uint8_t
+{
+    AND = 0,
+    OR,
+    XOR
+};
 
 enum class ESTADOS : uint8_t
 {

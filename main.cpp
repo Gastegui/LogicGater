@@ -80,13 +80,13 @@ auto main() -> int
                             mensajeTiempo = SDL_GetTicks64();
                             break;
                         case ACCION::CrearAnd:
-                            controlador.crear(Puerta::AND, -1, -1);
+                            controlador.crear(TIPOS_PUERTA::AND, -1, -1);
                             break;
                         case ACCION::CrearOr:
-                            controlador.crear(Puerta::OR, -1, -1);
+                            controlador.crear(TIPOS_PUERTA::OR, -1, -1);
                             break;
                         case ACCION::CrearXor:
-                            controlador.crear(Puerta::XOR, -1, -1);
+                            controlador.crear(TIPOS_PUERTA::XOR, -1, -1);
                             break;
                         case ACCION::CrearInterruptor:
                             controlador.crear(false, -1, -1);
@@ -101,7 +101,7 @@ auto main() -> int
                             controlador.crear(-1, -1, 10);
                             break;
                         case ACCION::CrearCondensador:
-                            controlador.crear(-1, -1, Puerta::OR);
+                            controlador.crear(-1, -1, TIPOS_PUERTA::OR);
                             break;
                         case ACCION::AlternarBorrando:
                             raton.setBorrando(!raton.getBorrando());

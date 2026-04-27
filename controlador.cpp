@@ -10,7 +10,7 @@
 #include "Simulables/temporizador.h"
 #include "Simulables/condensador.h"
 
-auto Controlador::crear(const Puerta::TIPO tipo, int x, int y, const bool arribaNegado, const bool abajoNegado, const bool salidaNegada, const unsigned int id) -> unsigned int
+auto Controlador::crear(const TIPOS_PUERTA tipo, int x, int y, const bool arribaNegado, const bool abajoNegado, const bool salidaNegada, const unsigned int id) -> unsigned int
 {
     if(x == -1 && y == -1)
         SDL_GetMouseState(&x, &y);
@@ -82,7 +82,7 @@ auto Controlador::crear(int x, int y, const int tiempo, const bool entradaNegada
     return idTemporizaador;
 }
 
-auto Controlador::crear(int x, int y, Puerta::TIPO tipo, unsigned int id) -> unsigned int
+auto Controlador::crear(int x, int y, TIPOS_PUERTA tipo, unsigned int id) -> unsigned int
 {
     if(x == -1 && y == -1)
         SDL_GetMouseState(&x, &y);

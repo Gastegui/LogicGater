@@ -10,12 +10,14 @@
 #include <string>
 #include <ranges>
 
+#include "Simulables/condensador.h"
 #include "controlador.h"
 #include "Wrapper/window.h"
 #include "Simulables/puerta.h"
 #include "Simulables/entrada.h"
 #include "Simulables/salida.h"
 #include "Simulables/temporizador.h"
+#include "enums.h"
 
 auto SistemaGuardado::guardar(const Valores* valores, const std::string& archivo) -> bool
 {
@@ -36,6 +38,7 @@ auto SistemaGuardado::guardar(const Valores* valores, const std::string& archivo
     const Salida* salida{};
     const Entrada* entrada{};
     const Temporizador* temp{};
+    const Condensador* cond{};
     for(const auto& value : Controlador::get().simulables | std::views::values)
     {
         if((puerta = dynamic_cast<Puerta*>(value.get())) != nullptr) // NOLINT(*-assignment-in-if-condition)
@@ -46,6 +49,8 @@ auto SistemaGuardado::guardar(const Valores* valores, const std::string& archivo
             outf << "Entrada: id: " << entrada->getId() << " mantener: " << entrada->mantener << " x: " << entrada->img.rect.x << " y: " << entrada->img.rect.y << "\n";
         else if((temp = dynamic_cast<Temporizador*>(value.get())) != nullptr) // NOLINT(*-assignment-in-if-condition)
             outf << "Temporizador: id: " << temp->getId() << " x: " << temp->imagen.rect.x << " y: " << temp->imagen.rect.y << " entradaNegada: " << temp->entradaNegada << " salidaNegada: " << temp->salidaNegada << " ciclosTotales: " << temp->ciclosTotales << "\n";
+        else if((cond = dynamic_cast<Condensador*>(value.get())) != nullptr) // NOLINT(*-assignment-in-if-condition)
+            outf << "Condensador: id: " << cond->getId() << " x: " << cond->imagen.rect.x << " y: " << cond->imagen.rect.y << " tipo: " << static_cast<int>(cond->tipo) << "\n";
     }
 
     outf << "-Conexiones\n";
@@ -109,6 +114,12 @@ auto SistemaGuardado::cargar(Valores* valores, const std::string& archivo) -> in
     bool tempSalidaNegada{false};
     int tempCiclos{0};
 
+    //Condensadores
+    unsigned int condId{getOffset(ID_TIPOS::Condensador)};
+    int condX{0};
+    int condY{0};
+    int condTipo{0};
+
     //Conexiones
     unsigned int simulableOrigen{0};
     unsigned int simulableDestino{0};
@@ -141,7 +152,7 @@ auto SistemaGuardado::cargar(Valores* valores, const std::string& archivo) -> in
             iss >> puertaX;
             iss >> tmp; //y:
             iss >> puertaY;
-            Controlador::get().crear(puertaTipo == 0 ? Puerta::AND : puertaTipo == 1 ? Puerta::OR : Puerta::XOR, puertaX, puertaY, puertaArribaNegado, puertaAbajoNegado, puertaSalidaNegada, puertaId);
+            Controlador::get().crear(static_cast<TIPOS_PUERTA>(puertaTipo), puertaX, puertaY, puertaArribaNegado, puertaAbajoNegado, puertaSalidaNegada, puertaId);
         }
         else if(tmp == "Entrada:"s)
         {
@@ -181,6 +192,18 @@ auto SistemaGuardado::cargar(Valores* valores, const std::string& archivo) -> in
             iss >> tempCiclos;
             Controlador::get().crear(tempX, tempY, tempCiclos, tempEntradaNegada, tempSalidaNegada, tempId);
         }
+        else if(tmp == "Condensador:"s)
+        {
+            iss >> tmp; //id:
+            iss >> condId;
+            iss >> tmp; //x:
+            iss >> condX;
+            iss >> tmp; //y:
+            iss >> condY;
+            iss >> tmp; //tipo:
+            iss >> condTipo;
+            Controlador::get().crear(condX, condY, static_cast<TIPOS_PUERTA>(condTipo), condId);
+        }
         else if(tmp == "Conexion:"s)
         {
             iss >> tmp; //origen:
@@ -211,6 +234,7 @@ auto SistemaGuardado::cargar(Valores* valores, const std::string& archivo) -> in
     Entrada::gastarIds(entradaId ^ getOffset(ID_TIPOS::Entrada));
     Salida::gastarIds(salidaId ^ getOffset(ID_TIPOS::Salida));
     Temporizador::gastarIds(tempId ^ getOffset(ID_TIPOS::Temporizador));
+    Condensador::gastarIds(condId ^ getOffset(ID_TIPOS::Condensador));
 
     return 0;
 }
