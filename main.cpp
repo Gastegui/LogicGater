@@ -357,6 +357,7 @@ auto main() -> int
                     window.limpiar();
                     idiomas.print(ID_TEXTO::Cargando);
                     window.render(false);
+                    controlador.setEstado(ESTADOS::Normal);
                     const int ret = SistemaGuardado::cargar(&valores, inputStr);
                     if(ret == -1)
                         mensaje = ID_TEXTO::CargadoNo;
@@ -366,7 +367,6 @@ auto main() -> int
                         mensaje = ID_TEXTO::CargadoSi;
 
                     mensajeTiempo = SDL_GetTicks64();
-                    controlador.setEstado(ESTADOS::Normal);
                 }
                 break;
             case ESTADOS::Controles:
