@@ -11,11 +11,14 @@ ACCION Controles::accionAnterior = Nada;
 SDL_Event* Controles::evento = nullptr;
 std::map<std::string, ACCION> Controles::acciones;
 bool Controles::escribiendo = false;
+bool Controles::shift = false;
+bool Controles::ctrl = false;
+bool Controles::alt = false;
 
 auto Controles::getNuevaAccion(const SDL_Event* evento) -> ACCION
 {
     accionAnterior = Nada;
-    std::string str = "..";
+    std::string str = "..-";
     if(evento->type == SDL_KEYDOWN || evento->type == SDL_MOUSEBUTTONDOWN)
         str[0] = 'p';
     else if(evento->type == SDL_KEYUP || evento->type == SDL_MOUSEBUTTONUP)
@@ -60,14 +63,17 @@ auto Controles::getNuevaAccion(const SDL_Event* evento) -> ACCION
                     case SDLK_LCTRL:
                     case SDLK_RCTRL:
                         str[1] = 'C';
+                        ctrl = str[0] == 'p';
                         break;
                     case SDLK_LSHIFT:
                     case SDLK_RSHIFT:
                         str[1] = 'S';
+                        shift = str[0] == 'p';
                         break;
                     case SDLK_LALT:
                     case SDLK_RALT:
                         str[1] = 'A';
+                        alt = str[0] == 'p';
                         break;
                     case SDLK_ESCAPE:
                         str[1] = 'X';
@@ -92,8 +98,25 @@ auto Controles::getNuevaAccion(const SDL_Event* evento) -> ACCION
         default:
             break;
     }
-    if(str != ".." && acciones.contains(str))
-        accionAnterior = acciones[str];
+
+    if(shift)
+        str[2] = 'S';
+    else if(ctrl)
+        str[2] = 'C';
+    else if(alt)
+        str[2] = 'A';
+
+    if(str != "..-")
+    {
+        if(acciones.contains(str))
+            accionAnterior = acciones[str];
+        else if(str[2] != '-')
+        {
+            str[2] = '-';
+            if(acciones.contains(str))
+            accionAnterior = acciones[str];
+        }
+    }
 
     if(escribiendo)
     {

@@ -210,7 +210,7 @@ auto Raton::manejarRaton() -> void
         else if(accion == ACCION::MovimientoRaton)
         {
             const SDL_Event* evento = Controles::getEvent();
-            Window::get().moverRel(evento->motion.xrel, evento->motion.yrel);
+            Window::get().moverRel(Controles::getShift() ? evento->motion.xrel * 2 : evento->motion.xrel, Controles::getShift() ? evento->motion.yrel * 2 : evento->motion.yrel);
             return;
         }
     }
